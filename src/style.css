@@ -1,9 +1,106 @@
 body {
-  background-color: aqua;
-}
-
-.todo-app {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue',
+    Arial;
   display: flex;
   align-items: center;
-  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.dice-game {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.die-face {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-top: 12px;
+  transition: transform 140ms ease;
+}
+
+.die-face.rolling {
+  animation: die-roll 0.5s linear infinite;
+}
+
+@keyframes die-roll {
+  0% {
+    transform: rotateX(0) translateY(0);
+  }
+  25% {
+    transform: rotateX(20deg) translateY(-3px);
+  }
+  50% {
+    transform: rotateX(0) translateY(0);
+  }
+  75% {
+    transform: rotateX(-20deg) translateY(3px);
+  }
+  100% {
+    transform: rotateX(0) translateY(0);
+  }
+}
+
+.die-face.shape-d20 {
+  background: #0f62fe;
+  clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
+}
+.die-face.shape-d12 {
+  background: #7fdbca;
+  clip-path: polygon(
+    50% 5%,
+    80% 14%,
+    95% 35%,
+    95% 65%,
+    80% 86%,
+    50% 95%,
+    20% 86%,
+    5% 65%,
+    5% 35%,
+    20% 14%
+  );
+}
+.die-face.shape-d10 {
+  background: #ff7f50;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+.die-face.shape-d8 {
+  background: #f1c232;
+  clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
+}
+.die-face.shape-d6 {
+  background: #6f42c1;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+.die-face.shape-d4 {
+  background: #28a745;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.controls button[disabled] {
+  opacity: 0.4;
+}
+.die-label,
+.last-roll,
+.score {
+  margin-top: 8px;
+}
+.info {
+  font-size: 14px;
+  color: #333;
 }

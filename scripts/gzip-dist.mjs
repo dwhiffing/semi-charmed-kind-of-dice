@@ -36,5 +36,8 @@ const maxKB = 13;
 const remainingKB = (maxKB - totalGzipped / 1024).toFixed(2);
 const percentUsed = ((totalGzipped / 1024) / maxKB * 100).toFixed(2);
 
-console.log(`Total gzipped size: ${totalKB} KB`);
-console.log(`Remaining: ${remainingKB} KB (${percentUsed}%) out of ${maxKB} KB`);
+const barLength = 20;
+const filledLength = Math.round(barLength * percentUsed / 100);
+const bar = '█'.repeat(filledLength) + '-'.repeat(barLength - filledLength);
+
+console.log(`[${bar}] ${totalKB} KB of 13 KB used (${percentUsed}%) ${remainingKB} KB remaining`);

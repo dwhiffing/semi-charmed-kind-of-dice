@@ -1,0 +1,9 @@
+body {
+  background-color: aqua;
+}
+
+.todo-app {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

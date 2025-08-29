@@ -13,5 +13,4 @@ await Promise.all(
 )
 
 document.body.append(svgs)
-
 document.body.append(DiceGame())

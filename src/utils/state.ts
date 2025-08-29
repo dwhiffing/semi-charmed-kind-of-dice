@@ -44,9 +44,9 @@ export const doRoll = () => {
   zzfx(...clickSound)
 
   rollInterval = window.setInterval(() => {
-    state.dice = state.dice.map((die) => ({
+    updateDice((die) => ({
       ...die,
-      roll: die.selected ? die.roll : rollDie(die.sides),
+      roll: die.selected ? die.roll : null,
     }))
   }, 60)
 
@@ -54,7 +54,7 @@ export const doRoll = () => {
     clearInterval(rollInterval)
     clearTimeout(rollTimeout)
 
-    state.dice = state.dice.map((die) => ({
+    updateDice((die) => ({
       ...die,
       roll: die.selected ? die.roll : rollDie(die.sides),
     }))
@@ -65,6 +65,9 @@ export const doRoll = () => {
     state.status = state.lives <= 0 ? 'lost' : 'ready'
   }, 700)
 }
+
+const updateDice = (update: (die: Die) => Die) =>
+  (state.dice = state.dice.map(update))
 
 export const toggleDieSelected = (index: number) => {
   state.dice = state.dice.map((die, i) => {
@@ -80,12 +83,12 @@ export const toggleDieSelected = (index: number) => {
 export const applyDiceToCard = (index: number) => {
   const card = state.cards[index]
   const selectedDice = state.dice.filter((die) => die.selected)
-  state.dice = state.dice.map((d) => ({
-    ...d,
-    selected: false,
-    roll: d.selected ? null : d.roll,
-  }))
   if (selectedDice.length === 1 && selectedDice[0].roll === card.value) {
+    state.dice = state.dice.map((d) => ({
+      ...d,
+      selected: false,
+      roll: d.selected ? null : d.roll,
+    }))
     if (card.reward === 'chips') {
       state.chips += card.multi
     } else {
@@ -103,7 +106,14 @@ const getDie = (sides: number) =>
     selected: false,
   } as Die)
 export const resetDice = () => {
-  state.dice = [getDie(20), getDie(12), getDie(8)]
+  state.dice = [
+    getDie(20),
+    getDie(12),
+    getDie(10),
+    // getDie(8),
+    // getDie(6),
+    // getDie(4),
+  ]
 }
 
 export const resetBoard = () => {

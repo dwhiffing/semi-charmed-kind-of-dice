@@ -32,6 +32,7 @@ export type Tag =
   | 'span'
   | 'strong'
   | 'style'
+  | 'svg'
   | 'table'
   | 'tbody'
   | 'td'

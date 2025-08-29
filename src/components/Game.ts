@@ -21,7 +21,7 @@ export const DiceGame = () => {
   state.addUpdate('chips', update)
   update()
 
-  app.append(info, Cards(), Controls(), Dice())
+  app.append(info, Cards(), Dice(), Controls())
 
   resetBoard()
   resetDice()

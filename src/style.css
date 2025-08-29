@@ -1,8 +1,9 @@
 :root {
-  --dark: #111;
+  --dark: #333;
   --light: #fff;
   --surface: #999;
 }
+
 body {
   background-color: var(--dark);
   color: var(--light);
@@ -12,35 +13,31 @@ body {
 
 .dice-game {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  text-align: center;
-  height: 100vh;
+  align-items: center;
   max-width: 500px;
   margin: 0 auto;
-}
-
-.dice {
-  display: flex;
-  gap: 20px;
+  gap: 12px;
+  padding: 16px;
 }
 
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 8px;
   width: 100%;
 }
 
 .card {
   aspect-ratio: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: var(--surface);
   border-radius: 12px;
   color: var(--dark);
-  flex-direction: column;
 }
 
 .card > div {
@@ -48,50 +45,72 @@ body {
   flex-direction: row;
 }
 
-.cat-body {
-  fill: currentColor;
-}
-.cat-whisker {
-  stroke: currentColor;
-  stroke-width: 3;
-  stroke-linecap: round;
-}
-
-.dice-game {
+.dice {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 300px;
   justify-content: center;
-  gap: 12px;
-  padding: 20px;
 }
 
 .die {
-  width: 80px;
-  height: 92px;
+  width: 76px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.die svg rect:first-of-type,
+.die svg path:first-of-type {
+  transition: all 0.3s ease;
+  stroke: transparent;
+  paint-order: stroke;
+  stroke: transparent;
+  stroke-width: 4px;
+}
+
+.die.selected svg rect:first-of-type,
+.die.selected svg path:first-of-type {
+  stroke-width: 12px;
+  stroke: white;
 }
 
 .die.rolling {
   animation: die-roll 0.5s linear infinite;
 }
 
-.die-number {
+.cat {
+  width: 26px;
+}
+.die .die-number {
   font-size: 18px;
   font-weight: 700;
   z-index: 10;
-  position: relative;
-  color: white;
-}
-
-.hidden {
-  display: none;
-}
-
-.die svg {
   position: absolute;
+  color: black;
+  pointer-events: none;
+}
+.die.d20 .die-number {
+  font-size: 14px;
+}
+.die.d20 .cat {
+  width: 20px;
+}
+.die.d6 .die-number {
+  font-size: 24px;
+}
+.die.d6 .cat {
+  width: 40px;
+}
+.die.d4 .die-number,
+.die.d4 .cat {
+  translate: 0 6px;
+}
+
+#d6 .die-number .die svg {
+  width: 100%;
 }
 
 .controls {
@@ -102,6 +121,20 @@ body {
 
 .controls button[disabled] {
   opacity: 0.4;
+}
+
+.cat-body {
+  fill: currentColor;
+}
+
+.cat-whisker {
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.hidden {
+  display: none;
 }
 
 @keyframes die-roll {

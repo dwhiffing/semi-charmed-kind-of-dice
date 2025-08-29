@@ -71,10 +71,18 @@ body {
 }
 
 .dice svg path,
-.dice svg rect {
+.dice svg rect,
+button {
   cursor: pointer;
 }
+button:disabled {
+  cursor: not-allowed;
+}
 
+.die-number-cat svg path,
+.die-number-cat svg rect {
+  cursor: not-allowed;
+}
 .die svg rect:first-of-type,
 .die svg path:first-of-type {
   transition: all 0.3s ease;

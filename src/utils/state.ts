@@ -4,8 +4,10 @@ import { createState } from './createState'
 import { clickSound } from './sounds'
 import { zzfx } from './zzfx'
 
+type GoalVariant = 'equal' | 'sum' | 'minmax' | 'odd' | 'even'
+
 type Card = {
-  variant: 'equal'
+  goal: GoalVariant
   value: number
   reward: 'lives' | 'chips'
   multi: number
@@ -81,10 +83,32 @@ export const toggleDieSelected = (index: number) => {
   })
 }
 
+const checkGoal = (card: Card, dice: Die[]) => {
+  const total = dice.reduce((sum, die) => sum + (die.roll ?? 0), 0)
+  const oddCount = dice.filter((die) => (die.roll ?? 0) % 2 === 1).length
+  const evenCount = dice.length - oddCount
+
+  switch (card.goal) {
+    case 'equal':
+      return dice.length === 1 && total === card.value
+    case 'sum':
+      return total === card.value
+    case 'minmax':
+      return (
+        dice.length === 2 &&
+        Math.abs(dice[0].roll! - dice[1].roll!) >= card.value
+      )
+    case 'odd':
+      return oddCount >= card.value
+    case 'even':
+      return evenCount >= card.value
+  }
+}
+
 export const applyDiceToCard = (index: number) => {
   const card = state.cards[index]
   const selectedDice = state.dice.filter((die) => die.selected)
-  if (selectedDice.length === 1 && selectedDice[0].roll === card.value) {
+  if (checkGoal(card, selectedDice)) {
     state.dice = state.dice.map((d) => ({
       ...d,
       selected: false,
@@ -118,12 +142,39 @@ export const resetDice = () => {
 }
 
 export const resetBoard = () => {
-  state.cards = new Array(9).fill('').map(() => ({
-    variant: 'equal',
-    value: rollDie(20),
-    reward: rollDie(2) === 1 ? 'chips' : 'lives',
-    multi: rollDie(3),
-  }))
+  state.cards = new Array(9).fill('').map(() => {
+    const goal = shuffle([
+      'equal',
+      'sum',
+      'odd',
+      'even',
+      'minmax',
+    ])[0] as GoalVariant
+    const difficulty = 1
+
+    // TODO: value should be adjusted based on difficulty
+    let value = 0
+    if (goal === 'equal') {
+      value = rollDie(10)
+    } else if (goal === 'sum') {
+      value = rollDie(10) + 5
+    } else if (goal === 'odd' || goal === 'even') {
+      value = rollDie(3)
+    } else if (goal === 'minmax') {
+      value = rollDie(5)
+    }
+
+    const reward = rollDie(2) === 1 ? 'chips' : 'lives'
+    return { goal, value, reward, multi: difficulty }
+  })
 }
 
+const shuffle = <T>(array: T[]): T[] => {
+  const arr = array.slice()
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
 const rollDie = (sides: number) => Math.floor(Math.random() * sides) + 1

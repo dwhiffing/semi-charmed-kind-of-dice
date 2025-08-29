@@ -15,7 +15,7 @@ export const Card = (index: number) => {
 
   const update = () => {
     const card = state.cards[index]
-    variantLabel.innerHTML = card.variant
+    variantLabel.innerHTML = card.goal
     multiLabel.innerHTML = `x${card.multi}`
     rewardLabel.innerHTML = `${card.reward}`
     valueLabel.innerHTML = `${card.value}`

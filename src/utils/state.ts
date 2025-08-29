@@ -74,7 +74,8 @@ export const toggleDieSelected = (index: number) => {
     if (i === index)
       return {
         ...die,
-        selected: die.roll == null ? die.selected : !die.selected,
+        selected:
+          die.roll == null || die.roll === 1 ? die.selected : !die.selected,
       }
     return die
   })

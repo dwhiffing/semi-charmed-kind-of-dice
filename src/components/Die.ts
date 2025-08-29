@@ -20,7 +20,6 @@ export const Die = (index: number) => {
   die.append(number, cat, dieSvg)
   let lastSides = -1
 
-  cat.style.opacity = '0'
   const update = () => {
     const _die = state.dice[index]
     if (!_die) return
@@ -31,9 +30,9 @@ export const Die = (index: number) => {
     die.classList.add(`d${_die.sides}`)
 
     die.classList.toggle('selected', _die.selected)
+    die.classList.toggle('die-number-cat', _die.roll === 1)
     number.textContent = _die.roll ? `${_die.roll}` : ''
-    number.style.opacity = _die.roll === 1 ? '0' : '1'
-    cat.style.opacity = _die.roll === 1 ? '1' : '0'
+
     if (lastSides !== _die.sides) {
       const _dieSvg = document
         .querySelector(`#d${_die.sides} svg`)!

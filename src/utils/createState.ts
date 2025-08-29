@@ -1,4 +1,4 @@
-import type { State, StateProxy } from './types'
+import type { State, StateProxy } from '../types'
 
 export const createState = (state: Record<string, unknown>) => {
   const _updates: Record<string, Array<() => void>> = Object.fromEntries(

@@ -1,20 +1,7 @@
-import { DiceGame } from './components'
-import { createElement } from './createElement'
-import { createState } from './createState'
-import type { State } from './types'
+import { DiceGame } from './components/Game'
+import { createElement } from './utils/createElement'
+import { state } from './utils/state'
 
-export interface IState extends State {
-  dieIndex: number
-  currentRoll: number | null
-  status: 'ready' | 'rolling' | 'won' | 'lost'
-}
-
-const state = createState({
-  dieIndex: 0,
-  currentRoll: null,
-  status: 'ready',
-}) as IState
-
-const app = createElement('div', { className: 'game-root' }, DiceGame(state))
-
-document.body.append(app)
+document.body.append(
+  createElement('div', { className: 'game-root' }, DiceGame(state)),
+)

@@ -1,4 +1,4 @@
-import type { DeepHTMLElement, Tag } from './types'
+import type { DeepHTMLElement, Tag } from '../types'
 
 export const createElement = (
   tag: Tag,

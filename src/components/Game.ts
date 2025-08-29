@@ -11,11 +11,14 @@ export const DiceGame = () => {
 
   const update = () => {
     info.textContent =
-      state.status === 'lost' ? 'You lose!' : `You have ${state.lives} lives`
+      state.status === 'lost'
+        ? 'You lose!'
+        : `You have ${state.lives} lives and ${state.chips} chips`
   }
 
   state.addUpdate('lives', update)
   state.addUpdate('status', update)
+  state.addUpdate('chips', update)
   update()
 
   app.append(info, Cards(), Controls(), Dice())

@@ -22,6 +22,7 @@ export interface IState extends State {
   dice: Die[]
   cards: Card[]
   lives: number
+  chips: number
   status: 'ready' | 'rolling' | 'won' | 'lost'
 }
 
@@ -29,6 +30,7 @@ export const state = createState({
   dice: [],
   cards: [],
   lives: 9,
+  chips: 0,
   status: 'ready',
 }) as IState
 
@@ -66,9 +68,31 @@ export const doRoll = () => {
 
 export const toggleDieSelected = (index: number) => {
   state.dice = state.dice.map((die, i) => {
-    if (i === index) return { ...die, selected: !die.selected }
+    if (i === index)
+      return {
+        ...die,
+        selected: die.roll == null ? die.selected : !die.selected,
+      }
     return die
   })
+}
+
+export const applyDiceToCard = (index: number) => {
+  const card = state.cards[index]
+  const selectedDice = state.dice.filter((die) => die.selected)
+  state.dice = state.dice.map((d) => ({
+    ...d,
+    selected: false,
+    roll: d.selected ? null : d.roll,
+  }))
+  if (selectedDice.length === 1 && selectedDice[0].roll === card.value) {
+    if (card.reward === 'chips') {
+      state.chips += card.multi
+    } else {
+      state.lives += card.multi
+    }
+    resetBoard()
+  }
 }
 
 const getDie = (sides: number) =>
@@ -86,8 +110,8 @@ export const resetBoard = () => {
   state.cards = new Array(9).fill('').map(() => ({
     variant: 'equal',
     value: rollDie(20),
-    reward: 'chips',
-    multi: 1,
+    reward: rollDie(2) === 1 ? 'chips' : 'lives',
+    multi: rollDie(3),
   }))
 }
 

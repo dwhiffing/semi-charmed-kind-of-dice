@@ -1,10 +1,13 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: xxx */
 import { colors, textColors } from '../constants'
 import { createElement } from '../utils/createElement'
-import { state } from '../utils/state'
+import { state, toggleDieSelected } from '../utils/state'
 
 export const Die = (index: number) => {
-  const die = createElement('div', { className: 'die' })
+  const die = createElement('div', {
+    className: 'die',
+    onclick: () => toggleDieSelected(index),
+  })
   const number = createElement('div', { className: 'die-number' })
 
   const update = () => {
@@ -13,6 +16,7 @@ export const Die = (index: number) => {
 
     die.innerHTML = ''
     die.style.color = colors[_die.sides]
+    die.style.opacity = _die.selected ? '0.5' : '1'
     number.style.color = textColors[_die.sides]
     number.textContent = _die.roll ? `${_die.roll}` : ''
 
@@ -26,7 +30,8 @@ export const Die = (index: number) => {
     const numberEl = _die.roll === 1 ? cat : number
 
     die.append(numberEl, dieSvg.cloneNode(true))
-    die.classList.toggle('rolling', state.status === 'rolling')
+    if (!_die.selected)
+      die.classList.toggle('rolling', state.status === 'rolling')
   }
 
   state.addUpdate('dice', update)

@@ -13,6 +13,7 @@ type Card = {
 
 type Die = {
   sides: number
+  selected: boolean
   roll: number | null
   status: 'rolling' | 'ready'
 }
@@ -43,7 +44,7 @@ export const doRoll = () => {
   rollInterval = window.setInterval(() => {
     state.dice = state.dice.map((die) => ({
       ...die,
-      roll: rollDie(die.sides),
+      roll: die.selected ? die.roll : rollDie(die.sides),
     }))
   }, 60)
 
@@ -53,7 +54,7 @@ export const doRoll = () => {
 
     state.dice = state.dice.map((die) => ({
       ...die,
-      roll: rollDie(die.sides),
+      roll: die.selected ? die.roll : rollDie(die.sides),
     }))
     if (state.dice.some((die) => die.roll === 1)) {
       state.lives -= 1
@@ -63,12 +64,22 @@ export const doRoll = () => {
   }, 700)
 }
 
+export const toggleDieSelected = (index: number) => {
+  state.dice = state.dice.map((die, i) => {
+    if (i === index) return { ...die, selected: !die.selected }
+    return die
+  })
+}
+
+const getDie = (sides: number) =>
+  ({
+    sides,
+    roll: null,
+    status: 'ready',
+    selected: false,
+  } as Die)
 export const resetDice = () => {
-  state.dice = [
-    { sides: 20, roll: null, status: 'ready' },
-    { sides: 12, roll: null, status: 'ready' },
-    { sides: 8, roll: null, status: 'ready' },
-  ]
+  state.dice = [getDie(20), getDie(12), getDie(8)]
 }
 
 export const resetBoard = () => {
@@ -79,7 +90,5 @@ export const resetBoard = () => {
     multi: 1,
   }))
 }
-
-export const doPass = () => {}
 
 const rollDie = (sides: number) => Math.floor(Math.random() * sides) + 1

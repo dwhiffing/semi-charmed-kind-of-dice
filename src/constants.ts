@@ -1,3 +1,12 @@
+export const SVGS = [
+  `d${20}`,
+  `d${12}`,
+  `d${10}`,
+  `d${8}`,
+  `d${6}`,
+  `d${4}`,
+  'cat',
+]
 export const DICE = [20, 12, 10, 8, 6, 4]
 export const colors: Record<number, string> = {
   20: '#0f62fe',

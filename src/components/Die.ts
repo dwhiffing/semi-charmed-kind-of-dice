@@ -1,15 +1,15 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: xxx */
-import { colors, DICE, textColors } from '../constants'
+import { colors, DICE, SVGS, textColors } from '../constants'
 import { createElement } from '../utils/createElement'
 import { state } from '../utils/state'
 
 export const DieSvgs = () => {
   const svgs = createElement('div', { className: 'svgs hidden' }, '')
 
-  DICE.forEach(async (side) => {
-    const res = await fetch(`/d${side}.svg`)
+  SVGS.forEach(async (svg) => {
+    const res = await fetch(`/${svg}.svg`)
     const innerHTML = (await res.text()).trim()
-    const id = `d${side}`
+    const id = `${svg}`
     svgs.append(createElement('div', { id, innerHTML }))
   })
 

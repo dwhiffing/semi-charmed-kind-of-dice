@@ -13,16 +13,12 @@ export const Controls = () => {
 
   const update = () => {
     btnRoll.toggleAttribute('disabled', state.status !== 'ready')
-    btnPass.toggleAttribute(
-      'disabled',
-      state.currentRoll == null || state.status !== 'ready',
-    )
+    btnPass.toggleAttribute('disabled', state.status !== 'ready')
   }
 
   btnRoll.onclick = doRoll
   btnPass.onclick = doPass
 
-  state.addUpdate('currentRoll', update)
   state.addUpdate('status', update)
   update()
 

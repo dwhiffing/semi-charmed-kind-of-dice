@@ -1,8 +1,9 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: don't care */
 import { createElement } from '../utils/createElement'
-import { state } from '../utils/state'
+import { resetBoard, resetDice, state } from '../utils/state'
+import { Cards } from './Cards'
 import { Controls } from './Controls'
-import { Die, DieSvgs } from './Die'
+import { Dice } from './Dice'
 
 export const DiceGame = () => {
   const app = createElement('div', { className: 'dice-game' })
@@ -10,18 +11,17 @@ export const DiceGame = () => {
 
   const update = () => {
     info.textContent =
-      state.status === 'lost'
-        ? 'You rolled a 1 — you lose. Press Restart to try again.'
-        : state.status === 'won'
-        ? 'You completed all dice! Great job.'
-        : 'Roll the current die. If you roll a 1 you lose'
+      state.status === 'lost' ? 'You lose!' : `You have ${state.lives} lives`
   }
 
+  state.addUpdate('lives', update)
   state.addUpdate('status', update)
-
   update()
 
-  app.append(info, DieSvgs(), Controls(), Die())
+  app.append(info, Cards(), Controls(), Dice())
+
+  resetBoard()
+  resetDice()
 
   return app
 }

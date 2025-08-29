@@ -18,7 +18,43 @@ body {
   height: 100vh;
   max-width: 500px;
   margin: 0 auto;
-  margin: 0;
+}
+
+.dice {
+  display: flex;
+  gap: 20px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.card {
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--surface);
+  border-radius: 12px;
+  color: var(--dark);
+  flex-direction: column;
+}
+
+.card > div {
+  display: flex;
+  flex-direction: row;
+}
+
+.cat-body {
+  fill: currentColor;
+}
+.cat-whisker {
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
 }
 
 .dice-game {

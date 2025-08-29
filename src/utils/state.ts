@@ -1,20 +1,33 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: don't care */
-import { DICE } from '../constants'
 import type { State } from '../types'
 import { createState } from './createState'
-import { rollDie } from './rollDie'
 import { clickSound } from './sounds'
 import { zzfx } from './zzfx'
 
+type Card = {
+  variant: 'equal'
+  value: number
+  reward: 'lives' | 'chips'
+  multi: number
+}
+
+type Die = {
+  sides: number
+  roll: number | null
+  status: 'rolling' | 'ready'
+}
+
 export interface IState extends State {
-  dieIndex: number
-  currentRoll: number | null
+  dice: Die[]
+  cards: Card[]
+  lives: number
   status: 'ready' | 'rolling' | 'won' | 'lost'
 }
 
 export const state = createState({
-  dieIndex: 0,
-  currentRoll: null,
+  dice: [],
+  cards: [],
+  lives: 9,
   status: 'ready',
 }) as IState
 
@@ -22,29 +35,51 @@ let rollInterval: number = -1
 let rollTimeout: number = -1
 
 export const doRoll = () => {
-  if (state.dieIndex >= DICE.length) return
   if (state.status === 'rolling') return
 
   state.status = 'rolling'
   zzfx(...clickSound)
 
   rollInterval = window.setInterval(() => {
-    state.currentRoll = rollDie(DICE[state.dieIndex])
+    state.dice = state.dice.map((die) => ({
+      ...die,
+      roll: rollDie(die.sides),
+    }))
   }, 60)
 
   rollTimeout = window.setTimeout(() => {
     clearInterval(rollInterval)
     clearTimeout(rollTimeout)
 
-    state.currentRoll = rollDie(DICE[state.dieIndex])
-    state.status = 'ready'
-    if (state.currentRoll === 1) state.status = 'lost'
+    state.dice = state.dice.map((die) => ({
+      ...die,
+      roll: rollDie(die.sides),
+    }))
+    if (state.dice.some((die) => die.roll === 1)) {
+      state.lives -= 1
+    }
+
+    state.status = state.lives <= 0 ? 'lost' : 'ready'
   }, 700)
 }
 
-export const doPass = () => {
-  if (state.currentRoll == null) return
-  state.currentRoll = null
-  state.dieIndex = state.dieIndex + 1
-  state.status = state.dieIndex >= DICE.length ? 'won' : 'ready'
+export const resetDice = () => {
+  state.dice = [
+    { sides: 20, roll: null, status: 'ready' },
+    { sides: 12, roll: null, status: 'ready' },
+    { sides: 8, roll: null, status: 'ready' },
+  ]
 }
+
+export const resetBoard = () => {
+  state.cards = new Array(9).fill('').map(() => ({
+    variant: 'equal',
+    value: rollDie(20),
+    reward: 'chips',
+    multi: 1,
+  }))
+}
+
+export const doPass = () => {}
+
+const rollDie = (sides: number) => Math.floor(Math.random() * sides) + 1

@@ -1,42 +1,37 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: xxx */
-import { colors, DICE, SVGS, textColors } from '../constants'
+import { colors, textColors } from '../constants'
 import { createElement } from '../utils/createElement'
 import { state } from '../utils/state'
 
-export const DieSvgs = () => {
-  const svgs = createElement('div', { className: 'svgs hidden' }, '')
-
-  SVGS.forEach(async (svg) => {
-    const res = await fetch(`/${svg}.svg`)
-    const innerHTML = (await res.text()).trim()
-    const id = `${svg}`
-    svgs.append(createElement('div', { id, innerHTML }))
-  })
-
-  return svgs
-}
-
-export const Die = () => {
+export const Die = (index: number) => {
   const die = createElement('div', { className: 'die' })
   const number = createElement('div', { className: 'die-number' })
 
   const update = () => {
-    const sides = DICE[state.dieIndex]
-    if (!sides) return
-    const svg = document.querySelector(`#d${sides} svg`)!
+    const _die = state.dice[index]
+    if (!_die) return
 
     die.innerHTML = ''
-    die.append(number, svg.cloneNode(true))
-    die.style.color = colors[sides]
-    number.style.color = textColors[sides]
+    die.style.color = colors[_die.sides]
+    number.style.color = textColors[_die.sides]
+    number.textContent = _die.roll ? `${_die.roll}` : ''
 
-    number.textContent = state.currentRoll ? `${state.currentRoll}` : ''
+    const dieSvg = document.querySelector(`#d${_die.sides} svg`)!
+    const cat = document
+      .querySelector(`#cat svg`)!
+      .cloneNode(true) as SVGSVGElement
+    cat.style.color = textColors[_die.sides]
+    cat.style.width = '26px'
+    cat.style.zIndex = '20'
+    const numberEl = _die.roll === 1 ? cat : number
+
+    die.append(numberEl, dieSvg.cloneNode(true))
     die.classList.toggle('rolling', state.status === 'rolling')
   }
 
-  state.addUpdate('dieIndex', update)
-  state.addUpdate('currentRoll', update)
+  state.addUpdate('dice', update)
   state.addUpdate('status', update)
+  update()
 
   return die
 }

@@ -1,35 +1,60 @@
 body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue',
-    Arial;
+  font-family: system-ui, -apple-system;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   height: 100vh;
   margin: 0;
 }
 
 .dice-game {
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
 }
 
-.die-face {
+.die {
   width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  background: #222;
-  color: #fff;
+  height: 92px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
-  margin-top: 12px;
-  transition: transform 140ms ease;
+  pointer-events: none;
+  color: red;
 }
 
-.die-face.rolling {
+.die.rolling {
   animation: die-roll 0.5s linear infinite;
+}
+
+.die-number {
+  font-size: 18px;
+  font-weight: 700;
+  z-index: 10;
+  position: relative;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.die svg {
+  position: absolute;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.controls button[disabled] {
+  opacity: 0.4;
 }
 
 @keyframes die-roll {
@@ -48,59 +73,4 @@ body {
   100% {
     transform: rotateX(0) translateY(0);
   }
-}
-
-.die-face.shape-d20 {
-  background: #0f62fe;
-  clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
-}
-.die-face.shape-d12 {
-  background: #7fdbca;
-  clip-path: polygon(
-    50% 5%,
-    80% 14%,
-    95% 35%,
-    95% 65%,
-    80% 86%,
-    50% 95%,
-    20% 86%,
-    5% 65%,
-    5% 35%,
-    20% 14%
-  );
-}
-.die-face.shape-d10 {
-  background: #ff7f50;
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-.die-face.shape-d8 {
-  background: #f1c232;
-  clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
-}
-.die-face.shape-d6 {
-  background: #6f42c1;
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-}
-.die-face.shape-d4 {
-  background: #28a745;
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-}
-
-.controls {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-.controls button[disabled] {
-  opacity: 0.4;
-}
-.die-label,
-.last-roll,
-.score {
-  margin-top: 8px;
-}
-.info {
-  font-size: 14px;
-  color: #333;
 }

@@ -1,161 +1,128 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: don't care */
+
+import { colors, DICE, textColors } from './constants'
 import { createElement } from './createElement'
+import type { IState } from './main'
 import { clickSound } from './sounds'
-import type { State } from './types'
 import { zzfx } from './zzfx'
 
-const DICE = [20, 12, 10, 8, 6, 4]
-
-const rollDie = (sides: number) => Math.floor(Math.random() * sides) + 1
-
-export const DiceGame = (state: State) => {
+export const DiceGame = (state: IState) => {
   const app = createElement('div', { className: 'dice-game' })
+  const info = createElement('span', { className: 'info' }, '')
 
-  const title = createElement('h2', 'Black Cat')
-  const info = createElement('p', { className: 'info' }, '')
-  const dieLabel = createElement('div', { className: 'die-label' }, '')
-  const dieFace = createElement('div', { className: 'die-face' }, '')
-  const lastRoll = createElement('div', { className: 'last-roll' }, '')
-  const scoreDisplay = createElement('div', { className: 'score' }, '')
-
-  const btnRoll = createElement('button', 'Roll') as HTMLButtonElement
-  const btnPass = createElement('button', 'Pass') as HTMLButtonElement
-  const btnScore = createElement('button', 'Score Out') as HTMLButtonElement
-  const btnRestart = createElement('button', 'Restart') as HTMLButtonElement
-
-  // Rolling animation state
-  let rollInterval: number | null = null
-  let rollTimeout: number | null = null
-
-  const clearRollTimers = () => {
-    if (rollInterval != null) {
-      clearInterval(rollInterval)
-      rollInterval = null
-    }
-    if (rollTimeout != null) {
-      clearTimeout(rollTimeout)
-      rollTimeout = null
-    }
-  }
+  let rollInterval: number = -1
+  let rollTimeout: number = -1
 
   const doRoll = () => {
-    const idx = (state.dieIndex as number) ?? 0
-    if (idx >= DICE.length) return
-    const sides = DICE[idx]
-    if ((state.status as string) === 'rolling') return
+    if (state.dieIndex >= DICE.length) return
+    if (state.status === 'rolling') return
 
     state.status = 'rolling'
     zzfx(...clickSound)
 
     rollInterval = window.setInterval(() => {
-      const quick = Math.floor(Math.random() * sides) + 1
-      dieFace.textContent = String(quick)
-    }, 60) as unknown as number
+      state.currentRoll = rollDie(DICE[state.dieIndex])
+    }, 60)
 
     rollTimeout = window.setTimeout(() => {
-      clearRollTimers()
-      const r = rollDie(sides)
-      state.currentRoll = r
-      dieFace.textContent = String(r)
-      state.status = 'playing'
-      if (r === 1) state.status = 'lost'
-    }, 700) as unknown as number
+      clearInterval(rollInterval)
+      clearTimeout(rollTimeout)
+
+      state.currentRoll = rollDie(DICE[state.dieIndex])
+      state.status = 'ready'
+      if (state.currentRoll === 1) state.status = 'lost'
+    }, 700)
   }
 
   const doPass = () => {
-    const r = state.currentRoll as number | null
-    if (r == null) return
-    state.score = ((state.score as number) ?? 0) + r
+    if (state.currentRoll == null) return
     state.currentRoll = null
-    state.dieIndex = ((state.dieIndex as number) ?? 0) + 1
-    if ((state.dieIndex as number) >= DICE.length) {
-      state.status = 'won'
-    } else {
-      state.status = 'ready'
-    }
+    state.dieIndex = state.dieIndex + 1
+    state.status = state.dieIndex >= DICE.length ? 'won' : 'ready'
   }
 
-  const doScoreOut = () => {
-    const r = state.currentRoll as number | null
-    if (r == null) return
-    state.score = ((state.score as number) ?? 0) + r
-    state.currentRoll = null
-    state.status = 'scored'
-  }
-
-  const doRestart = () => {
-    state.score = 0
-    state.dieIndex = 0
-    state.currentRoll = null
-    dieFace.textContent = ''
-    clearRollTimers()
-    state.status = 'ready'
-  }
-
-  btnRoll.onclick = doRoll
-  btnPass.onclick = doPass
-  btnScore.onclick = doScoreOut
-  btnRestart.onclick = doRestart
-
-  const updateUI = () => {
-    const idx = (state.dieIndex as number) ?? 0
-    const sides = DICE[idx]
-    const roll = state.currentRoll as number | null
-    const score = (state.score as number) ?? 0
-    const status = (state.status as string) ?? 'ready'
-
+  const update = () => {
     info.textContent =
-      status === 'lost'
+      state.status === 'lost'
         ? 'You rolled a 1 — you lose. Press Restart to try again.'
-        : status === 'won'
+        : state.status === 'won'
         ? 'You completed all dice! Great job.'
-        : 'Roll the current die. If you roll a 1 you lose. Otherwise you may re-roll, pass to lock the value, or score out.'
-
-    dieLabel.textContent =
-      idx < DICE.length ? `Current die: d${sides}` : 'No more dice'
-    lastRoll.textContent = roll ? `Last roll: ${roll}` : 'No roll yet'
-    const shapeClasses = [
-      'shape-d20',
-      'shape-d12',
-      'shape-d10',
-      'shape-d8',
-      'shape-d6',
-      'shape-d4',
-    ]
-    shapeClasses.forEach((c) => dieFace.classList.remove(c))
-    if (idx < DICE.length) dieFace.classList.add(`shape-d${sides}`)
-    if (status === 'rolling') {
-      dieFace.classList.add('rolling')
-    } else {
-      dieFace.classList.remove('rolling')
-      dieFace.textContent = roll ? String(roll) : ''
-    }
-    scoreDisplay.textContent = `Score: ${score}`
-
-    btnRoll.toggleAttribute(
-      'disabled',
-      status === 'lost' || status === 'won' || status === 'rolling',
-    )
-    btnPass.toggleAttribute('disabled', roll == null || status !== 'playing')
-    btnScore.toggleAttribute('disabled', roll == null || status !== 'playing')
+        : 'Roll the current die. If you roll a 1 you lose'
   }
 
-  state.addUpdate('dieIndex', updateUI)
-  state.addUpdate('currentRoll', updateUI)
-  state.addUpdate('score', updateUI)
-  state.addUpdate('status', updateUI)
+  state.addUpdate('status', update)
 
-  updateUI()
+  update()
 
+  app.append(info, DieSvgs(), Controls(state, doRoll, doPass), Die(state))
+
+  return app
+}
+
+const DieSvgs = () => {
+  const svgs = createElement('div', { className: 'svgs hidden' }, '')
+
+  DICE.forEach(async (side) => {
+    const res = await fetch(`/d${side}.svg`)
+    const innerHTML = (await res.text()).trim()
+    const id = `d${side}`
+    svgs.append(createElement('div', { id, innerHTML }))
+  })
+
+  return svgs
+}
+
+export const Die = (state: IState) => {
+  const die = createElement('div', { className: 'die' })
+  const number = createElement('div', { className: 'die-number' })
+
+  const update = () => {
+    const sides = DICE[state.dieIndex]
+    if (!sides) return
+    const svg = document.querySelector(`#d${sides} svg`)!
+
+    die.innerHTML = ''
+    die.append(number, svg.cloneNode(true))
+    die.style.color = colors[sides]
+    number.style.color = textColors[sides]
+
+    number.textContent = state.currentRoll ? `${state.currentRoll}` : ''
+    die.classList.toggle('rolling', state.status === 'rolling')
+  }
+
+  state.addUpdate('dieIndex', update)
+  state.addUpdate('currentRoll', update)
+  state.addUpdate('status', update)
+
+  return die
+}
+
+const Controls = (state: IState, doRoll: () => void, doPass: () => void) => {
+  const btnRoll = createElement('button', 'Roll') as HTMLButtonElement
+  const btnPass = createElement('button', 'Pass') as HTMLButtonElement
   const controls = createElement(
     'div',
     { className: 'controls' },
     btnRoll,
     btnPass,
-    btnScore,
-    btnRestart,
   )
 
-  app.append(title, info, dieLabel, lastRoll, scoreDisplay, controls, dieFace)
+  const update = () => {
+    btnRoll.toggleAttribute('disabled', state.status !== 'ready')
+    btnPass.toggleAttribute(
+      'disabled',
+      state.currentRoll == null || state.status !== 'ready',
+    )
+  }
 
-  return app
+  btnRoll.onclick = doRoll
+  btnPass.onclick = doPass
+
+  state.addUpdate('currentRoll', update)
+  state.addUpdate('status', update)
+  update()
+
+  return controls
 }
+
+const rollDie = (sides: number) => Math.floor(Math.random() * sides) + 1

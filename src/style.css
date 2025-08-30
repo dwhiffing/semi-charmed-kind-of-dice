@@ -191,6 +191,11 @@ button:disabled {
   display: none;
 }
 
+button,
+.die {
+  touch-action: manipulation;
+}
+
 @keyframes die-roll {
   0% {
     transform: rotateX(0) translateY(0);

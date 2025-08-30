@@ -25,18 +25,20 @@ body {
 }
 
 .cards {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   width: 100%;
 }
 
 .card {
-  aspect-ratio: 1;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 8px;
   background-color: var(--surface);
   border-radius: 12px;
   color: var(--dark);
@@ -45,6 +47,7 @@ body {
 .card > div {
   display: flex;
   flex-direction: row;
+  gap: 4px;
 }
 
 .dice {

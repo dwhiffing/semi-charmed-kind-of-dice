@@ -15,10 +15,10 @@ export const Card = (index: number) => {
 
   const update = () => {
     const card = state.cards[index]
-    variantLabel.innerHTML = card.goal
-    multiLabel.innerHTML = `x${card.multi}`
-    rewardLabel.innerHTML = `${card.reward}`
+    variantLabel.innerHTML = `${card.goal}:`
     valueLabel.innerHTML = `${card.value}`
+    rewardLabel.innerHTML = `${card.reward}`
+    multiLabel.innerHTML = `x${card.multi}`
   }
 
   state.addUpdate('cards', update)

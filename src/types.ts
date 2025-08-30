@@ -1,3 +1,27 @@
+export type GoalVariant = 'equal' | 'sum' | 'minmax' | 'odd' | 'even'
+
+export type Card = {
+  goal: GoalVariant
+  value: number
+  reward: 'lives' | 'chips'
+  multi: number
+}
+
+export type Die = {
+  sides: number
+  selected: boolean
+  roll: number | null
+  status: 'rolling' | 'ready'
+}
+
+export interface IState extends State {
+  dice: Die[]
+  cards: Card[]
+  lives: number
+  chips: number
+  status: 'ready' | 'rolling' | 'won' | 'lost'
+}
+
 export type DeepHTMLElement = HTMLElement & { [key: string]: unknown }
 export type Tag =
   | 'a'

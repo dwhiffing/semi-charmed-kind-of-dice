@@ -111,6 +111,19 @@ button:disabled {
   width: 26px;
   opacity: 0;
 }
+.die-svg {
+  fill: none;
+  pointer-events: none;
+}
+.die-svg .face {
+  fill: currentColor;
+}
+.die-svg .edges {
+  stroke: black;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .die .die-number {
   font-size: 18px;
   font-weight: 700;
@@ -118,6 +131,7 @@ button:disabled {
   position: absolute;
   color: black;
   pointer-events: none;
+  user-select: none;
 }
 .die .die-number,
 .die .cat {

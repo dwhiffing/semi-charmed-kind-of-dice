@@ -71,7 +71,9 @@ const checkGoal = (card: Card, dice: Die[]) => {
 
   switch (card.goal) {
     case 'equal':
-      return dice.length === 1 && total === (card.value as number)
+      return (
+        dice.length === 1 && (card.value as number[]).includes(dice[0].roll!)
+      )
     case 'sum':
       return total === (card.value as number)
     case 'difference':
@@ -83,10 +85,6 @@ const checkGoal = (card: Card, dice: Die[]) => {
       return oddCount >= (card.value as number)
     case 'even':
       return evenCount >= (card.value as number)
-    case 'range':
-      return (
-        dice.length === 1 && (card.value as number[]).includes(dice[0].roll!)
-      )
     case 'set':
       return (
         dice.length >= (card.value as number) &&
@@ -146,37 +144,31 @@ export const resetDice = () => {
 }
 
 export const resetBoard = () => {
-  state.cards = new Array(9).fill('').map(() => {
-    const goal = shuffle([
-      'equal',
-      'sum',
-      'odd',
-      'even',
-      'difference',
-      'range',
-      'set',
-      'run',
-    ])[0] as GoalVariant
-    const difficulty = 1
+  state.cards = new Array(3).fill('').map(() => {
+    // const difficulty = 1
+    const difficulty = rollDie(4)
+    let pool = ['odd', 'even', 'equal']
+    if (difficulty === 2) {
+      pool = ['odd', 'even', 'equal', 'sum', 'difference']
+    } else if (difficulty >= 3) {
+      pool = ['odd', 'even', 'equal', 'sum', 'difference', 'set', 'run']
+    }
+    const goal = shuffle(pool)[0] as GoalVariant
 
-    // TODO: value should be adjusted based on difficulty
     let value: number | number[] = 0
     if (goal === 'equal') {
-      value = rollDie(10)
-    } else if (goal === 'sum') {
-      value = rollDie(10) + 5
-    } else if (goal === 'odd' || goal === 'even') {
-      value = rollDie(3)
-    } else if (goal === 'difference') {
-      value = rollDie(5)
-    } else if (goal === 'range') {
       const i = rollDie(4) * 3
-      value = [i - 2, i - 1, i]
-      console.log(value)
+      value = adjacentRange(i, Math.max(1, 4 - difficulty))
+    } else if (goal === 'sum') {
+      value = rollDie(difficulty * 3) + 5
+    } else if (goal === 'odd' || goal === 'even') {
+      value = rollDie(difficulty)
+    } else if (goal === 'difference') {
+      value = rollDie(difficulty * 2 + 3) // starts at 2-5,
     } else if (goal === 'set') {
-      value = rollDie(2) + 2
+      value = rollDie(difficulty - 4) + 2 // appears at difficulty 4, starts at 2 and goes up 1 per difficulty
     } else if (goal === 'run') {
-      value = rollDie(2) + 2
+      value = rollDie(difficulty - 3) + 2 // appears at difficulty 4, starts at 3 and goes up 1 per difficulty
     }
 
     const reward = rollDie(2) === 1 ? 'chips' : 'lives'
@@ -192,4 +184,23 @@ const shuffle = <T>(array: T[]): T[] => {
   }
   return arr
 }
-const rollDie = (sides: number) => Math.floor(Math.random() * sides) + 1
+const rollDie = (sides: number) =>
+  sides < 1 ? 0 : Math.floor(Math.random() * sides) + 1
+
+const adjacentRange = (value: number, range: number): number[] => {
+  const r = Math.max(1, Math.floor(range))
+
+  // number of items on each side of `value` should sum to r-1
+  const half = (r - 1) / 2
+  let left = Math.floor(half)
+  let right = Math.ceil(half)
+
+  // if unbalanced (happens when r is even) randomly flip which side gets the extra
+  if (left !== right && Math.random() < 0.5) {
+    ;[left, right] = [right, left]
+  }
+
+  const out: number[] = []
+  for (let i = value - left; i <= value + right; i++) out.push(i)
+  return out
+}

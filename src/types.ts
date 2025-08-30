@@ -4,7 +4,6 @@ export type GoalVariant =
   | 'difference'
   | 'odd'
   | 'even'
-  | 'range'
   | 'set'
   | 'run'
 

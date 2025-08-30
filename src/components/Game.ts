@@ -7,21 +7,8 @@ import { Dice } from './Dice'
 
 export const DiceGame = () => {
   const app = createElement('div', { className: 'dice-game' })
-  const info = createElement('span', { className: 'info' }, '')
 
-  const update = () => {
-    info.textContent =
-      state.status === 'lost'
-        ? 'You lose!'
-        : `You have ${state.lives} lives and ${state.chips} chips`
-  }
-
-  state.addUpdate('lives', update)
-  state.addUpdate('status', update)
-  state.addUpdate('chips', update)
-  update()
-
-  app.append(info, Cards(), Dice(), Controls())
+  app.append(Cards(), Dice(), Controls())
 
   resetBoard()
   resetDice()

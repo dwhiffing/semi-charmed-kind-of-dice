@@ -20,6 +20,8 @@ body {
   margin: 0 auto;
   gap: 12px;
   padding: 16px;
+  box-sizing: border-box;
+  height: 100vh;
 }
 
 .cards {
@@ -159,6 +161,13 @@ button:disabled {
 }
 
 .controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls .buttons {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;

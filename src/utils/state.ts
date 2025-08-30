@@ -66,18 +66,41 @@ const checkGoal = (card: Card, dice: Die[]) => {
 
   switch (card.goal) {
     case 'equal':
-      return dice.length === 1 && total === card.value
+      return dice.length === 1 && total === (card.value as number)
     case 'sum':
-      return total === card.value
-    case 'minmax':
+      return total === (card.value as number)
+    case 'difference':
       return (
         dice.length === 2 &&
-        Math.abs(dice[0].roll! - dice[1].roll!) >= card.value
+        Math.abs(dice[0].roll! - dice[1].roll!) >= (card.value as number)
       )
     case 'odd':
-      return oddCount >= card.value
+      return oddCount >= (card.value as number)
     case 'even':
-      return evenCount >= card.value
+      return evenCount >= (card.value as number)
+    case 'range':
+      return (
+        dice.length === 1 && (card.value as number[]).includes(dice[0].roll!)
+      )
+    case 'set':
+      return (
+        dice.length >= (card.value as number) &&
+        dice.every((d) => d.roll === dice[0].roll)
+      )
+    case 'run':
+      return (
+        (dice.length >= (card.value as number) &&
+          dice
+            .map((d) => d.roll!)
+            .sort((a, b) => a - b)
+            .every((val, i, arr) =>
+              i === 0 ? true : val === arr[i - 1] + 1,
+            )) ||
+        dice
+          .map((d) => d.roll!)
+          .sort((a, b) => b - a)
+          .every((val, i, arr) => (i === 0 ? true : val === arr[i - 1] - 1))
+      )
   }
 }
 
@@ -124,20 +147,31 @@ export const resetBoard = () => {
       'sum',
       'odd',
       'even',
-      'minmax',
+      'difference',
+      'range',
+      'set',
+      'run',
     ])[0] as GoalVariant
     const difficulty = 1
 
     // TODO: value should be adjusted based on difficulty
-    let value = 0
+    let value: number | number[] = 0
     if (goal === 'equal') {
       value = rollDie(10)
     } else if (goal === 'sum') {
       value = rollDie(10) + 5
     } else if (goal === 'odd' || goal === 'even') {
       value = rollDie(3)
-    } else if (goal === 'minmax') {
+    } else if (goal === 'difference') {
       value = rollDie(5)
+    } else if (goal === 'range') {
+      const i = rollDie(4) * 3
+      value = [i - 2, i - 1, i]
+      console.log(value)
+    } else if (goal === 'set') {
+      value = rollDie(2) + 2
+    } else if (goal === 'run') {
+      value = rollDie(2) + 2
     }
 
     const reward = rollDie(2) === 1 ? 'chips' : 'lives'

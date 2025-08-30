@@ -1,8 +1,16 @@
-export type GoalVariant = 'equal' | 'sum' | 'minmax' | 'odd' | 'even'
+export type GoalVariant =
+  | 'equal'
+  | 'sum'
+  | 'difference'
+  | 'odd'
+  | 'even'
+  | 'range'
+  | 'set'
+  | 'run'
 
 export type Card = {
   goal: GoalVariant
-  value: number
+  value: number | number[]
   reward: 'lives' | 'chips'
   multi: number
 }

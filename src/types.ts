@@ -26,6 +26,7 @@ export interface IState extends State {
   cards: Card[]
   lives: number
   chips: number
+  goalsCompleted: number
   status: 'ready' | 'rolling' | 'won' | 'lost'
 }
 

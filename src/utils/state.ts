@@ -9,6 +9,7 @@ export const state = createState({
   cards: [],
   lives: 9,
   chips: 0,
+  goalsCompleted: 0,
   status: 'ready',
 }) as IState
 
@@ -121,6 +122,7 @@ export const applyDiceToCard = (index: number) => {
     } else {
       state.lives += card.multi
     }
+    state.goalsCompleted++
     resetBoard()
   }
 }
@@ -144,9 +146,9 @@ export const resetDice = () => {
 }
 
 export const resetBoard = () => {
-  state.cards = new Array(3).fill('').map(() => {
-    // const difficulty = 1
-    const difficulty = rollDie(4)
+  state.cards = new Array(3).fill('').map((_, i) => {
+    const milestone = Math.floor(state.goalsCompleted / 5)
+    const difficulty = rollDie(milestone) + i + 1
     let pool = ['odd', 'even', 'equal']
     if (difficulty === 2) {
       pool = ['odd', 'even', 'equal', 'sum', 'difference']

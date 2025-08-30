@@ -12,36 +12,41 @@ export const state = createState({
   status: 'ready',
 }) as IState
 
-let rollInterval: number = -1
-let rollTimeout: number = -1
-
 export const doRoll = () => {
   if (state.status === 'rolling') return
 
   state.status = 'rolling'
   zzfx(...clickSound)
 
-  rollInterval = window.setInterval(() => {
-    updateDice((die) => ({
-      ...die,
-      roll: die.selected ? die.roll : null,
-    }))
-  }, 60)
+  updateDice((die) => ({ ...die, roll: die.selected ? die.roll : null }))
 
-  rollTimeout = window.setTimeout(() => {
-    clearInterval(rollInterval)
-    clearTimeout(rollTimeout)
+  const initialDelay = 1000
+  const perDieOffset = 500
+  const totalToRoll = state.dice.filter((d) => !d.selected).length
+  let completed = 0
+  let j = 0
 
-    updateDice((die) => ({
-      ...die,
-      roll: die.selected ? die.roll : rollDie(die.sides),
-    }))
-    if (state.dice.some((die) => die.roll === 1)) {
-      state.lives -= 1
-    }
+  const app = document.querySelector('.dice-game')!
 
-    state.status = state.lives <= 0 ? 'lost' : 'ready'
-  }, 700)
+  state.dice.forEach((die, i) => {
+    if (die.selected) return
+
+    const delay = initialDelay + j++ * perDieOffset
+    setTimeout(() => {
+      app.classList.remove('shake')
+      const roll = rollDie(die.sides)
+      state.dice = state.dice.map((d, idx) => (idx === i ? { ...d, roll } : d))
+
+      if (roll === 1) {
+        app.classList.add('shake')
+        setTimeout(() => app.classList.remove('shake'), 400)
+        state.lives -= 1
+      }
+
+      if (++completed === totalToRoll)
+        state.status = state.lives <= 0 ? 'lost' : 'ready'
+    }, delay)
+  })
 }
 
 const updateDice = (update: (die: Die) => Die) =>

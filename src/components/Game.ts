@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: don't care */
 import { createElement } from '../utils/createElement'
-import { resetBoard, resetDice, state } from '../utils/state'
+import { resetBoard, resetDice } from '../utils/state'
 import { Cards } from './Cards'
 import { Controls } from './Controls'
 import { Dice } from './Dice'

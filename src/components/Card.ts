@@ -1,11 +1,8 @@
 import { createElement } from '../utils/createElement'
-import { applyDiceToCard, checkGoal, state } from '../utils/state'
+import { checkGoal, state } from '../utils/state'
 
 export const Card = (index: number) => {
-  const card = createElement('div', {
-    className: 'card',
-    onclick: () => applyDiceToCard(index),
-  })
+  const card = createElement('div', { className: 'card' })
   const variant = createElement('div')
   const reward = createElement('div')
   const variantLabel = createElement('div')

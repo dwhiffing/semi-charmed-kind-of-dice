@@ -13,6 +13,26 @@ export const state = createState({
   status: 'ready',
 }) as IState
 
+export const doSubmit = () => {
+  state.cards.forEach((card) => {
+    if (checkGoal(card)) {
+      state.dice = state.dice.map((d) => ({
+        ...d,
+        selected: false,
+        roll: d.selected ? null : d.roll,
+      }))
+      if (card.reward === 'chips') {
+        state.chips += card.multi
+      } else {
+        state.lives += card.multi
+      }
+      state.goalsCompleted++
+    }
+  })
+
+  resetBoard()
+}
+
 export const doRoll = () => {
   if (state.status === 'rolling') return
 
@@ -94,24 +114,6 @@ export const checkGoal = (card: Card) => {
       return isValidSet(validDice, card.value as number)
     case 'run':
       return isValidRun(validDice, card.value as number)
-  }
-}
-
-export const applyDiceToCard = (index: number) => {
-  const card = state.cards[index]
-  if (checkGoal(card)) {
-    state.dice = state.dice.map((d) => ({
-      ...d,
-      selected: false,
-      roll: d.selected ? null : d.roll,
-    }))
-    if (card.reward === 'chips') {
-      state.chips += card.multi
-    } else {
-      state.lives += card.multi
-    }
-    state.goalsCompleted++
-    resetBoard()
   }
 }
 

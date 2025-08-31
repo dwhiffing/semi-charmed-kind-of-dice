@@ -50,6 +50,10 @@ body {
   gap: 4px;
 }
 
+.card.completable {
+  background-color: yellow;
+}
+
 .dice {
   display: flex;
   gap: 8px;
@@ -118,8 +122,8 @@ button:disabled {
 }
 .die-svg {
   fill: none;
-  pointer-events: none;
 }
+
 .die-svg .face {
   fill: currentColor;
 }
@@ -237,5 +241,11 @@ button,
   }
   80% {
     transform: translate(1px, -1px) rotate(1deg);
+  }
+}
+
+@media (pointer: coarse) {
+  .die-svg {
+    pointer-events: none;
   }
 }

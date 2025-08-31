@@ -65,53 +65,41 @@ export const toggleDieSelected = (index: number) => {
   })
 }
 
-const checkGoal = (card: Card, dice: Die[]) => {
-  const total = dice.reduce((sum, die) => sum + (die.roll ?? 0), 0)
-  const oddCount = dice.filter((die) => (die.roll ?? 0) % 2 === 1).length
-  const evenCount = dice.length - oddCount
+export const checkGoal = (card: Card) => {
+  const validDice = state.dice.filter(
+    (die) => typeof die.roll === 'number' && die.selected,
+  )
+  const total = validDice.reduce((sum, die) => sum + (die.roll ?? 0), 0)
+  const oddCount = validDice.filter((die) => (die.roll ?? 0) % 2 === 1).length
+  const evenCount = validDice.filter((die) => (die.roll ?? 0) % 2 === 0).length
 
   switch (card.goal) {
     case 'equal':
-      return (
-        dice.length === 1 && (card.value as number[]).includes(dice[0].roll!)
-      )
+      return validDice.some((d) => (card.value as number[]).includes(d.roll!))
     case 'sum':
       return total === (card.value as number)
     case 'difference':
-      return (
-        dice.length === 2 &&
-        Math.abs(dice[0].roll! - dice[1].roll!) >= (card.value as number)
+      return validDice.some((a, i) =>
+        validDice.some(
+          (b, j) =>
+            i !== j &&
+            Math.abs((a.roll ?? 0) - (b.roll ?? 0)) === (card.value as number),
+        ),
       )
     case 'odd':
       return oddCount >= (card.value as number)
     case 'even':
       return evenCount >= (card.value as number)
     case 'set':
-      return (
-        dice.length >= (card.value as number) &&
-        dice.every((d) => d.roll === dice[0].roll)
-      )
+      return isValidSet(validDice, card.value as number)
     case 'run':
-      return (
-        (dice.length >= (card.value as number) &&
-          dice
-            .map((d) => d.roll!)
-            .sort((a, b) => a - b)
-            .every((val, i, arr) =>
-              i === 0 ? true : val === arr[i - 1] + 1,
-            )) ||
-        dice
-          .map((d) => d.roll!)
-          .sort((a, b) => b - a)
-          .every((val, i, arr) => (i === 0 ? true : val === arr[i - 1] - 1))
-      )
+      return isValidRun(validDice, card.value as number)
   }
 }
 
 export const applyDiceToCard = (index: number) => {
   const card = state.cards[index]
-  const selectedDice = state.dice.filter((die) => die.selected)
-  if (checkGoal(card, selectedDice)) {
+  if (checkGoal(card)) {
     state.dice = state.dice.map((d) => ({
       ...d,
       selected: false,
@@ -205,4 +193,40 @@ const adjacentRange = (value: number, range: number): number[] => {
   const out: number[] = []
   for (let i = value - left; i <= value + right; i++) out.push(i)
   return out
+}
+
+const isValidRun = (dice: Die[], value: number) => {
+  if (dice.length < value) return false
+
+  const rolls = dice.map((d) => d.roll!).filter((r) => typeof r === 'number')
+  const unique = Array.from(new Set(rolls)).sort((a, b) => a - b)
+
+  if (unique.length < value) return false
+
+  for (let i = 0; i <= unique.length - value; i++) {
+    let ok = true
+    for (let j = 1; j < value; j++) {
+      if (unique[i + j] !== unique[i] + j) {
+        ok = false
+        break
+      }
+    }
+    if (ok) return true
+  }
+
+  return false
+}
+
+const isValidSet = (dice: Die[], value: number) => {
+  if (dice.length < value) return false
+
+  const counts = dice
+    .map((d) => d.roll!)
+    .filter((r) => typeof r === 'number')
+    .reduce<Record<number, number>>((acc, r) => {
+      acc[r] = (acc[r] || 0) + 1
+      return acc
+    }, {})
+
+  return Object.values(counts).some((c) => c >= value)
 }

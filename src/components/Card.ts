@@ -1,5 +1,5 @@
 import { createElement } from '../utils/createElement'
-import { applyDiceToCard, state } from '../utils/state'
+import { applyDiceToCard, checkGoal, state } from '../utils/state'
 
 export const Card = (index: number) => {
   const card = createElement('div', {
@@ -14,14 +14,16 @@ export const Card = (index: number) => {
   const valueLabel = createElement('div')
 
   const update = () => {
-    const card = state.cards[index]
-    variantLabel.innerHTML = `${card.goal}:`
-    valueLabel.innerHTML = `${card.value}`
-    rewardLabel.innerHTML = `${card.reward}`
-    multiLabel.innerHTML = `x${card.multi}`
+    const _card = state.cards[index]
+    variantLabel.innerHTML = `${_card.goal}:`
+    valueLabel.innerHTML = `${_card.value}`
+    rewardLabel.innerHTML = `${_card.reward}`
+    multiLabel.innerHTML = `x${_card.multi}`
+    card.classList.toggle('completable', checkGoal(_card))
   }
 
   state.addUpdate('cards', update)
+  state.addUpdate('dice', update)
   update()
 
   variant.append(variantLabel, valueLabel)

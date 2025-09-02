@@ -19,6 +19,12 @@ export type Die = {
   status: 'rolling' | 'ready'
 }
 
+export type Item = {
+  label: string
+  cost: number
+  effect: () => void
+}
+
 export interface IState extends State {
   dice: Die[]
   cards: Card[]

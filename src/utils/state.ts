@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: don't care */
-import type { Card, Die, GoalVariant, IState } from '../types'
+import type { Card, Die, GoalVariant, IState, Item } from '../types'
 import { createState } from './createState'
 import { clickSound } from './sounds'
 import { zzfx } from './zzfx'
@@ -114,6 +114,13 @@ export const checkGoal = (card: Card) => {
     case 'run':
       return isValidRun(validDice, card.value as number)
   }
+}
+
+export const buyItem = (item: Item) => {
+  if (state.chips < item.cost) return
+
+  state.chips -= item.cost
+  item.effect()
 }
 
 const getDie = (sides: number) =>

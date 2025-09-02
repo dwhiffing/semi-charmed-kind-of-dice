@@ -10,8 +10,6 @@ export type GoalVariant =
 export type Card = {
   goal: GoalVariant
   value: number | number[]
-  reward: 'lives' | 'chips'
-  multi: number
 }
 
 export type Die = {

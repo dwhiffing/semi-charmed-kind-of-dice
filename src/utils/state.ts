@@ -4,6 +4,10 @@ import { createState } from './createState'
 import { clickSound } from './sounds'
 import { zzfx } from './zzfx'
 
+const DEV = true
+
+const initialDelay = DEV ? 0 : 1000
+const perDieOffset = DEV ? 0 : 500
 export const state = createState({
   dice: [],
   cards: [],
@@ -16,19 +20,16 @@ export const state = createState({
 export const doSubmit = () => {
   state.cards.forEach((card) => {
     if (checkGoal(card)) {
-      state.dice = state.dice.map((d) => ({
-        ...d,
-        selected: false,
-        roll: d.selected ? null : d.roll,
-      }))
-      if (card.reward === 'chips') {
-        state.chips += card.multi
-      } else {
-        state.lives += card.multi
-      }
+      state.chips += 1
       state.goalsCompleted++
     }
   })
+
+  state.dice = state.dice.map((d) => ({
+    ...d,
+    selected: false,
+    roll: d.selected ? null : d.roll,
+  }))
 
   resetBoard()
 }
@@ -37,12 +38,10 @@ export const doRoll = () => {
   if (state.status === 'rolling') return
 
   state.status = 'rolling'
-  zzfx(...clickSound)
+  if (!DEV) zzfx(...clickSound)
 
   updateDice((die) => ({ ...die, roll: die.selected ? die.roll : null }))
 
-  const initialDelay = 1000
-  const perDieOffset = 500
   const totalToRoll = state.dice.filter((d) => !d.selected).length
   let completed = 0
   let j = 0
@@ -125,14 +124,7 @@ const getDie = (sides: number) =>
     selected: false,
   } as Die)
 export const resetDice = () => {
-  state.dice = [
-    getDie(20),
-    getDie(12),
-    getDie(10),
-    // getDie(8),
-    // getDie(6),
-    // getDie(4),
-  ]
+  state.dice = [getDie(4), getDie(4), getDie(4)]
 }
 
 export const resetBoard = () => {
@@ -163,8 +155,7 @@ export const resetBoard = () => {
       value = rollDie(difficulty - 3) + 2 // appears at difficulty 4, starts at 3 and goes up 1 per difficulty
     }
 
-    const reward = rollDie(2) === 1 ? 'chips' : 'lives'
-    return { goal, value, reward, multi: difficulty }
+    return { goal, value }
   })
 }
 

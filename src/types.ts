@@ -1,5 +1,9 @@
 export type GoalVariant = 'set' | 'sum' | 'run'
 
+export type Passive = {
+  variant: 'basic'
+}
+
 export type Reward = {
   lengthMulti?: number // add to scoreMulti: length * lengthMulti
   lengthBaseMulti?: number // add to scoreBase: length * lengthBaseMulti
@@ -27,7 +31,7 @@ export type Card = {
 }
 
 export type Sticker = {
-  type: 'number'
+  variant: 'number'
   rollValue: number
   value: number
 }
@@ -56,6 +60,7 @@ export interface IState extends State {
   scoreMulti: number
   round: number
   scoreInfo: string
+  passives: Passive[]
   pendingSticker: Sticker | null
   status:
     | 'ready'

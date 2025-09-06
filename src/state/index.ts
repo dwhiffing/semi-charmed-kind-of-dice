@@ -18,6 +18,7 @@ export const state = createState({
   dice: [getDie(4, 0), getDie(4, 1), getDie(4, 2)],
   cards: [],
   cardPool: [],
+  passives: [],
   lives: 9,
   chips: 0,
   round: 0,

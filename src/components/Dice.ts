@@ -99,7 +99,7 @@ const Die = (index: number) => {
     sticker.classList.toggle('hidden', !activeSticker)
     if (activeSticker)
       sticker.style.backgroundColor =
-        activeSticker?.type === 'number' ? 'blue' : 'red'
+        activeSticker?.variant === 'number' ? 'blue' : 'red'
 
     sticker.innerText = activeSticker?.value.toString() ?? ''
 

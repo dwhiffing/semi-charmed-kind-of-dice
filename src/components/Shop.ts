@@ -2,7 +2,7 @@
 import { createElement } from '../utils/createElement'
 import { buyItem, doNextRound, state } from '../state'
 import { getDie } from '../state/die'
-import type { Item, Sticker } from '../types'
+import type { Item, Passive, Sticker } from '../types'
 // import { state } from '../utils/state'
 
 const buyLives = (val: number) => {
@@ -69,63 +69,45 @@ export const Shop = () => {
         },
         { label: 'Exit Shop', cost: () => 0, effect: () => doNextRound() },
       ])
-    }
+    } else if (state.status === 'shop-passive-pack') {
+      // TODO: randomize stickers each time a pack is opened
+      const passivePool: Passive[] = [
+        { variant: 'basic' },
+        { variant: 'basic' },
+        { variant: 'basic' },
+      ]
+      const buyPassive = (index: number) => {
+        if (state.passives.length >= 5) return
+        state.passives = [...state.passives, passivePool[index]]
+        state.status = 'shop'
+      }
 
-    if (state.status === 'shop-passive-pack') {
-      renderButtons([
-        {
-          label: 'Buy Passive 1',
+      renderButtons(
+        passivePool.map((s, i) => ({
+          label: `Buy Passive ${JSON.stringify(s)}`,
           cost: () => 0,
-          effect: () => {
-            state.status = 'shop'
-          },
-        },
-        {
-          label: 'Buy Passive 2',
-          cost: () => 0,
-          effect: () => {
-            state.status = 'shop'
-          },
-        },
-        {
-          label: 'Buy Passive 3',
-          cost: () => 0,
-          effect: () => {
-            state.status = 'shop'
-          },
-        },
-      ])
-    }
-
-    if (state.status === 'shop-sticker-pack') {
+          effect: () => buyPassive(i),
+        })),
+      )
+    } else if (state.status === 'shop-sticker-pack') {
       // TODO: randomize stickers each time a pack is opened
       const stickerPool: Sticker[] = [
-        { type: 'number', rollValue: -1, value: 4 },
-        { type: 'number', rollValue: -1, value: 2 },
-        { type: 'number', rollValue: -1, value: 3 },
+        { variant: 'number', rollValue: -1, value: 4 },
+        { variant: 'number', rollValue: -1, value: 2 },
+        { variant: 'number', rollValue: -1, value: 3 },
       ]
       const buySticker = (index: number) => {
         state.pendingSticker = stickerPool[index]
         state.status = 'shop-sticker-apply'
       }
 
-      renderButtons([
-        {
-          label: `Buy Sticker ${JSON.stringify(stickerPool[0])}`,
+      renderButtons(
+        stickerPool.map((s, i) => ({
+          label: `Buy Sticker ${JSON.stringify(s)}`,
           cost: () => 0,
-          effect: () => buySticker(0),
-        },
-        {
-          label: `Buy Sticker ${JSON.stringify(stickerPool[1])}`,
-          cost: () => 0,
-          effect: () => buySticker(1),
-        },
-        {
-          label: `Buy Sticker ${JSON.stringify(stickerPool[2])}`,
-          cost: () => 0,
-          effect: () => buySticker(2),
-        },
-      ])
+          effect: () => buySticker(i),
+        })),
+      )
     }
 
     if (state.status.match(/passive|sticker|upgrade/)) {

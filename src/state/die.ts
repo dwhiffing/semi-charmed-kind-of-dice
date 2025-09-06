@@ -1,14 +1,31 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: don't care */
-import { state } from '.'
+import { buyItem, state } from '.'
 import { perDieOffset } from '../constants'
-import type { Die } from '../types'
+import type { Die, Sticker } from '../types'
 import { rollDie } from '../utils'
 
 export const getDie = (sides: number, index: number) =>
-  ({ sides, roll: null, status: 'ready', selected: false, index } as Die)
+  ({
+    sides,
+    roll: sides,
+    status: 'ready',
+    selected: false,
+    index,
+    stickers: [],
+  } as Die)
 
-export const toggleDieSelected = (index: number) => {
-  state.dice = state.dice.map((die, i) => {
+export const toggleDieSide = (index: number) =>
+  updateDice((die: Die, i) => {
+    if (i === index)
+      return {
+        ...die,
+        roll: die.roll === die.sides ? 2 : (die.roll ?? 0) + 1,
+      }
+    return die
+  })
+
+export const toggleDieSelected = (index: number) =>
+  updateDice((die, i) => {
     if (i === index)
       return {
         ...die,
@@ -16,9 +33,50 @@ export const toggleDieSelected = (index: number) => {
       }
     return die
   })
+
+export const applySticker = (index: number, sticker: Sticker) =>
+  updateDice((die, i) => {
+    if (i === index)
+      return {
+        ...die,
+        stickers: [...die.stickers, { ...sticker, rollValue: die.roll ?? 1 }],
+      }
+    return die
+  })
+
+export const onClickDie = (index: number) => {
+  if (state.status.includes('shop-sticker-apply')) {
+    toggleDieSide(index)
+  } else if (state.status === 'ready') {
+    toggleDieSelected(index)
+  }
 }
 
-export const updateDice = (update: (die: Die) => Die) =>
+export const onClickUpgradeDie = (index: number) =>
+  state.dice[index].sides < 20 &&
+  buyItem({
+    label: '',
+    cost: () => getDieUpgradeCost(index),
+    effect: () => {
+      if (state.status === 'shop-sticker-apply') {
+        applySticker(index, state.pendingSticker!)
+      } else {
+        upgradeDie(index)
+      }
+      state.status = 'shop'
+    },
+  })
+export const upgradeDie = (index: number) =>
+  updateDice((die, i) => {
+    if (i === index)
+      return {
+        ...die,
+        sides: die.sides >= 12 ? 20 : die.sides + 2,
+      }
+    return die
+  })
+
+export const updateDice = (update: (die: Die, i: number) => Die) =>
   (state.dice = state.dice.map(update))
 
 export const doRollDie = async (die: Die, delay: number) => {
@@ -42,3 +100,5 @@ export const doRollDie = async (die: Die, delay: number) => {
     }, delay),
   )
 }
+
+export const getDieUpgradeCost = (index: number) => 10 * state.dice[index].sides

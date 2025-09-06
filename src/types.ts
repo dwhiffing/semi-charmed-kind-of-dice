@@ -26,17 +26,23 @@ export type Card = {
   reward: Reward
 }
 
+export type Sticker = {
+  type: 'number'
+  rollValue: number
+  value: number
+}
 export type Die = {
   sides: number
   index: number
   selected: boolean
   roll: number | null
   status: 'rolling' | 'ready'
+  stickers: Sticker[]
 }
 
 export type Item = {
   label: string
-  cost: number
+  cost: () => number
   effect: () => void
 }
 
@@ -50,7 +56,17 @@ export interface IState extends State {
   scoreMulti: number
   round: number
   scoreInfo: string
-  status: 'ready' | 'shop' | 'rolling' | 'won' | 'lost'
+  pendingSticker: Sticker | null
+  status:
+    | 'ready'
+    | 'rolling'
+    | 'won'
+    | 'lost'
+    | 'shop'
+    | 'shop-die-upgrade'
+    | 'shop-sticker-pack'
+    | 'shop-passive-pack'
+    | 'shop-sticker-apply'
 }
 
 export type DeepHTMLElement = HTMLElement & { [key: string]: unknown }

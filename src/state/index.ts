@@ -23,14 +23,16 @@ export const state = createState({
   round: 0,
   scoreBase: 0,
   scoreMulti: 1,
+  pendingSticker: null,
   scoreInfo: '',
   status: 'ready',
 }) as IState
 
 export const buyItem = (item: Item) => {
-  if (state.chips < item.cost) return
+  const cost = item.cost()
+  if (state.chips < cost) return
 
-  state.chips -= item.cost
+  state.chips -= cost
   item.effect()
 }
 
@@ -40,7 +42,7 @@ export const doEnterShop = () => {
   state.scoreMulti = 1
   state.scoreInfo = ''
 
-  state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
+  state.dice = state.dice.map((d) => ({ ...d, selected: false }))
   state.status = 'shop'
 }
 
@@ -103,13 +105,12 @@ export const doSubmit = () => {
     getIsCardCompleted(card) ? getCardFromCardPool() : card,
   )
 
-  // reset dice
-  state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
-
   // next round
   if (++state.round % ROUNDS_BEFORE_SHOP === 0) {
     doEnterShop()
   } else {
+    // reset dice
+    state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
     doNextRound()
   }
 }

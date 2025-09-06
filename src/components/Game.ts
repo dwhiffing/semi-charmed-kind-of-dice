@@ -16,7 +16,7 @@ export const DiceGame = () => {
   resetBoard()
 
   const update = () => {
-    app.classList.toggle('shop-mode', state.status === 'shop')
+    app.classList.toggle('shop-mode', state.status.includes('shop'))
   }
   state.addUpdate('status', update)
   setTimeout(() => doRoll(), afterSubmitRollDelay)

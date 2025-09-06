@@ -1,5 +1,5 @@
 import { createElement } from '../utils/createElement'
-import { doNextRound, doRoll, doRollCards, doSubmit, state } from '../state'
+import { doRoll, doRollCards, doSubmit, state } from '../state'
 
 export const Controls = () => {
   const btnRoll = createElement('button', 'Roll') as HTMLButtonElement
@@ -8,14 +8,8 @@ export const Controls = () => {
     'Roll Cards',
   ) as HTMLButtonElement
   const btnSubmit = createElement('button', 'Submit') as HTMLButtonElement
-  const btnExitShop = createElement('button', 'Exit') as HTMLButtonElement
   const info = createElement('span', { className: 'info' }, '')
   const scoreInfo = createElement('span', { className: 'last-score' }, '')
-  const shopButtons = createElement(
-    'div',
-    { className: 'buttons' },
-    btnExitShop,
-  )
   const gameButtons = createElement(
     'div',
     { className: 'buttons' },
@@ -26,7 +20,6 @@ export const Controls = () => {
   const controls = createElement(
     'div',
     { className: 'controls' },
-    shopButtons,
     gameButtons,
     info,
     scoreInfo,
@@ -41,8 +34,7 @@ export const Controls = () => {
       'disabled',
       state.dice.some((d) => typeof d.roll !== 'number'),
     )
-    shopButtons.classList.toggle('hidden', state.status !== 'shop')
-    gameButtons.classList.toggle('hidden', state.status === 'shop')
+    gameButtons.classList.toggle('hidden', state.status.includes('shop'))
     scoreInfo.textContent = `Last score: ${state.scoreInfo}`
     info.textContent =
       state.status === 'lost'
@@ -53,7 +45,6 @@ export const Controls = () => {
   btnRoll.onclick = doRoll
   btnRollCards.onclick = doRollCards
   btnSubmit.onclick = doSubmit
-  btnExitShop.onclick = doNextRound
 
   state.addUpdate('lives', update)
   state.addUpdate('status', update)

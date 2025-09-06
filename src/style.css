@@ -16,7 +16,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 500px;
+  max-width: 550px;
   margin: 0 auto;
   gap: 12px;
   padding: 16px;
@@ -69,15 +69,17 @@ body {
   gap: 8px;
   flex-wrap: wrap;
   width: 100%;
-  max-width: 300px;
   justify-content: center;
-  svg {
+  .die.clickable svg {
     path,
-    rect,
-    button {
+    rect {
       cursor: pointer;
     }
   }
+}
+
+button {
+  cursor: pointer;
 }
 
 .die {
@@ -86,6 +88,7 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
+  position: relative;
 
   .die-number,
   .cat {
@@ -158,6 +161,21 @@ body {
   &.d4 .die-number,
   &.d4 .cat {
     translate: 0 6px;
+  }
+
+  .sticker {
+    position: absolute;
+    top: 24px;
+    right: 16px;
+    width: 16px;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 

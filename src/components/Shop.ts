@@ -24,9 +24,7 @@ export const Shop = () => {
     shop.append(itemElement)
   })
 
-  const update = () => {
-    console.log(state.chips)
-  }
+  const update = () => {}
 
   state.addUpdate('chips', update)
 

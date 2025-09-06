@@ -6,31 +6,50 @@ import { zzfx } from './zzfx'
 
 const DEV = true
 
-const initialDelay = DEV ? 0 : 1000
-const perDieOffset = DEV ? 0 : 500
+const initialDelay = DEV ? 250 : 1000
+const perDieOffset = DEV ? 50 : 500
+export const afterSubmitRollDelay = DEV ? 50 : 500
+
 export const state = createState({
   dice: [],
   cards: [],
   lives: 9,
   chips: 0,
-  goalsCompleted: 0,
+  round: 0,
   status: 'ready',
+  lastScore: '',
 }) as IState
 
 export const doSubmit = () => {
-  state.cards.forEach((card) => {
-    if (checkGoal(card)) {
-      state.chips += 1
-      state.goalsCompleted++
-    }
-  })
+  state.round++
+
+  const result = getHandScore()
+
+  let multi = getMultiplier()
+  const change = result.score * multi
+
+  state.chips += change
+
+  state.lastScore = `${result.type} ${result.label} * ${multi} = ${change}`
 
   state.dice = state.dice.map((d) => ({
     ...d,
     selected: false,
-    roll: d.selected ? null : d.roll,
+    roll: null,
   }))
 
+  if (state.round % 5 === 0) {
+    state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
+    state.status = 'shop'
+  } else {
+    state.status = 'ready'
+    setTimeout(() => doRoll(), afterSubmitRollDelay)
+    resetBoard()
+  }
+}
+export const doExitShop = () => {
+  state.status = 'ready'
+  setTimeout(() => doRoll(), afterSubmitRollDelay)
   resetBoard()
 }
 
@@ -77,43 +96,45 @@ export const toggleDieSelected = (index: number) => {
     if (i === index)
       return {
         ...die,
-        selected:
-          die.roll == null || die.roll === 1 ? die.selected : !die.selected,
+        selected: die.roll == null ? die.selected : !die.selected,
       }
     return die
   })
 }
 
-export const checkGoal = (card: Card) => {
-  const validDice = state.dice.filter(
-    (die) => typeof die.roll === 'number' && die.selected,
-  )
-  const total = validDice.reduce((sum, die) => sum + (die.roll ?? 0), 0)
-  const oddCount = validDice.filter((die) => (die.roll ?? 0) % 2 === 1).length
-  const evenCount = validDice.filter((die) => (die.roll ?? 0) % 2 === 0).length
+export const getMultiplier = () => {
+  let multi = 1
+  state.cards.forEach((card) => {
+    if (getIsCardCompleted(card)) multi += 1
+  })
+  return multi
+}
+export const getHandScore = () => {
+  const sum = state.dice.reduce((sum, die) => sum + (die.roll ?? 0), 0)
+  const sets = getSets(state.dice)
+  const run = getRun(state.dice)
+  // const oddCount = state.dice.filter((die) => (die.roll ?? 0) % 2 === 1).length
+  // const evenCount = state.dice.filter((die) => (die.roll ?? 0) % 2 === 0).length
 
-  switch (card.goal) {
-    case 'equal':
-      return validDice.some((d) => (card.value as number[]).includes(d.roll!))
-    case 'sum':
-      return total === (card.value as number)
-    case 'difference':
-      return validDice.some((a, i) =>
-        validDice.some(
-          (b, j) =>
-            i !== j &&
-            Math.abs((a.roll ?? 0) - (b.roll ?? 0)) === (card.value as number),
-        ),
-      )
-    case 'odd':
-      return oddCount >= (card.value as number)
-    case 'even':
-      return evenCount >= (card.value as number)
-    case 'set':
-      return isValidSet(validDice, card.value as number)
-    case 'run':
-      return isValidRun(validDice, card.value as number)
+  const sumString = state.dice.map((d) => d.roll).join('+')
+  let score = 0
+  let type = ''
+  let label = ''
+  if (sets.length > 0) {
+    type = 'set'
+    score = sum + Math.pow(sets[0].length, 3)
+    label = `(${sumString}=${sum}) + ${sets[0].length - 1}^3 = ${score}`
+  } else if (run) {
+    type = 'run'
+    score = sum + Math.pow(run.length, 3)
+    label = `(${sumString}+${run.length}^3=${score})`
+  } else {
+    type = 'chance'
+    score = sum
+    label = `(${sumString}) = ${score}`
   }
+
+  return { type, score, sets, run, label }
 }
 
 export const buyItem = (item: Item) => {
@@ -136,7 +157,7 @@ export const resetDice = () => {
 
 export const resetBoard = () => {
   state.cards = new Array(3).fill('').map((_, i) => {
-    const milestone = Math.floor(state.goalsCompleted / 5)
+    const milestone = Math.floor(state.round / 5)
     const difficulty = rollDie(milestone) + i + 1
     let pool = ['odd', 'even', 'equal']
     if (difficulty === 2) {
@@ -195,38 +216,49 @@ const adjacentRange = (value: number, range: number): number[] => {
   return out
 }
 
-const isValidRun = (dice: Die[], value: number) => {
-  if (dice.length < value) return false
-
+const getRun = (dice: Die[]) => {
   const rolls = dice.map((d) => d.roll!).filter((r) => typeof r === 'number')
   const unique = Array.from(new Set(rolls)).sort((a, b) => a - b)
+  let longestRun: number[] = []
+  let currentRun: number[] = []
 
-  if (unique.length < value) return false
-
-  for (let i = 0; i <= unique.length - value; i++) {
-    let ok = true
-    for (let j = 1; j < value; j++) {
-      if (unique[i + j] !== unique[i] + j) {
-        ok = false
-        break
-      }
+  for (let i = 0; i < unique.length; i++) {
+    if (i === 0 || unique[i] === unique[i - 1] + 1) {
+      currentRun.push(unique[i])
+    } else {
+      if (currentRun.length > longestRun.length) longestRun = currentRun.slice()
+      currentRun = [unique[i]]
     }
-    if (ok) return true
   }
+  if (currentRun.length > longestRun.length) longestRun = currentRun.slice()
 
-  return false
+  if (longestRun.length > 2) {
+    // collect dice that match the run values
+    const runDice = dice.filter(
+      (d) => typeof d.roll === 'number' && longestRun.includes(d.roll!),
+    )
+    return { values: longestRun, dice: runDice, length: longestRun.length }
+  }
+  return null
 }
 
-const isValidSet = (dice: Die[], value: number) => {
-  if (dice.length < value) return false
-
-  const counts = dice
-    .map((d) => d.roll!)
-    .filter((r) => typeof r === 'number')
-    .reduce<Record<number, number>>((acc, r) => {
-      acc[r] = (acc[r] || 0) + 1
-      return acc
-    }, {})
-
-  return Object.values(counts).some((c) => c >= value)
+const getSets = (dice: Die[]) => {
+  const groups: Record<number, Die[]> = {}
+  dice.forEach((d) => {
+    if (typeof d.roll === 'number') {
+      if (!groups[d.roll]) groups[d.roll] = []
+      groups[d.roll].push(d)
+    }
+  })
+  const sets = Object.entries(groups)
+    .map(([value, diceArr]) => ({
+      value: Number(value),
+      dice: diceArr,
+      length: diceArr.length,
+    }))
+    .filter((set) => set.length > 2)
+    .sort((a, b) => b.length - a.length)
+  return sets
 }
+export const getIsCardCompleted = (_card: Card) =>
+  _card.goal === getHandScore().type

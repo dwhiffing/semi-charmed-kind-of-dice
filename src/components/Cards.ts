@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: xxx */
 import { createElement } from '../utils/createElement'
-import { checkGoal, state } from '../utils/state'
+import { getIsCardCompleted, state } from '../utils/state'
 
 export const Cards = () => {
   const cards = createElement('div', { className: 'cards' })
@@ -27,7 +27,8 @@ const Card = (index: number) => {
     const _card = state.cards[index]
     variantLabel.innerHTML = `${_card.goal}:`
     valueLabel.innerHTML = `${_card.value}`
-    card.classList.toggle('completable', checkGoal(_card))
+
+    card.classList.toggle('completable', getIsCardCompleted(_card))
   }
 
   state.addUpdate('cards', update)

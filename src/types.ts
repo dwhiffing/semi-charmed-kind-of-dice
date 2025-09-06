@@ -30,8 +30,9 @@ export interface IState extends State {
   cards: Card[]
   lives: number
   chips: number
-  goalsCompleted: number
-  status: 'ready' | 'rolling' | 'won' | 'lost'
+  round: number
+  lastScore: string
+  status: 'ready' | 'shop' | 'rolling' | 'won' | 'lost'
 }
 
 export type DeepHTMLElement = HTMLElement & { [key: string]: unknown }

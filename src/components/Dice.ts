@@ -42,7 +42,7 @@ const Die = (index: number) => {
     if (!_die) return
 
     die.style.color = colors[_die.sides]
-    die.style.opacity = _die.roll == null || _die.roll === 1 ? '0.5' : '1'
+    die.style.opacity = _die.roll == null ? '0.5' : '1'
     die.classList.remove('d4', 'd6', 'd8', 'd10', 'd12', 'd20')
     die.classList.add(`d${_die.sides}`)
 

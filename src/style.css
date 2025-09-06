@@ -22,6 +22,18 @@ body {
   padding: 16px;
   box-sizing: border-box;
   height: 100vh;
+  &.shop-mode {
+    .shop {
+      display: block;
+    }
+    .cards {
+      display: none;
+    }
+  }
+}
+
+.shop {
+  display: none;
 }
 
 .cards {
@@ -42,16 +54,14 @@ body {
   background-color: var(--surface);
   border-radius: 12px;
   color: var(--dark);
-}
-
-.card > div {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-}
-
-.card.completable {
-  background-color: yellow;
+  & > div {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+  }
+  &.completable {
+    background-color: yellow;
+  }
 }
 
 .dice {
@@ -61,6 +71,13 @@ body {
   width: 100%;
   max-width: 300px;
   justify-content: center;
+  svg {
+    path,
+    rect,
+    button {
+      cursor: pointer;
+    }
+  }
 }
 
 .die {
@@ -69,102 +86,96 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
+
+  .die-number,
+  .cat {
+    transition: all 0.3s ease;
+  }
+  .cat {
+    width: 26px;
+    opacity: 0;
+
+    .cat-body {
+      fill: currentColor;
+    }
+
+    .cat-whisker {
+      stroke: currentColor;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+  }
+  .die-number {
+    font-size: 18px;
+    font-weight: 700;
+    z-index: 10;
+    position: absolute;
+    color: black;
+    pointer-events: none;
+    user-select: none;
+  }
+  svg rect:first-of-type,
+  svg path:first-of-type {
+    transition: all 0.3s ease;
+    stroke: transparent;
+    paint-order: stroke;
+    stroke: transparent;
+    stroke-width: 4px;
+  }
+  &.die-number-cat {
+    .die-number {
+      opacity: 0;
+    }
+    .cat {
+      opacity: 1;
+    }
+  }
+  &.selected svg rect:first-of-type,
+  &.selected svg path:first-of-type {
+    stroke-width: 12px;
+    stroke: white;
+  }
+  &.rolling {
+    animation: die-roll 500ms linear infinite;
+    .die-number,
+    .cat {
+      opacity: 0;
+    }
+  }
+
+  &.d20 .die-number {
+    font-size: 14px;
+  }
+  &.d20 .cat {
+    width: 20px;
+  }
+  &.d6 .die-number {
+    font-size: 24px;
+  }
+  &.d6 .cat {
+    width: 40px;
+  }
+  &.d4 .die-number,
+  &.d4 .cat {
+    translate: 0 6px;
+  }
 }
 
-.die-number-cat .die-number {
-  opacity: 0;
-}
-
-.die-number-cat .cat {
-  opacity: 1;
-}
-
-.dice svg path,
-.dice svg rect,
-button {
-  cursor: pointer;
-}
-button:disabled {
-  cursor: not-allowed;
-}
-
-.die-number-cat svg path,
-.die-number-cat svg rect {
-  cursor: not-allowed;
-}
-.die svg rect:first-of-type,
-.die svg path:first-of-type {
-  transition: all 0.3s ease;
-  stroke: transparent;
-  paint-order: stroke;
-  stroke: transparent;
-  stroke-width: 4px;
-}
-
-.die.selected svg rect:first-of-type,
-.die.selected svg path:first-of-type {
-  stroke-width: 12px;
-  stroke: white;
-}
-
-.die.rolling {
-  animation: die-roll 500ms linear infinite;
-}
-
-.die.rolling .die-number,
-.die.rolling .cat {
-  opacity: 0;
-}
-
-.cat {
-  width: 26px;
-  opacity: 0;
-}
 .die-svg {
   fill: none;
-}
+  .face {
+    fill: currentColor;
+  }
+  .edges {
+    stroke: black;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 
-.die-svg .face {
-  fill: currentColor;
-}
-.die-svg .edges {
-  stroke: black;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.die .die-number {
-  font-size: 18px;
-  font-weight: 700;
-  z-index: 10;
-  position: absolute;
-  color: black;
-  pointer-events: none;
-  user-select: none;
-}
-.die .die-number,
-.die .cat {
-  transition: all 0.3s ease;
-}
-.die.d20 .die-number {
-  font-size: 14px;
-}
-.die.d20 .cat {
-  width: 20px;
-}
-.die.d6 .die-number {
-  font-size: 24px;
-}
-.die.d6 .cat {
-  width: 40px;
-}
-.die.d4 .die-number,
-.die.d4 .cat {
-  translate: 0 6px;
-}
-
-#d6 .die-number .die svg {
-  width: 100%;
+  @media (pointer: coarse) {
+    pointer-events: none;
+  }
 }
 
 .controls {
@@ -172,35 +183,33 @@ button:disabled {
   flex-direction: column;
   align-items: center;
   gap: 8px;
+
+  .buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  button[disabled] {
+    opacity: 0.4;
+  }
 }
 
-.controls .buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.controls button[disabled] {
-  opacity: 0.4;
-}
-
-.cat-body {
-  fill: currentColor;
-}
-
-.cat-whisker {
-  stroke: currentColor;
-  stroke-width: 3;
-  stroke-linecap: round;
+#d6 .die-number .die svg {
+  width: 100%;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 button,
 .die {
   touch-action: manipulation;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 .shake {
@@ -241,11 +250,5 @@ button,
   }
   80% {
     transform: translate(1px, -1px) rotate(1deg);
-  }
-}
-
-@media (pointer: coarse) {
-  .die-svg {
-    pointer-events: none;
   }
 }

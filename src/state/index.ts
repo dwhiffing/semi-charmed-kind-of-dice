@@ -79,6 +79,10 @@ export const doRoll = async () => {
   state.status = state.lives <= 0 ? 'lost' : 'ready'
 }
 
+export const doRollCards = async () => {
+  state.cards = state.cards.map(getCardFromCardPool)
+}
+
 const getMultiplier = () => {
   let multi = 1
   state.cards.forEach((card) => {

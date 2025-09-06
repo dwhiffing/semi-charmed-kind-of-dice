@@ -1,8 +1,12 @@
 import { createElement } from '../utils/createElement'
-import { doNextRound, doRoll, doSubmit, state } from '../state'
+import { doNextRound, doRoll, doRollCards, doSubmit, state } from '../state'
 
 export const Controls = () => {
   const btnRoll = createElement('button', 'Roll') as HTMLButtonElement
+  const btnRollCards = createElement(
+    'button',
+    'Roll Cards',
+  ) as HTMLButtonElement
   const btnSubmit = createElement('button', 'Submit') as HTMLButtonElement
   const btnExitShop = createElement('button', 'Exit') as HTMLButtonElement
   const info = createElement('span', { className: 'info' }, '')
@@ -17,6 +21,7 @@ export const Controls = () => {
     { className: 'buttons' },
     btnRoll,
     btnSubmit,
+    btnRollCards,
   )
   const controls = createElement(
     'div',
@@ -46,6 +51,7 @@ export const Controls = () => {
   }
 
   btnRoll.onclick = doRoll
+  btnRollCards.onclick = doRollCards
   btnSubmit.onclick = doSubmit
   btnExitShop.onclick = doNextRound
 

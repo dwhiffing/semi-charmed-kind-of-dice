@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: xxx */
 import { createElement } from '../utils/createElement'
-import { buyItem, state } from '../utils/state'
+import { buyItem, state } from '../state'
 // import { state } from '../utils/state'
 
 export const Shop = () => {

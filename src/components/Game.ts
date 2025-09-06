@@ -1,16 +1,12 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: don't care */
 import { createElement } from '../utils/createElement'
-import {
-  afterSubmitRollDelay,
-  doRoll,
-  resetBoard,
-  resetDice,
-  state,
-} from '../utils/state'
+import { doRoll, state } from '../state'
 import { Cards } from './Cards'
 import { Controls } from './Controls'
 import { Dice } from './Dice'
 import { Shop } from './Shop'
+import { resetBoard } from '../state/card'
+import { afterSubmitRollDelay } from '../constants'
 
 export const DiceGame = () => {
   const app = createElement('div', { className: 'dice-game' })
@@ -18,7 +14,6 @@ export const DiceGame = () => {
   app.append(Shop(), Cards(), Dice(), Controls())
 
   resetBoard()
-  resetDice()
 
   const update = () => {
     app.classList.toggle('shop-mode', state.status === 'shop')

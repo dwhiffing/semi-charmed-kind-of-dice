@@ -1,5 +1,5 @@
 import { createElement } from '../utils/createElement'
-import { doExitShop, doRoll, doSubmit, state } from '../utils/state'
+import { doNextRound, doRoll, doSubmit, state } from '../state'
 
 export const Controls = () => {
   const btnRoll = createElement('button', 'Roll') as HTMLButtonElement
@@ -47,7 +47,7 @@ export const Controls = () => {
 
   btnRoll.onclick = doRoll
   btnSubmit.onclick = doSubmit
-  btnExitShop.onclick = doExitShop
+  btnExitShop.onclick = doNextRound
 
   state.addUpdate('lives', update)
   state.addUpdate('status', update)

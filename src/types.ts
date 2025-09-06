@@ -1,19 +1,26 @@
-export type GoalVariant =
-  | 'equal'
-  | 'sum'
-  | 'difference'
-  | 'odd'
-  | 'even'
-  | 'set'
-  | 'run'
+export type GoalVariant = 'set' | 'sum' | 'run'
+
+export type Goal =
+  | { variant: 'set'; length?: number; value?: number } // (set.length >= length)||set[0] === value && set.length >=length||(set[0] === value)
+  | { variant: 'run'; length?: number; value?: [number] } // run.length >= length||run === value
+  | { variant: 'sum'; value: number; exact: boolean } // sum >= value || sum === value
+
+// type Goal =
+// { goal: 'set', length: number }| // set.length >= length
+// { goal: 'set', length: number, value: number }| // set[0] === value && set.length >=length
+// { goal: 'set', value: number }| // set[0] === value
+// { goal: 'run', length: number }| // run.length >= length
+// { goal: 'run', value: [number] }| // run === value
+// { goal: 'sum', value: number }| // sum >= value
+// { goal: 'sum', value: number, exact: boolean } // sum === value
 
 export type Card = {
-  goal: GoalVariant
-  value: number | number[]
+  goals: Goal[]
 }
 
 export type Die = {
   sides: number
+  index: number
   selected: boolean
   roll: number | null
   status: 'rolling' | 'ready'
@@ -28,6 +35,7 @@ export type Item = {
 export interface IState extends State {
   dice: Die[]
   cards: Card[]
+  cardPool: Card[]
   lives: number
   chips: number
   round: number

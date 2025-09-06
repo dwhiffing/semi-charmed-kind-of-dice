@@ -1,3 +1,10 @@
+export const DEV = false
+
+export const initialDelay = DEV ? 250 : 150
+export const perDieOffset = DEV ? 50 : 500
+export const ROUNDS_BEFORE_SHOP = 5
+export const afterSubmitRollDelay = DEV ? 50 : 500
+
 export const SVGS = [
   `d${20}`,
   `d${12}`,

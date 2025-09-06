@@ -1,7 +1,8 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: xxx */
 import { createElement } from '../utils/createElement'
 import { colors } from '../constants'
-import { state, toggleDieSelected } from '../utils/state'
+import { state } from '../state'
+import { toggleDieSelected } from '../state/die'
 
 export const Dice = () => {
   const dice = createElement('div', { className: 'dice' })
@@ -67,6 +68,7 @@ const Die = (index: number) => {
 
   state.addUpdate('dice', update)
   state.addUpdate('status', update)
+  console.log(state.dice)
   update()
 
   return die

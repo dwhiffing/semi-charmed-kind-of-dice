@@ -1,5 +1,12 @@
 export type GoalVariant = 'set' | 'sum' | 'run'
 
+export type Reward = {
+  lengthMulti?: number // add to scoreMulti: length * lengthMulti
+  lengthBaseMulti?: number // add to scoreBase: length * lengthBaseMulti
+  scoreBase?: number // static value to add to scoreBase
+  multiBase?: number // static value to add to multiBase
+}
+
 export type Goal =
   | { variant: 'set'; length?: number; value?: number } // (set.length >= length)||set[0] === value && set.length >=length||(set[0] === value)
   | { variant: 'run'; length?: number; value?: [number] } // run.length >= length||run === value
@@ -16,6 +23,7 @@ export type Goal =
 
 export type Card = {
   goals: Goal[]
+  reward: Reward
 }
 
 export type Die = {
@@ -38,8 +46,10 @@ export interface IState extends State {
   cardPool: Card[]
   lives: number
   chips: number
+  scoreBase: number
+  scoreMulti: number
   round: number
-  lastScore: string
+  scoreInfo: string
   status: 'ready' | 'shop' | 'rolling' | 'won' | 'lost'
 }
 

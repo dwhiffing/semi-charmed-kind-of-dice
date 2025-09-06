@@ -21,8 +21,10 @@ export const state = createState({
   lives: 9,
   chips: 0,
   round: 0,
+  scoreBase: 0,
+  scoreMulti: 1,
+  scoreInfo: '',
   status: 'ready',
-  lastScore: '',
 }) as IState
 
 export const buyItem = (item: Item) => {
@@ -33,6 +35,11 @@ export const buyItem = (item: Item) => {
 }
 
 export const doEnterShop = () => {
+  state.chips += state.scoreBase * state.scoreMulti
+  state.scoreBase = 0
+  state.scoreMulti = 1
+  state.scoreInfo = ''
+
   state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
   state.status = 'shop'
 }
@@ -40,25 +47,6 @@ export const doEnterShop = () => {
 export const doNextRound = () => {
   state.status = 'ready'
   setTimeout(() => doRoll(), afterSubmitRollDelay)
-}
-
-export const doSubmit = () => {
-  const handScore = getHandScore()
-  const multi = getMultiplier()
-  const change = handScore.score * multi
-
-  state.chips += change
-  state.lastScore = `${handScore.type} ${handScore.label} * ${multi} = ${change}`
-  state.cards = state.cards.map((card) =>
-    getIsCardCompleted(card) ? getCardFromCardPool() : card,
-  )
-
-  state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
-  if (++state.round % ROUNDS_BEFORE_SHOP === 0) {
-    doEnterShop()
-  } else {
-    doNextRound()
-  }
 }
 
 export const doRoll = async () => {
@@ -83,10 +71,45 @@ export const doRollCards = async () => {
   state.cards = state.cards.map(getCardFromCardPool)
 }
 
-const getMultiplier = () => {
-  let multi = 1
+export const doSubmit = () => {
+  // Calculate score
+  const handScore = getHandScore()
+  let prevScore = state.scoreBase
+  state.scoreBase += handScore.score
+  state.scoreMulti += handScore.multi
+
   state.cards.forEach((card) => {
-    if (getIsCardCompleted(card)) multi += 1
+    if (getIsCardCompleted(card)) {
+      state.scoreBase += card.reward.scoreBase ?? 0
+      state.scoreMulti += card.reward.multiBase ?? 0
+
+      const setLength = handScore.sets[0]?.length ?? 0
+      const runLength = handScore.run?.length ?? 0
+      const length = setLength ?? runLength
+
+      state.scoreBase += (card.reward.lengthMulti ?? 0) * length
+      state.scoreMulti += (card.reward.lengthBaseMulti ?? 0) * length
+    }
   })
-  return multi
+
+  state.scoreInfo = `${handScore.label}. ${prevScore} + ${handScore.score} = ${
+    state.scoreBase
+  }.  ${state.scoreBase} * ${state.scoreMulti} = ${
+    state.scoreBase * state.scoreMulti
+  }`
+
+  // reset completed cards
+  state.cards = state.cards.map((card) =>
+    getIsCardCompleted(card) ? getCardFromCardPool() : card,
+  )
+
+  // reset dice
+  state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
+
+  // next round
+  if (++state.round % ROUNDS_BEFORE_SHOP === 0) {
+    doEnterShop()
+  } else {
+    doNextRound()
+  }
 }

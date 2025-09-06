@@ -1,47 +1,23 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: don't care */
 import { state } from '.'
-import type { Card, Goal, GoalVariant } from '../types'
-import { arraysHaveSameValues, rollDie, shuffle } from '../utils'
+import { CARDS } from '../constants'
+
+import type { Card } from '../types'
+import { arraysHaveSameValues, shuffle } from '../utils'
 import { getHandScore } from './getHandScore'
 
-const getGoal = (variant: GoalVariant) => {
-  let rest = {}
-  if (variant === 'set') {
-    const subVariant = rollDie(3)
-    const length = rollDie(2) + 2
-    const value = rollDie(4)
-    if (subVariant === 1) {
-      rest = { length }
-    } else if (subVariant === 2) {
-      rest = { value }
-    } else {
-      rest = { length, value }
-    }
-  } else if (variant === 'run') {
-    const subVariant = rollDie(2)
-    if (subVariant === 1) {
-      rest = { length: rollDie(2) + 2 }
-    } else {
-      rest = { value: [1, 2, 3] }
-    }
-  } else {
-    rest = { value: rollDie(6) + 6, exact: rollDie(2) === 1 }
-  }
-
-  return { variant, ...rest } as Goal
-}
-const getCard = (variant: GoalVariant) => {
-  // const milestone = Math.floor(state.round / ROUNDS_BEFORE_SHOP)
-  // const difficulty = rollDie(milestone) + 1
-
-  const goal: Goal = getGoal(variant)
-
-  return { goals: [goal] } as Card
-}
+export const getNewCards = () => [
+  CARDS.easySum(),
+  CARDS.easySum(),
+  CARDS.easySum(),
+  CARDS.easySetLength(),
+  CARDS.easySetValue(),
+  CARDS.easyRunLength(),
+]
 
 export const getCardFromCardPool = () => {
   if (state.cardPool.length === 0) {
-    state.cardPool = shuffle([getCard('set'), getCard('run'), getCard('sum')])
+    state.cardPool = shuffle(getNewCards())
   }
   const nextCard = state.cardPool[0]
   state.cardPool = state.cardPool.slice(1)

@@ -10,7 +10,7 @@ export const Controls = () => {
   const btnSubmit = createElement('button', 'Submit') as HTMLButtonElement
   const btnExitShop = createElement('button', 'Exit') as HTMLButtonElement
   const info = createElement('span', { className: 'info' }, '')
-  const lastScore = createElement('span', { className: 'last-score' }, '')
+  const scoreInfo = createElement('span', { className: 'last-score' }, '')
   const shopButtons = createElement(
     'div',
     { className: 'buttons' },
@@ -29,7 +29,7 @@ export const Controls = () => {
     shopButtons,
     gameButtons,
     info,
-    lastScore,
+    scoreInfo,
   )
 
   const update = () => {
@@ -43,7 +43,7 @@ export const Controls = () => {
     )
     shopButtons.classList.toggle('hidden', state.status !== 'shop')
     gameButtons.classList.toggle('hidden', state.status === 'shop')
-    lastScore.textContent = `Last score: ${state.lastScore}`
+    scoreInfo.textContent = `Last score: ${state.scoreInfo}`
     info.textContent =
       state.status === 'lost'
         ? 'You lose!'

@@ -1,4 +1,7 @@
-export const DEV = false
+import type { Card } from './types'
+import { rollDie } from './utils'
+
+export const DEV = true
 
 export const initialDelay = DEV ? 250 : 150
 export const perDieOffset = DEV ? 50 : 500
@@ -23,3 +26,31 @@ export const colors: Record<number, string> = {
   6: '#6f42c1',
   4: '#28a745',
 }
+
+export const CARDS: Record<string, () => Card> = {
+  easySum: () => ({
+    goals: [{ variant: 'sum', value: rollDie(6) + 6, exact: false }],
+    reward: { multiBase: 1 },
+  }),
+  easySetLength: () => ({
+    goals: [{ variant: 'set', length: 3 }],
+    reward: { lengthMulti: 1 },
+  }),
+  easySetLengthValue: () => ({
+    goals: [{ variant: 'set', value: rollDie(4), length: 3 }],
+    reward: { lengthMulti: 2 },
+  }),
+  easySetValue: () => ({
+    goals: [{ variant: 'set', value: rollDie(4) }],
+    reward: { lengthMulti: 3 },
+  }),
+  easyRunLength: () => ({
+    goals: [{ variant: 'run', length: 3 }],
+    reward: { lengthBaseMulti: 100 },
+  }),
+}
+
+// { variant: 'set', value: rollDie(4) } - // reward: multi = length of set * 2
+// { variant: 'set', value: rollDie(4), length: 3 } - // reward: multi = length of set * 3
+// { variant: 'sum', value: rollDie(6) + 6, exact: false } - // reward: multi = length of set * 3
+// { variant: 'run', length: 3 } // reward: base = length of run * 100

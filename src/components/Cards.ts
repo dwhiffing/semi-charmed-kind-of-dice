@@ -26,8 +26,8 @@ const Card = (index: number) => {
 
   const update = () => {
     const _card = state.cards[index]
-    variantLabel.innerHTML = `${JSON.stringify(_card.goals[0])}`
-    // valueLabel.innerHTML = `${JSON.stringify(_card.goals[0])}`
+    variantLabel.innerHTML = `${JSON.stringify(_card.goals)}`
+    valueLabel.innerHTML = `${JSON.stringify(_card.reward)}`
 
     card.classList.toggle('completable', getIsCardCompleted(_card))
   }

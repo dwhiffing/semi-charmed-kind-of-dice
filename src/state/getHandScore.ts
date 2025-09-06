@@ -9,24 +9,21 @@ export const getHandScore = () => {
   // const evenCount = state.dice.filter((die) => (die.roll ?? 0) % 2 === 0).length
 
   const sumString = state.dice.map((d) => d.roll).join('+')
-  let score = 0
+  let score = sum
+  let multi = 0
   let type: GoalVariant = 'sum'
-  let label = ''
+  let label = `(${sumString}) = ${score}`
   if (sets.length > 0) {
     type = 'set'
-    score = sum + Math.pow(sets[0].length, 3)
-    label = `(${sumString}=${sum}) + ${sets[0].length - 1}^3 = ${score}`
+    multi = sets[0].length - 2
   } else if (run) {
     type = 'run'
-    score = sum + Math.pow(run.length, 3)
-    label = `(${sumString}+${run.length}^3=${score})`
+    multi = run.length - 1
   } else {
     type = 'sum'
-    score = sum
-    label = `(${sumString}) = ${score}`
   }
 
-  return { type, sum, score, sets, run, label }
+  return { type, sum, score, sets, run, label, multi }
 }
 const getRun = (dice: Die[]) => {
   const rolls = dice.map((d) => d.roll!).filter((r) => typeof r === 'number')

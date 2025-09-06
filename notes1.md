@@ -2,23 +2,23 @@
 
 Brinks & Jynx
 
-- remove getting points from your hand directly
-- instead you only get them from completing goals (should reward chips and multi based on difficulty)
-- have a running total of chips and multi for the 5 hand round, get when you arrive at shop
-
 - upgrade die size
 - upgrade die face
 - add die (each new die costs more exponentially)
 
 - don't allow submitting without at least one goal?
 
-- add goal reroll tokens, allow locking goals
+- more card/goal/reward scaling
+- add goal reroll tokens
 - full house .etc are done by putting multiple goals on a single card (2 pair, full house, 3 pair, double triplet.etc)
+- ensure displayed cards are always of different variants?
 
-- goals should scale based on round number
+- price of lives increases over time
 - passive abilities
 - finish shop ui
+- card reroll animation
 - boss goals?
+- allow locking goals?
 - show score calculation for hand better
 - gain interest by not spending money?
 

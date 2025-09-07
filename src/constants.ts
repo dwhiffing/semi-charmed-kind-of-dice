@@ -28,25 +28,24 @@ export const colors: Record<number, string> = {
 }
 
 export const CARDS: Record<string, () => Card> = {
-  easySum: () => ({
-    goals: [{ variant: 'sum', value: rollDie(6) + 6, exact: false }],
-    reward: { multiBase: 1 },
-  }),
+  easySum: () => {
+    const value = rollDie(6) + 6
+    return {
+      goal: { variant: 'sum', value: value, exact: false },
+      reward: { scoreBase: value * 2 },
+    }
+  },
   easySetLength: () => ({
-    goals: [{ variant: 'set', length: 3 }],
-    reward: { lengthMulti: 1 },
-  }),
-  easySetLengthValue: () => ({
-    goals: [{ variant: 'set', value: rollDie(4), length: 3 }],
-    reward: { lengthMulti: 2 },
+    goal: { variant: 'set', value: 3 },
+    reward: { scoreBase: 100 },
   }),
   easySetValue: () => ({
-    goals: [{ variant: 'set', value: rollDie(4) }],
-    reward: { lengthMulti: 3 },
+    goal: { variant: 'set', value: rollDie(4), specific: true },
+    reward: { lengthBase: 10 },
   }),
   easyRunLength: () => ({
-    goals: [{ variant: 'run', length: 3 }],
-    reward: { lengthBaseMulti: 100 },
+    goal: { variant: 'run', value: 3 },
+    reward: { scoreBase: 100 },
   }),
 }
 

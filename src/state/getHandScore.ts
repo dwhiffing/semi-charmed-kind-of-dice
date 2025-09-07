@@ -65,7 +65,7 @@ const getSets = (dice: Die[]) => {
       dice: diceArr,
       length: diceArr.length,
     }))
-    .filter((set) => set.length > 2)
+    // .filter((set) => set.length > 2)
     .sort((a, b) => b.length - a.length)
   return sets
 }

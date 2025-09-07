@@ -1,7 +1,7 @@
 :root {
-  --dark: #333;
+  --dark: #42694e;
   --light: #fff;
-  --surface: #999;
+  --surface: #333;
 }
 
 body {
@@ -42,25 +42,36 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   width: 100%;
-}
-
-.card {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--surface);
-  border-radius: 12px;
-  color: var(--dark);
-  & > div {
+  .card {
+    padding: 20px;
     display: flex;
-    flex-direction: row;
-    gap: 4px;
-  }
-  &.completable {
-    background-color: yellow;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--surface);
+    border-radius: 12px;
+    color: var(--light);
+    border: 2px solid black;
+    & > div {
+      display: flex;
+      flex-direction: row;
+      gap: 4px;
+    }
+    &.completable {
+      border-color: var(--light);
+    }
+    .goal {
+      font-weight: 800;
+    }
+    .red {
+      font-weight: 800;
+      color: #ff4e4e;
+    }
+    .blue {
+      font-weight: 800;
+      color: #6a6aff;
+    }
   }
 }
 

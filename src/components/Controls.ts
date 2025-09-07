@@ -8,8 +8,7 @@ export const Controls = () => {
     'Roll Cards',
   ) as HTMLButtonElement
   const btnSubmit = createElement('button', 'Submit') as HTMLButtonElement
-  const info = createElement('span', { className: 'info' }, '')
-  const scoreInfo = createElement('span', { className: 'last-score' }, '')
+  const info = createElement('span', { className: 'info' })
   const gameButtons = createElement(
     'div',
     { className: 'buttons' },
@@ -17,29 +16,24 @@ export const Controls = () => {
     btnSubmit,
     btnRollCards,
   )
-  const controls = createElement(
+  const container = createElement(
     'div',
     { className: 'controls' },
     gameButtons,
     info,
-    scoreInfo,
   )
 
   const update = () => {
-    btnRoll.toggleAttribute(
-      'disabled',
-      state.dice.every((d) => d.selected) || state.status !== 'ready',
-    )
-    btnSubmit.toggleAttribute(
-      'disabled',
-      state.dice.some((d) => typeof d.roll !== 'number'),
-    )
+    const rollDisabled =
+      state.dice.every((d) => d.selected) || state.status !== 'ready'
+    const submitDisabled = state.dice.some((d) => typeof d.roll !== 'number')
+    btnRoll.toggleAttribute('disabled', rollDisabled)
+    btnSubmit.toggleAttribute('disabled', submitDisabled)
+
     gameButtons.classList.toggle('hidden', state.status.includes('shop'))
-    scoreInfo.textContent = `Last score: ${state.scoreInfo}`
-    info.textContent =
-      state.status === 'lost'
-        ? 'You lose!'
-        : `Round: ${state.round} You have ${state.lives} lives and ${state.chips} chips`
+
+    const summary = `Round: ${state.round} You have ${state.lives} lives and ${state.chips} chips\nLast score: ${state.scoreInfo}`
+    info.textContent = state.status === 'lost' ? 'You lose!' : summary
   }
 
   btnRoll.onclick = doRoll
@@ -52,5 +46,5 @@ export const Controls = () => {
   state.addUpdate('dice', update)
   update()
 
-  return controls
+  return container
 }

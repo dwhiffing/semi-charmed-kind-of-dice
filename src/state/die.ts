@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: don't care */
 import { buyItem, state } from '.'
 import { perDieOffset } from '../constants'
 import type { Die, Sticker } from '../types'

@@ -11,7 +11,7 @@ import { afterSubmitRollDelay } from '../constants'
 export const DiceGame = () => {
   const app = createElement('div', { className: 'dice-game' })
 
-  app.append(Shop(), Cards(), Dice(), Passives(), Controls())
+  app.append(Shop(), Passives(), Cards(), Dice(), Controls())
 
   resetBoard()
 

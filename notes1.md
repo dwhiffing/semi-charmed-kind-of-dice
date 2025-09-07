@@ -2,25 +2,30 @@
 
 Brinks & Jynx
 
-- upgrade die size
-- upgrade die face
-- add die (each new die costs more exponentially)
+- add passive effects/types
+- add sticker effects/types
+- randomize passives/stickers each time a pack is opened
 
-- don't allow submitting without at least one goal?
+- add goal reroll tokens
+- price of lives increases over time
+
+- add ability to add passives
+- add ability to apply sticker to face
+
+- fix gameover
 
 - more card/goal/reward scaling
-- add goal reroll tokens
 - full house .etc are done by putting multiple goals on a single card (2 pair, full house, 3 pair, double triplet.etc)
-- ensure displayed cards are always of different variants?
 
-- price of lives increases over time
-- passive abilities
 - finish shop ui
 - card reroll animation
 - boss goals?
+- need a way to see what stickers are on a die?
 - allow locking goals?
 - show score calculation for hand better
 - gain interest by not spending money?
+- don't allow submitting without at least one goal?
+- ensure displayed cards are always of different variants?
 
 - playtest and adjust scaling
 
@@ -50,11 +55,15 @@ Nine Lives: Once per game, on game over, recover somehow
 Scavenger: Gain x currency each time you submit
 Die Hard: gain extra currency each submit based on how many lives you have left
 Collector: Gain extra currency based on dice variety
+gains lives over time with interest, sell for lives
 
-# dice upgrades
+# dice upgrades (stickers)
 
-Wild card: Makes face count as best possible value fore scoring.
-Split Face: adds +/-x, face counts as that value as well as +/-x
-Clover Face: When this face is submitted, adds x currency
-Reroll Face: when this face is submitted, gain a goal reroll
-Vampiric Face: when face is submitted, gain x lives
+vampire: when this face is submitted, gain 1 life (legendary)
+wild: Makes face count any number (legendary)
+reroll: when this face is submitted, gain a goal reroll (rare)
+split: value on this face can be off by 1 to satisfy goals (rare)
+clone: face counts as 2 instances of its value (uncommon,rare)
+multi: face adds multi when submitted (uncommon,rare)
+base: fade adds base score when submitted(common,uncommon,rare)
+number: makes face count as this number in addition to its existing value (common)

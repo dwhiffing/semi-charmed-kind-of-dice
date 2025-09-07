@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: don't care */
 import {
   afterSubmitRollDelay,
   ROUNDS_BEFORE_SHOP,
@@ -20,8 +19,8 @@ export const state = createState({
   cardPool: [],
   passives: [],
   lives: 9,
-  chips: 0,
-  round: 0,
+  chips: 10000,
+  round: 4,
   scoreBase: 0,
   scoreMulti: 1,
   pendingSticker: null,
@@ -78,20 +77,20 @@ export const doSubmit = () => {
   // Calculate score
   const handScore = getHandScore()
   let prevScore = state.scoreBase
-  state.scoreBase += handScore.score
-  state.scoreMulti += handScore.multi
+  // state.scoreBase += handScore.score
+  // state.scoreMulti += handScore.multi
 
   state.cards.forEach((card) => {
     if (getIsCardCompleted(card)) {
       state.scoreBase += card.reward.scoreBase ?? 0
-      state.scoreMulti += card.reward.multiBase ?? 0
+      // state.scoreMulti += card.reward.scoreMulti ?? 0
 
       const setLength = handScore.sets[0]?.length ?? 0
       const runLength = handScore.run?.length ?? 0
       const length = setLength ?? runLength
 
-      state.scoreBase += (card.reward.lengthMulti ?? 0) * length
-      state.scoreMulti += (card.reward.lengthBaseMulti ?? 0) * length
+      state.scoreBase += (card.reward.lengthBase ?? 0) * length
+      // state.scoreMulti += (card.reward.lengthMulti ?? 0) * length
     }
   })
 

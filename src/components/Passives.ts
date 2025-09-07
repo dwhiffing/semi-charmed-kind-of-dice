@@ -6,9 +6,7 @@ export const Passives = () => {
 
   const update = () => {
     container.innerHTML = ''
-    for (let i = 0; i < 5; i++) {
-      container.append(Passive(i))
-    }
+    for (let i = 0; i < 5; i++) container.append(Passive(i))
   }
 
   state.addUpdate('passives', update)

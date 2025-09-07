@@ -5,16 +5,16 @@ export type Passive = {
 }
 
 export type Reward = {
-  lengthMulti?: number // add to scoreMulti: length * lengthMulti
-  lengthBaseMulti?: number // add to scoreBase: length * lengthBaseMulti
+  lengthBase?: number // add to scoreBase: length of set/run * lengthBaseMulti
+  lengthMulti?: number // add to scoreMulti: length of set/run * lengthMulti
   scoreBase?: number // static value to add to scoreBase
-  multiBase?: number // static value to add to multiBase
+  scoreMulti?: number // static value to add to scoreMulti
 }
 
 export type Goal =
-  | { variant: 'set'; length?: number; value?: number } // (set.length >= length)||set[0] === value && set.length >=length||(set[0] === value)
-  | { variant: 'run'; length?: number; value?: [number] } // run.length >= length||run === value
-  | { variant: 'sum'; value: number; exact: boolean } // sum >= value || sum === value
+  | { variant: 'set'; value: number; specific?: boolean } // (set.length >= length)
+  | { variant: 'run'; value: number } // run.length >= length||run === value
+  | { variant: 'sum'; value: number; exact?: boolean } // sum >= value || sum === value
 
 // type Goal =
 // { goal: 'set', length: number }| // set.length >= length
@@ -26,12 +26,17 @@ export type Goal =
 // { goal: 'sum', value: number, exact: boolean } // sum === value
 
 export type Card = {
-  goals: Goal[]
+  goal: Goal
   reward: Reward
 }
 
 export type Sticker = {
-  variant: 'number'
+  variant: 'number' | 'multi' | 'base'
+  // | 'clone'
+  // | 'wild'
+  // | 'vampire'
+  // | 'reroll'
+  // | 'split'
   rollValue: number
   value: number
 }

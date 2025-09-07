@@ -30,10 +30,6 @@ export const Die = (index: number) => {
     const _die = state.dice[index]
     if (!_die) return
 
-    const isHidden =
-      state.status.includes('shop-passive-pack') ||
-      state.status.includes('shop-sticker-pack')
-
     const isUpgradeButtonHidden =
       state.status !== 'shop' && state.status !== 'shop-sticker-apply'
 
@@ -48,10 +44,7 @@ export const Die = (index: number) => {
     const isRolling =
       !_die.selected && state.status === 'rolling' && _die.roll == null
 
-    container.classList.toggle('hidden', isHidden)
-
     die.style.color = colors[_die.sides]
-    die.style.opacity = _die.roll == null ? '0.5' : '1'
     die.classList.remove('d4', 'd6', 'd8', 'd10', 'd12', 'd20')
     die.classList.add(`d${_die.sides}`)
     die.classList.toggle('clickable', isClickable)

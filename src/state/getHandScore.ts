@@ -29,7 +29,9 @@ export const getHandScore = () => {
   return { type, sum, score, sets, run, label, multi }
 }
 const getRun = (dice: Die[]) => {
-  const rolls = dice.map((d) => d.roll!).filter((r) => typeof r === 'number')
+  const rolls = dice
+    .map((d) => d.roll!)
+    .filter((r) => typeof r === 'number' && r > 1)
   const unique = Array.from(new Set(rolls)).sort((a, b) => a - b)
   let longestRun: number[] = []
   let currentRun: number[] = []

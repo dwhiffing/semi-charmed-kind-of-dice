@@ -29,6 +29,7 @@ const Card = (index: number) => {
 
   const update = () => {
     const _card = state.cards[index]
+    if (!_card) return
     const reward = _card.reward()
 
     goalLabel.innerHTML = ''
@@ -55,7 +56,7 @@ const Card = (index: number) => {
         'div',
         {
           className: !isCompleted ? '' : isZero ? 'red' : 'blue',
-          style: { opacity: _card.score === undefined ? '0.2' : '1' },
+          style: { opacity: _card.score === undefined ? '0.35' : '1' },
         },
         typeof _card.score === 'number'
           ? `${_card.score}`

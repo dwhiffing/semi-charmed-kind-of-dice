@@ -1,5 +1,5 @@
 import { createElement } from '../utils/createElement'
-import { buyItem, doNextRound, state } from '../state'
+import { buyItem, state } from '../state'
 import type { Item } from '../types'
 import {
   buyLives,
@@ -22,14 +22,6 @@ export const Shop = () => {
       renderPassivePackButtons(container)
     } else if (state.status === 'shop-sticker-pack') {
       renderStickerPackButtons(container)
-    }
-
-    if (state.status.match(/passive|sticker|upgrade/)) {
-      const onSkip = () => (state.status = 'shop')
-      renderButtons(
-        [{ label: 'Back', cost: () => 0, effect: onSkip }],
-        container,
-      )
     }
 
     if (state.status === 'shop-sticker-apply') {
@@ -74,7 +66,6 @@ const renderStoreButtons = (el: HTMLElement) => {
         cost: () => Math.pow(5, state.dice.length),
         effect: buyNewDie,
       },
-      { label: 'Exit Shop', cost: () => 0, effect: () => doNextRound() },
     ],
     el,
   )

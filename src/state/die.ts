@@ -6,7 +6,7 @@ import { rollDie } from '../utils'
 export const getDie = (sides: number, index: number) =>
   ({
     sides,
-    roll: sides,
+    roll: null,
     status: 'ready',
     selected: false,
     index,
@@ -25,11 +25,7 @@ export const toggleDieSide = (index: number) =>
 
 export const toggleDieSelected = (index: number) =>
   updateDice((die, i) => {
-    if (i === index)
-      return {
-        ...die,
-        selected: die.roll == null ? die.selected : !die.selected,
-      }
+    if (i === index) return { ...die, selected: !die.selected }
     return die
   })
 

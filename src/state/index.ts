@@ -32,8 +32,10 @@ export const buyItem = (item: Item) => {
 }
 
 export const doEnterShop = () => {
+  state.round++
+  state.chips += state.cards.reduce((sum, c) => sum + (c.score ?? 0), 0)
   state.cards = getNewCards()
-  state.dice = state.dice.map((d) => ({ ...d, selected: false }))
+  state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: d.sides }))
   state.status = 'shop'
 }
 
@@ -43,6 +45,19 @@ export const doNextRound = () => {
 }
 
 export const doRoll = async () => {
+  if (state.status.match(/passive|sticker/)) {
+    state.status = 'shop'
+    return
+  }
+
+  if (state.cards.every((c) => c.score !== undefined)) {
+    return doEnterShop()
+  }
+
+  if (state.status === 'shop') {
+    doNextRound()
+  }
+
   if (state.status === 'rolling') return
   if (!DEV) zzfx(...clickSound)
 
@@ -73,11 +88,7 @@ export const doSubmit = (index: number) => {
       : c,
   )
 
-  if (state.cards.every((c) => c.score !== undefined)) {
-    state.chips += state.cards.reduce((sum, c) => sum + (c.score ?? 0), 0)
-    setTimeout(() => doEnterShop(), 500)
-    state.round++
-  } else {
+  if (state.cards.some((c) => c.score === undefined)) {
     // reset dice
     state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
     doNextRound()

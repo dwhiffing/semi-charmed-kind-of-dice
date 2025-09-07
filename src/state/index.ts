@@ -85,13 +85,14 @@ export const doSubmit = (index: number) => {
 }
 
 export const startGame = () => {
-  state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
-  state.cards = getNewCards()
   state.passives = []
   state.lives = 9
   state.chips = 0
   state.round = 1
   state.pendingSticker = null
+  state.status = 'ready'
+  state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
+  state.cards = getNewCards()
 
   setTimeout(() => doRoll(), afterSubmitRollDelay)
 }

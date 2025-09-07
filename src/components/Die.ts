@@ -35,13 +35,12 @@ export const Die = (index: number) => {
       state.status.includes('shop-sticker-pack')
 
     const isUpgradeButtonHidden =
-      state.status !== 'shop-die-upgrade' &&
-      state.status !== 'shop-sticker-apply'
+      state.status !== 'shop' && state.status !== 'shop-sticker-apply'
 
     const upgradeLabel =
       state.status === 'shop-sticker-apply'
         ? `Apply Sticker`
-        : `Upgrade: cost ${getDieUpgradeCost(index)}`
+        : `Upgrade $${getDieUpgradeCost(index)}`
 
     const isClickable =
       state.status === 'ready' || state.status.includes('shop-sticker-apply')

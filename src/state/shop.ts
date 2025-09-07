@@ -5,7 +5,6 @@ import type { Passive, Sticker } from '../types'
 export const buyLives = (val: number) => (state.lives += val)
 export const buyPassivePack = () => (state.status = 'shop-passive-pack')
 export const buyStickerPack = () => (state.status = 'shop-sticker-pack')
-export const buyDieUpgrade = () => (state.status = 'shop-die-upgrade')
 export const buyNewDie = () =>
   (state.dice = [...state.dice, getDie(4, state.dice.length)])
 

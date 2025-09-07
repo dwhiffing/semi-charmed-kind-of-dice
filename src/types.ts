@@ -58,7 +58,6 @@ export interface IState extends State {
     | 'lost'
     | 'shop'
     | 'menu'
-    | 'shop-die-upgrade'
     | 'shop-sticker-pack'
     | 'shop-passive-pack'
     | 'shop-sticker-apply'

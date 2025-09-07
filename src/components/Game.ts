@@ -1,11 +1,12 @@
 import { createElement } from '../utils/createElement'
-import { state } from '../state'
+import { startGame, state } from '../state'
 import { Cards } from './Cards'
 import { Controls } from './Controls'
 import { Menu } from './Menu'
 import { Dice } from './Dice'
 import { Passives } from './Passives'
 import { Shop } from './Shop'
+import { DEV } from '../constants'
 
 export const DiceGame = () => {
   const app = createElement('div', { className: 'dice-game' })
@@ -16,6 +17,8 @@ export const DiceGame = () => {
     app.classList.toggle('shop-mode', state.status.includes('shop'))
   }
   state.addUpdate('status', update)
+
+  if (DEV) startGame()
 
   return app
 }

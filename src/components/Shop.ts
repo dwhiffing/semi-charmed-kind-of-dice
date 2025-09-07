@@ -5,7 +5,6 @@ import {
   buyLives,
   buyPassivePack,
   buyNewDie,
-  buyDieUpgrade,
   buyStickerPack,
   getPassivePool,
   getStickerPool,
@@ -28,7 +27,7 @@ export const Shop = () => {
     if (state.status.match(/passive|sticker|upgrade/)) {
       const onSkip = () => (state.status = 'shop')
       renderButtons(
-        [{ label: 'Skip', cost: () => 0, effect: onSkip }],
+        [{ label: 'Back', cost: () => 0, effect: onSkip }],
         container,
       )
     }
@@ -54,7 +53,7 @@ const renderButtons = (items: Item[], el: HTMLElement) =>
       createElement(
         'button',
         { onclick: () => buyItem(item) },
-        `${item.label}: cost: ${item.cost()}`,
+        `${item.label}${item.cost() ? ` - $${item.cost()}` : ''}`,
       ),
     )
   })
@@ -62,20 +61,19 @@ const renderButtons = (items: Item[], el: HTMLElement) =>
 const renderStoreButtons = (el: HTMLElement) => {
   renderButtons(
     [
-      { label: 'Buy Lives X1', cost: () => 1, effect: () => buyLives(1) },
-      { label: 'Buy Lives X5', cost: () => 4, effect: () => buyLives(5) },
+      { label: 'Buy Lives X1', cost: () => 10, effect: () => buyLives(1) },
+      { label: 'Buy Lives X5', cost: () => 40, effect: () => buyLives(5) },
+      { label: 'Buy Sticker Pack', cost: () => 100, effect: buyStickerPack },
       {
         label: 'Buy Passive Pack',
-        cost: () => 8,
+        cost: () => 250,
         effect: buyPassivePack,
       },
       {
-        label: 'New Die',
-        cost: () => Math.pow(10, state.dice.length - 1),
+        label: 'Buy New Die',
+        cost: () => Math.pow(5, state.dice.length),
         effect: buyNewDie,
       },
-      { label: 'Upgrade Die', cost: () => 0, effect: buyDieUpgrade },
-      { label: 'Buy Sticker Pack', cost: () => 8, effect: buyStickerPack },
       { label: 'Exit Shop', cost: () => 0, effect: () => doNextRound() },
     ],
     el,

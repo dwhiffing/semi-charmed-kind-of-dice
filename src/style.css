@@ -120,8 +120,18 @@ button {
   cursor: pointer;
 }
 
+.die-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  button {
+    width: 80px;
+  }
+}
+
 .die {
-  width: 76px;
+  height: 80px;
+  width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -298,7 +308,7 @@ button {
   justify-content: center;
   align-items: center;
   background-color: var(--dark);
-  transition: all 750ms ease;
+  transition: all 0.5s ease;
 }
 
 #d6 .die-number .die svg {
@@ -344,7 +354,7 @@ button {
 .blue,
 .chip-count {
   font-weight: 800;
-  color: #6a6aff;
+  color: #8a8aff;
 }
 
 button,

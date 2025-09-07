@@ -7,7 +7,6 @@ export const DEV = true
 
 export const initialDelay = DEV ? 250 : 150
 export const perDieOffset = DEV ? 50 : 500
-export const ROUNDS_BEFORE_SHOP = 5
 export const afterSubmitRollDelay = DEV ? 50 : 500
 
 export const SVGS = [
@@ -34,58 +33,67 @@ const getDiceSum = () => getHandScore().sum
 const getDiceValueCount = (v: number) =>
   state.dice.filter((die) => die.roll === v).length
 
-export const CARDS: Record<string, () => Card> = {
-  chance: () => {
-    return {
-      label: 'chance',
-      goal: { variant: 'sum', value: 1, exact: false },
-      reward: () => ({
-        label: 'SUM',
-        qualified: true,
-        value: getDiceSum(),
-      }),
-    }
-  },
-  easySum: () => {
-    const value = rollDie(6) + 6
-    const score = value * 2
-    return {
-      label: `sum ≥ ${value}`,
-      goal: { variant: 'sum', value: value, exact: false },
-      reward: () => ({
-        qualified: getDiceSum() >= value,
-        value: score,
-      }),
-    }
-  },
-  easySetLength: (value = 3) => ({
+const getSumCard = (value: number) => {
+  return {
+    label: `sum ≥ ${value}`,
+    goal: { variant: 'sum', value: value, exact: false },
+    reward: () => ({
+      qualified: getDiceSum() >= value,
+      value: value * 2,
+    }),
+  } as Card
+}
+
+const getChanceCard = () => {
+  return {
+    label: 'chance',
+    goal: { variant: 'sum', value: 1, exact: false },
+    reward: () => ({
+      label: 'SUM',
+      qualified: true,
+      value: getDiceSum(),
+    }),
+  } as Card
+}
+
+const getSetCard = (value = 3) =>
+  ({
     label: `${value} OAK`,
     goal: { variant: 'set', value },
     reward: () => ({
       qualified: getHandScore().sets.some((s) => s.length >= value),
       value: 100,
     }),
-  }),
-  easySetValue: () => {
-    const value = rollDie(3) + 1 // 2, 3, or 4
-    return {
-      label: `set of ${value}s`,
-      goal: { variant: 'set', value, specific: true },
-      reward: () => ({
-        label: `${getDiceValueCount(value)} x 10`,
-        qualified: getDiceValueCount(value) > 0,
-        value: getDiceValueCount(value) * 10,
-      }),
-    }
-  },
-  easyRunLength: (value = 3) => ({
+  } as Card)
+
+const getRunCard = (value = 3) =>
+  ({
     label: `run of ${value}`,
     goal: { variant: 'run', value },
     reward: () => ({
       qualified: (getHandScore().run?.length ?? 0) >= value,
       value: 100,
     }),
-  }),
+  } as Card)
+
+const getCountCard = (value = 1) => {
+  return {
+    label: `set of ${value}s`,
+    goal: { variant: 'set', value, specific: true },
+    reward: () => ({
+      label: `${getDiceValueCount(value)} x 10`,
+      qualified: getDiceValueCount(value) > 0,
+      value: getDiceValueCount(value) * 10,
+    }),
+  } as Card
+}
+
+export const CARDS: Record<string, () => Card> = {
+  chance: () => getChanceCard(),
+  easySum: () => getSumCard(10),
+  easySetLength: () => getSetCard(3),
+  easySetValue: () => getCountCard(rollDie(3) + 1), // 2, 3, or 4
+  easyRunLength: () => getRunCard(3),
 }
 
 // { variant: 'set', value: rollDie(4) } - // reward: multi = length of set * 2

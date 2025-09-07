@@ -1,44 +1,52 @@
 import { createElement } from '../utils/createElement'
-import { doRoll, doRollCards, doSubmit, state } from '../state'
+import { doRoll, state } from '../state'
 
 export const Controls = () => {
   const btnRoll = createElement('button', 'Roll') as HTMLButtonElement
-  const btnRollCards = createElement(
-    'button',
-    'Roll Cards',
-  ) as HTMLButtonElement
-  const btnSubmit = createElement('button', 'Submit') as HTMLButtonElement
-  const info = createElement('span', { className: 'info' })
-  const gameButtons = createElement(
+  const roundCount = createElement('div', { className: 'round-count' })
+  const lifeCount = createElement('div', { className: 'life-count' })
+  const chipCount = createElement('div', { className: 'chip-count' })
+  const gameButtons = createElement('div', { className: 'buttons' }, btnRoll)
+  const info = createElement(
     'div',
-    { className: 'buttons' },
-    btnRoll,
-    btnSubmit,
-    btnRollCards,
+    { className: 'info' },
+    roundCount,
+    lifeCount,
+    chipCount,
   )
   const container = createElement(
     'div',
     { className: 'controls' },
-    gameButtons,
     info,
+    gameButtons,
   )
 
   const update = () => {
     const rollDisabled =
       state.dice.every((d) => d.selected) || state.status !== 'ready'
-    const submitDisabled = state.dice.some((d) => typeof d.roll !== 'number')
     btnRoll.toggleAttribute('disabled', rollDisabled)
-    btnSubmit.toggleAttribute('disabled', submitDisabled)
 
     gameButtons.classList.toggle('hidden', state.status.includes('shop'))
 
-    const summary = `Round: ${state.round} You have ${state.lives} lives and ${state.chips} chips\nLast score: ${state.scoreInfo}`
-    info.textContent = state.status === 'lost' ? 'You lose!' : summary
+    roundCount.innerHTML = ''
+    lifeCount.innerHTML = ''
+    chipCount.innerHTML = ''
+
+    roundCount.append(
+      createElement('div', {}, `${state.round}`),
+      createElement('div', {}, `ROUND`),
+    )
+    lifeCount.append(
+      createElement('div', {}, `${state.lives}`),
+      createElement('div', {}, `LIVES`),
+    )
+    chipCount.append(
+      createElement('div', {}, `${state.chips}`),
+      createElement('div', {}, `CHIPS`),
+    )
   }
 
   btnRoll.onclick = doRoll
-  btnRollCards.onclick = doRollCards
-  btnSubmit.onclick = doSubmit
 
   state.addUpdate('lives', update)
   state.addUpdate('status', update)

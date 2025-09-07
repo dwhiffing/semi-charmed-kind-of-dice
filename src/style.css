@@ -24,7 +24,7 @@ body {
   height: 100vh;
   &.shop-mode {
     .shop {
-      display: block;
+      display: flex;
     }
     .cards {
       display: none;
@@ -34,6 +34,8 @@ body {
 
 .shop {
   display: none;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .cards {
@@ -42,35 +44,60 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   width: 100%;
+  max-width: 300px;
   .card {
-    padding: 20px;
+    cursor: pointer;
+    padding: 12px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    text-align: center;
     align-items: center;
     gap: 8px;
     background-color: var(--surface);
     border-radius: 12px;
     color: var(--light);
     border: 2px solid black;
-    & > div {
-      display: flex;
-      flex-direction: row;
-      gap: 4px;
+
+    &.completed {
+      background-color: #444;
+      border-color: #333;
+      .goal {
+        opacity: 0.3;
+      }
+      .reward {
+        display: none;
+      }
+      .score {
+        border-color: var(--light);
+      }
     }
-    &.completable {
-      border-color: var(--light);
+    &:hover {
+      background-color: #444;
+      .score div {
+        font-weight: 800;
+        opacity: 1 !important;
+      }
+    }
+    .reward-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .score,
+    .reward {
+      border: 2px solid #999;
+      border-radius: 8px;
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+    }
+    .reward {
+      border-color: #555;
     }
     .goal {
       font-weight: 800;
-    }
-    .red {
-      font-weight: 800;
-      color: #ff4e4e;
-    }
-    .blue {
-      font-weight: 800;
-      color: #6a6aff;
     }
   }
 }
@@ -227,19 +254,51 @@ button {
 
 .controls {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 8px;
 
-  .buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+  .buttons button {
+    aspect-ratio: 1;
+    height: 100%;
   }
 
   button[disabled] {
     opacity: 0.4;
   }
+
+  max-width: 300px;
+  width: 100%;
+
+  .info {
+    background-color: var(--surface);
+    border: 2px solid black;
+    padding: 8px;
+    border-radius: 12px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    .round-count,
+    .life-count,
+    .chip-count {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 800;
+    }
+  }
+}
+
+.menu {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--dark);
+  transition: all 750ms ease;
 }
 
 #d6 .die-number .die svg {
@@ -248,6 +307,44 @@ button {
 
 .hidden {
   display: none !important;
+}
+
+button {
+  border: 2px solid #000;
+  background-color: #aaa;
+  color: black;
+  border-radius: 4px;
+  font-weight: bold;
+  &:hover {
+    background-color: #999;
+  }
+  padding: 4px 12px;
+}
+
+.muted {
+  opacity: 0.5;
+}
+.bold {
+  font-weight: 800;
+}
+
+.green {
+  font-weight: 800;
+  color: #51ff4e;
+}
+.yellow {
+  font-weight: 800;
+  color: #f9ff4e;
+}
+.red,
+.life-count {
+  font-weight: 800;
+  color: #ff4e4e;
+}
+.blue,
+.chip-count {
+  font-weight: 800;
+  color: #6a6aff;
 }
 
 button,

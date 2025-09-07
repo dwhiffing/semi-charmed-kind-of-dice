@@ -2,7 +2,10 @@ import { state } from '.'
 import type { Die, GoalVariant } from '../types'
 
 export const getHandScore = () => {
-  const sum = state.dice.reduce((sum, die) => sum + (die.roll ?? 0), 0)
+  const sum = state.dice.reduce(
+    (sum, die) => sum + ((die.roll ?? 0) === 1 ? 0 : die.roll ?? 0),
+    0,
+  )
   const sets = getSets(state.dice)
   const run = getRun(state.dice)
   // const oddCount = state.dice.filter((die) => (die.roll ?? 0) % 2 === 1).length

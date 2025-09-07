@@ -1,6 +1,5 @@
 import {
   afterSubmitRollDelay,
-  ROUNDS_BEFORE_SHOP,
   DEV,
   initialDelay,
   perDieOffset,
@@ -9,24 +8,20 @@ import type { IState, Item } from '../types'
 import { createState } from '../utils/createState'
 import { clickSound } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
-import { getCardFromCardPool, getIsCardCompleted } from './card'
-import { getDie, updateDice, doRollDie } from './die'
-import { getHandScore } from './getHandScore'
+import { getNewCards } from './card'
+import { updateDice, doRollDie, getDie } from './die'
 
-export const state = createState({
-  dice: [getDie(4, 0), getDie(4, 1), getDie(4, 2)],
+const initialState = {
+  dice: [],
   cards: [],
-  cardPool: [],
   passives: [],
-  lives: 9,
-  chips: 10000,
-  round: 4,
-  scoreBase: 0,
-  scoreMulti: 1,
+  lives: 0,
+  chips: 0,
+  round: 1,
   pendingSticker: null,
-  scoreInfo: '',
-  status: 'ready',
-}) as IState
+  status: 'menu',
+}
+export let state = createState(initialState) as IState
 
 export const buyItem = (item: Item) => {
   const cost = item.cost()
@@ -37,11 +32,7 @@ export const buyItem = (item: Item) => {
 }
 
 export const doEnterShop = () => {
-  state.chips += state.scoreBase * state.scoreMulti
-  state.scoreBase = 0
-  state.scoreMulti = 1
-  state.scoreInfo = ''
-
+  state.cards = getNewCards()
   state.dice = state.dice.map((d) => ({ ...d, selected: false }))
   state.status = 'shop'
 }
@@ -66,51 +57,41 @@ export const doRoll = async () => {
     }),
   )
 
-  state.status = state.lives <= 0 ? 'lost' : 'ready'
+  if (state.lives <= 0) {
+    state.status = 'lost'
+  } else {
+    state.status = 'ready'
+  }
 }
 
-export const doRollCards = async () => {
-  state.cards = state.cards.map(getCardFromCardPool)
-}
+export const doSubmit = (index: number) => {
+  if (state.cards[index].score !== undefined) return
 
-export const doSubmit = () => {
-  // Calculate score
-  const handScore = getHandScore()
-  let prevScore = state.scoreBase
-  // state.scoreBase += handScore.score
-  // state.scoreMulti += handScore.multi
-
-  state.cards.forEach((card) => {
-    if (getIsCardCompleted(card)) {
-      state.scoreBase += card.reward.scoreBase ?? 0
-      // state.scoreMulti += card.reward.scoreMulti ?? 0
-
-      const setLength = handScore.sets[0]?.length ?? 0
-      const runLength = handScore.run?.length ?? 0
-      const length = setLength ?? runLength
-
-      state.scoreBase += (card.reward.lengthBase ?? 0) * length
-      // state.scoreMulti += (card.reward.lengthMulti ?? 0) * length
-    }
-  })
-
-  state.scoreInfo = `${handScore.label}. ${prevScore} + ${handScore.score} = ${
-    state.scoreBase
-  }.  ${state.scoreBase} * ${state.scoreMulti} = ${
-    state.scoreBase * state.scoreMulti
-  }`
-
-  // reset completed cards
-  state.cards = state.cards.map((card) =>
-    getIsCardCompleted(card) ? getCardFromCardPool() : card,
+  state.cards = state.cards.map((c, i) =>
+    i === index
+      ? { ...c, score: c.reward().qualified ? c.reward().value : 0 }
+      : c,
   )
 
-  // next round
-  if (++state.round % ROUNDS_BEFORE_SHOP === 0) {
-    doEnterShop()
+  if (state.cards.every((c) => c.score !== undefined)) {
+    state.chips += state.cards.reduce((sum, c) => sum + (c.score ?? 0), 0)
+    setTimeout(() => doEnterShop(), 500)
+    state.round++
   } else {
     // reset dice
     state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
     doNextRound()
   }
+}
+
+export const startGame = () => {
+  state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
+  state.cards = getNewCards()
+  state.passives = []
+  state.lives = 9
+  state.chips = 0
+  state.round = 1
+  state.pendingSticker = null
+
+  setTimeout(() => doRoll(), afterSubmitRollDelay)
 }

@@ -51,8 +51,6 @@ export const Die = (index: number) => {
 
     container.classList.toggle('hidden', isHidden)
 
-    console.log({ isHidden })
-
     die.style.color = colors[_die.sides]
     die.style.opacity = _die.roll == null ? '0.5' : '1'
     die.classList.remove('d4', 'd6', 'd8', 'd10', 'd12', 'd20')

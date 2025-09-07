@@ -1,3 +1,5 @@
+import { state } from './state'
+import { getHandScore } from './state/getHandScore'
 import type { Card } from './types'
 import { rollDie } from './utils'
 
@@ -27,25 +29,62 @@ export const colors: Record<number, string> = {
   4: '#28a745',
 }
 
+const getDiceSum = () => getHandScore().sum
+
+const getDiceValueCount = (v: number) =>
+  state.dice.filter((die) => die.roll === v).length
+
 export const CARDS: Record<string, () => Card> = {
-  easySum: () => {
-    const value = rollDie(6) + 6
+  chance: () => {
     return {
-      goal: { variant: 'sum', value: value, exact: false },
-      reward: { scoreBase: value * 2 },
+      label: 'chance',
+      goal: { variant: 'sum', value: 1, exact: false },
+      reward: () => ({
+        label: 'SUM',
+        qualified: true,
+        value: getDiceSum(),
+      }),
     }
   },
-  easySetLength: () => ({
-    goal: { variant: 'set', value: 3 },
-    reward: { scoreBase: 100 },
+  easySum: () => {
+    const value = rollDie(6) + 6
+    const score = value * 2
+    return {
+      label: `sum ≥ ${value}`,
+      goal: { variant: 'sum', value: value, exact: false },
+      reward: () => ({
+        qualified: getDiceSum() >= value,
+        value: score,
+      }),
+    }
+  },
+  easySetLength: (value = 3) => ({
+    label: `${value} OAK`,
+    goal: { variant: 'set', value },
+    reward: () => ({
+      qualified: getHandScore().sets.some((s) => s.length >= value),
+      value: 100,
+    }),
   }),
-  easySetValue: () => ({
-    goal: { variant: 'set', value: rollDie(4), specific: true },
-    reward: { lengthBase: 10 },
-  }),
-  easyRunLength: () => ({
-    goal: { variant: 'run', value: 3 },
-    reward: { scoreBase: 100 },
+  easySetValue: () => {
+    const value = rollDie(3) + 1 // 2, 3, or 4
+    return {
+      label: `set of ${value}s`,
+      goal: { variant: 'set', value, specific: true },
+      reward: () => ({
+        label: `${getDiceValueCount(value)} x 10`,
+        qualified: getDiceValueCount(value) > 0,
+        value: getDiceValueCount(value) * 10,
+      }),
+    }
+  },
+  easyRunLength: (value = 3) => ({
+    label: `run of ${value}`,
+    goal: { variant: 'run', value },
+    reward: () => ({
+      qualified: (getHandScore().run?.length ?? 0) >= value,
+      value: 100,
+    }),
   }),
 }
 

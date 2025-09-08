@@ -31,7 +31,7 @@ export const rollDie = (sides: number, index: number) => {
 }
 
 export const randInt = (min: number, max: number) =>
-  Math.floor(Math.random() * max) + min
+  Math.floor(Math.random() * (max + 1 - min)) + min
 
 export const adjacentRange = (value: number, range: number): number[] => {
   const r = Math.max(1, Math.floor(range))

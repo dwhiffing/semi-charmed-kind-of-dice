@@ -6,7 +6,7 @@ import { randInt, shuffle } from '../utils'
 const getDiceSum = () => getHandScore().sum
 
 const getDiceValueCount = (v: number) =>
-  state.dice.filter((die) => die.roll === v).length
+  state.dice.filter((die) => die.selected && die.roll === v).length
 
 const getSumCard = (value: number, reward = 50) => {
   return {
@@ -33,7 +33,7 @@ const getAnySumCard = () => {
     label: 'sum',
     reward: () => ({
       label: state.dice
-        .filter((d) => (d.roll ?? 0) > 1)
+        .filter((d) => (d.selected ? d.roll ?? 0 : 0) > 1)
         .map((d) => d.roll)
         .join('+'),
       qualified: true,

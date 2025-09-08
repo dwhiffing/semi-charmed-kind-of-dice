@@ -85,7 +85,12 @@ export const doRoll = async () => {
 
 export const doSubmit = (index: number) => {
   const card = state.cards[index]
-  if (card.score !== undefined || card.bonus) return
+  if (
+    card.score !== undefined ||
+    card.bonus ||
+    state.dice.every((d) => !d.selected)
+  )
+    return
 
   state.cards = state.cards.map((c, i) =>
     i === index
@@ -93,13 +98,12 @@ export const doSubmit = (index: number) => {
       : c,
   )
 
-  // state.dice = state.dice.map((d) =>
-  //   d.selected ? { ...d, selected: false, roll: null } : d,
-  // )
+  state.dice = state.dice.map((d) =>
+    d.selected ? { ...d, selected: false, roll: null } : d,
+  )
 
   if (!getIsRoundComplete()) {
     // reset dice
-    state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: null }))
     doNextRound()
   } else {
     // score bonus cards

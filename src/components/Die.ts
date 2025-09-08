@@ -51,6 +51,7 @@ export const Die = (index: number) => {
     die.classList.toggle('rolling', isRolling)
     die.classList.toggle('selected', _die.selected)
     die.classList.toggle('die-number-cat', _die.roll === 1)
+    die.style.opacity = _die.roll === null ? '0.3' : '1'
 
     number.textContent = _die.roll ? `${_die.roll}` : ''
 

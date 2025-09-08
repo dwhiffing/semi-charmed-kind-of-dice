@@ -25,7 +25,7 @@ export const toggleDieSide = (index: number) =>
 
 export const toggleDieSelected = (index: number) =>
   updateDice((die, i) => {
-    if (i === index) return { ...die, selected: !die.selected }
+    if (i === index && die.roll) return { ...die, selected: !die.selected }
     return die
   })
 

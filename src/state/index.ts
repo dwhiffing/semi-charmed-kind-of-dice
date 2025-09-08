@@ -8,7 +8,7 @@ import type { IState, Item } from '../types'
 import { createState } from '../utils/createState'
 import { clickSound } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
-import { getNewCards } from './card'
+import { getNewCards, resetPools } from './card'
 import { updateDice, doRollDie, getDie } from './die'
 
 const initialState = {
@@ -104,6 +104,7 @@ export const startGame = () => {
   state.status = 'ready'
   state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
   state.cards = getNewCards()
+  resetPools()
 
   setTimeout(() => doRoll(), afterSubmitRollDelay)
 }

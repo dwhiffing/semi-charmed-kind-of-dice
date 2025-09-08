@@ -4,16 +4,8 @@ export type Passive = {
   variant: 'basic'
 }
 
-export type Goal = {
-  variant: GoalVariant
-  value: number
-  exact?: boolean
-  specific?: boolean
-}
-
 export type Card = {
   label: string
-  goal: Goal
   reward: () => { qualified: boolean; label?: string; value: number }
   score?: number
 }

@@ -1,5 +1,6 @@
 import { createElement } from '../utils/createElement'
 import { doRoll, state } from '../state'
+import { onClickDie } from '../state/die'
 
 export const Controls = () => {
   const btnRoll = createElement('button', '') as HTMLButtonElement
@@ -53,6 +54,23 @@ export const Controls = () => {
   }
 
   btnRoll.onclick = doRoll
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.code === 'Space' && !btnRoll.hasAttribute('disabled')) {
+      event.preventDefault()
+      doRoll()
+    }
+
+    const key = parseInt(event.key)
+    if (key >= 1 && key <= 9) {
+      const dieIndex = key - 1
+      if (dieIndex < state.dice.length) {
+        event.preventDefault()
+        onClickDie(dieIndex)
+      }
+    }
+  }
+  document.addEventListener('keydown', handleKeyPress)
 
   state.addUpdate('lives', update)
   state.addUpdate('status', update)

@@ -159,28 +159,36 @@ export const CARDS: Record<string, () => Card> = {
   // doubleTriple: () => getTwoPairCard(3, 2),
 }
 
-export let pools: Record<string, Array<Card>> = {}
+export let pools: Record<string, string[]> = {}
 export const resetPools = () => (pools = {})
 
-const draw = (key: number) => {
-  if (!pools[key]) pools[key] = []
+const draw = (...keys: number[]) =>
+  keys.map((key) => {
+    if (!pools[key]) pools[key] = []
 
-  const decks: Card[][] = [
-    [CARDS.chance(), CARDS.min(), CARDS.max(), CARDS.setUnderFour()],
-    [CARDS.tenSum(), CARDS.pair(), CARDS.threeOak()],
-    [CARDS.exactSumEasy(), CARDS.exactSumEasy(), CARDS.threeRun()],
-    [CARDS.fourOak(), CARDS.fourRun()],
-    [CARDS.fiveOak(), CARDS.fiveRun(), CARDS.fullHouse()],
-  ]
+    const decks: string[][] = [
+      ['bonus'],
+      ['chance', 'setUnderFour'],
+      ['tenSum', 'pair', 'threeOak', 'exactSumEasy'],
+      ['exactSumEasy', 'exactSumEasy', 'threeRun'],
+      ['fourOak', 'fourRun'],
+      ['fiveOak', 'fiveRun', 'fullHouse'],
+    ]
 
-  if (pools[key].length === 0) pools[key].push(...shuffle(decks[key] || []))
-  return pools[key].pop() as Card
+    if (pools[key].length === 0) pools[key].push(...shuffle(decks[key] || []))
+    const cardKey = pools[key].pop()!
+    return CARDS[cardKey]()
+  })
+
+export const drawCards = () => {
+  if (state.round <= 5) return draw(2, 1, 1)
+  if (state.round <= 10) return draw(1, 1, 1)
+  if (state.round <= 15) return draw(2, 1, 1)
+  if (state.round <= 20) return draw(3, 2, 1)
+  return draw(4, 3, 1)
 }
 
 export const getNewCards = () => {
-  if (state.round <= 5) return [draw(1), draw(0), draw(0)]
-  if (state.round <= 10) return [draw(1), draw(1), draw(0)]
-  if (state.round <= 15) return [draw(2), draw(1), draw(0)]
-  if (state.round <= 20) return [draw(3), draw(2), draw(0)]
-  return [draw(4), draw(3), draw(0)]
+  state.cards = drawCards()
+  // state.cards = [...state.cards, ...draw(0)]
 }

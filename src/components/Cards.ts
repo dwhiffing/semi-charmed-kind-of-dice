@@ -55,7 +55,7 @@ const Card = (index: number) => {
       createElement(
         'div',
         {
-          className: !isCompleted ? '' : isZero ? 'red' : 'blue',
+          className: !isCompleted ? '' : isZero ? 'red' : 'bold',
           style: { opacity: _card.score === undefined ? '0.35' : '1' },
         },
         typeof _card.score === 'number'

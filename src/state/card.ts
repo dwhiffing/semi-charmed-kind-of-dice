@@ -1,7 +1,7 @@
 import { state } from '.'
 import { getHandScore } from './getHandScore'
 import type { Card } from '../types'
-import { rollDie, shuffle } from '../utils'
+import { randInt, shuffle } from '../utils'
 
 const getDiceSum = () => getHandScore().sum
 
@@ -137,12 +137,12 @@ export const CARDS: Record<string, () => Card> = {
   min: () => getMinMaxCard(true),
   max: () => getMinMaxCard(false),
   difference: () => getDifferenceCard(),
-  setUnderFour: () => getCountCard(rollDie(3) + 1),
+  setUnderFour: () => getCountCard(randInt(2, 4)),
 
   tenSum: () => getSumCard(10, 20),
   pair: () => getSetCard(2, 10),
   threeOak: () => getSetCard(3, 50),
-  exactSumEasy: () => getExactSumCard(rollDie(6) + 6, 25),
+  exactSumEasy: () => getExactSumCard(randInt(6, 12), 25),
   threeRun: () => getRunCard(3, 75),
 
   fourOak: () => getSetCard(4, 150),

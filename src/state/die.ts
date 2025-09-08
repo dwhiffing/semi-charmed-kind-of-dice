@@ -81,7 +81,7 @@ export const doRollDie = async (die: Die, delay: number) => {
   return new Promise((resolve) =>
     setTimeout(() => {
       app.classList.remove('shake')
-      const roll = rollDie(die.sides)
+      const roll = rollDie(die.sides, die.index)
       state.dice = state.dice.map((d, idx) =>
         idx === die.index ? { ...d, roll } : d,
       )

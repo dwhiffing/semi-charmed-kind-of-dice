@@ -8,6 +8,7 @@ export type Card = {
   label: string
   reward: () => { qualified: boolean; label?: string; value: number }
   score?: number
+  bonus?: boolean
 }
 
 export type Sticker = {

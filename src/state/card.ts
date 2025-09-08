@@ -132,7 +132,23 @@ const getDifferenceCard = () => {
   } as Card
 }
 
+const getBonusCard = (threshold: number, points: number) => {
+  return {
+    label: `score ≥ ${threshold}`,
+    reward: () => {
+      const score = state.cards.reduce((s, c) => (c.score ?? 0) + s, 0)
+      return {
+        qualified: score >= threshold,
+        value: points,
+      }
+    },
+    bonus: true,
+  } as Card
+}
+
 export const CARDS: Record<string, () => Card> = {
+  bonus: () => getBonusCard(20, 25),
+
   chance: () => getAnySumCard(),
   min: () => getMinMaxCard(true),
   max: () => getMinMaxCard(false),
@@ -190,5 +206,5 @@ export const drawCards = () => {
 
 export const getNewCards = () => {
   state.cards = drawCards()
-  // state.cards = [...state.cards, ...draw(0)]
+  state.cards = [...state.cards, ...draw(0)]
 }

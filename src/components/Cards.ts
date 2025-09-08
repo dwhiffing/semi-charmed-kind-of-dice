@@ -47,6 +47,7 @@ const Card = (index: number) => {
     )
 
     container.classList.toggle('completed', typeof _card.score === 'number')
+    container.classList.toggle('bonus', !!_card.bonus)
 
     const isCompleted = typeof _card.score === 'number'
     const isZero = _card.score === 0

@@ -1,5 +1,5 @@
 import { createElement } from '../utils/createElement'
-import { doRoll, state } from '../state'
+import { doRoll, getIsRoundComplete, state } from '../state'
 import { onClickDie } from '../state/die'
 
 export const Controls = () => {
@@ -27,7 +27,7 @@ export const Controls = () => {
       state.dice.every((d) => d.selected) ||
       !!state.status.match(/rolling|menu|lost/)
     btnRoll.toggleAttribute('disabled', rollDisabled)
-    btnRoll.textContent = state.cards.every((c) => typeof c.score === 'number')
+    btnRoll.textContent = getIsRoundComplete()
       ? 'Enter Shop'
       : state.status === 'shop'
       ? 'Next Round'

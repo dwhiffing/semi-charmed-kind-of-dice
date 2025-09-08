@@ -72,7 +72,17 @@ body {
         border-color: var(--light);
       }
     }
-    &:hover {
+
+    &.bonus {
+      background-color: transparent;
+      border-color: transparent;
+      cursor: default;
+      .score,
+      .reward {
+        border-color: #fff7;
+      }
+    }
+    &:not(.bonus):hover {
       background-color: #444;
       .score div {
         font-weight: 800;

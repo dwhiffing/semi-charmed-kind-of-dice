@@ -39,8 +39,8 @@ export const Die = (index: number) => {
     if (!_die) return
 
     const isUpgradeButtonHidden = state.status !== 'shop'
-
-    const upgradeLabel = `Upgrade ${getDieUpgradeCost(index)} Charms`
+    const upgradeCost = getDieUpgradeCost(index)
+    const upgradeLabel = `Upgrade ${upgradeCost} Charms`
 
     const isRolling =
       !_die.selected && state.status === 'rolling' && _die.roll == null
@@ -57,7 +57,10 @@ export const Die = (index: number) => {
 
     number.textContent = _die.roll ? `${_die.roll}` : ''
 
-    upgradeButton.toggleAttribute('disabled', _die.sides >= 20)
+    upgradeButton.toggleAttribute(
+      'disabled',
+      state.charms < upgradeCost || _die.sides >= 20,
+    )
     upgradeButton.classList.toggle('hidden', isUpgradeButtonHidden)
     upgradeButton.textContent = upgradeLabel
 
@@ -72,6 +75,7 @@ export const Die = (index: number) => {
   }
 
   state.addUpdate('dice', update)
+  state.addUpdate('charms', update)
   state.addUpdate('status', update)
   update()
 

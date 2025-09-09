@@ -42,16 +42,13 @@ export const Die = (index: number) => {
 
     const upgradeLabel = `Upgrade ${getDieUpgradeCost(index)} Charms`
 
-    const isClickable =
-      state.status === 'ready' || state.status.includes('shop-sticker-apply')
-
     const isRolling =
       !_die.selected && state.status === 'rolling' && _die.roll == null
 
     die.style.color = colors[_die.sides]
     die.classList.remove('d4', 'd6', 'd8', 'd10', 'd12', 'd20')
     die.classList.add(`d${_die.sides}`)
-    die.classList.toggle('clickable', isClickable)
+    // die.classList.toggle('clickable', state.status === 'ready')
     die.classList.toggle('rolling', isRolling)
     die.classList.toggle('selected', _die.selected)
     die.classList.toggle('die-number-cat', isDieBust(_die))

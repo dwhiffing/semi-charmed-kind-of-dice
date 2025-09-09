@@ -21,7 +21,7 @@ export const isDieBust = (die: Die) => {
 export const getDie = (sides: number, index: number) =>
   ({
     sides,
-    roll: null,
+    roll: sides,
     status: 'ready',
     selected: false,
     index,
@@ -54,6 +54,7 @@ export const upgradeDie = (index: number) =>
       return {
         ...die,
         sides: die.sides >= 12 ? 20 : die.sides + 2,
+        roll: die.sides >= 12 ? 20 : die.sides + 2,
       }
     return die
   })

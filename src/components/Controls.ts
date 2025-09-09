@@ -39,7 +39,7 @@ export const Controls = () => {
       : 'Roll'
     btnRoll.style.flex = '1'
 
-    btnShop.toggleAttribute('disabled', false)
+    btnShop.toggleAttribute('disabled', state.status !== 'ready')
     btnShop.style.display = state.status === 'shop' || isBust ? 'none' : 'block'
     btnShop.textContent = 'End Day'
 

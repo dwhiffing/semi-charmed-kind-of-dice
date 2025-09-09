@@ -80,14 +80,12 @@ button {
       stroke-linecap: round;
     }
   }
-  .charm {
-    width: 35px;
-    opacity: 0;
 
-    svg {
-      fill: black;
-    }
+  .charm {
+    width: 32px;
+    opacity: 0;
   }
+
   .die-number {
     font-size: 18px;
     font-weight: 700;
@@ -97,6 +95,7 @@ button {
     pointer-events: none;
     user-select: none;
   }
+
   svg rect:first-of-type,
   svg path:first-of-type {
     transition: all 0.3s ease;
@@ -105,6 +104,13 @@ button {
     stroke: transparent;
     stroke-width: 4px;
   }
+
+  &.selected svg rect:first-of-type,
+  &.selected svg path:first-of-type {
+    stroke-width: 12px;
+    stroke: white;
+  }
+
   &.die-number-cat {
     .die-number {
       opacity: 0;
@@ -113,6 +119,7 @@ button {
       opacity: 1;
     }
   }
+
   &.die-number-charm {
     .die-number {
       opacity: 0;
@@ -136,11 +143,7 @@ button {
       }
     }
   }
-  &.selected svg rect:first-of-type,
-  &.selected svg path:first-of-type {
-    stroke-width: 12px;
-    stroke: white;
-  }
+
   &.rolling {
     animation: die-roll 500ms linear infinite;
     .die-number,
@@ -150,23 +153,61 @@ button {
     }
   }
 
-  &.d20 .die-number {
-    font-size: 14px;
+  &.d4 {
+    .die-number {
+      translate: 0 6px;
+    }
+    .charm {
+      width: 40px;
+    }
+    .cat {
+      translate: 0 8px;
+    }
   }
-  &.d20 .cat {
-    width: 20px;
+
+  &.d6 {
+    .die-number {
+      font-size: 24px;
+    }
+    .cat,
+    .charm {
+      width: 50px;
+    }
   }
-  &.d6 .die-number {
-    font-size: 24px;
+
+  &.d8 {
+    .charm {
+      width: 40px;
+    }
   }
-  &.d6 .cat {
-    width: 40px;
+
+  &.d10 {
+    .cat {
+      width: 28px;
+    }
   }
-  &.d4 .die-number {
-    translate: 0 6px;
+
+  &.d12 {
+    .cat {
+      width: 26px;
+    }
+    .charm {
+      translate: 0 -2px;
+    }
   }
-  &.d4 .cat {
-    translate: 0 8px;
+
+  &.d20 {
+    .die-number {
+      font-size: 14px;
+    }
+
+    .cat {
+      width: 26px;
+    }
+
+    .charm {
+      translate: 0 -3px;
+    }
   }
 }
 

@@ -8,124 +8,99 @@ import type { IState, Item } from '../types'
 import { createState } from '../utils/createState'
 import { clickSound } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
-import { getNewCards, resetPools } from './card'
-import { updateDice, doRollDie, getDie } from './die'
+import { updateDice, doRollDie, getDie, isDieBust } from './die'
 
 const initialState = {
   dice: [],
-  cards: [],
-  passives: [],
-  lives: 0,
-  chips: 0,
+  charms: 0,
+  points: 0,
+  pendingCharms: 0,
+  pendingPoints: 0,
   round: 1,
-  pendingSticker: null,
   status: 'menu',
 }
 export let state = createState(initialState) as IState
 
-export const getIsRoundComplete = () =>
-  state.cards.every((c) => c.score !== undefined || c.bonus)
+// export const getIsRoundComplete = () =>
+//   state.cards.every((c) => c.score !== undefined || c.bonus)
 
 export const buyItem = (item: Item) => {
   const cost = item.cost()
-  if (state.chips < cost) return
+  if (state.charms < cost) return
 
-  state.chips -= cost
+  state.charms -= cost
   item.effect()
 }
 
 export const doEnterShop = () => {
+  if (state.round === 13) {
+    state.status = 'menu'
+    return
+  }
   state.round++
-  state.chips += state.cards.reduce((sum, c) => sum + (c.score ?? 0), 0)
-  getNewCards()
+  state.charms += state.pendingCharms
+  state.points += state.pendingPoints
+  state.pendingCharms = 0
+  state.pendingPoints = 0
   state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: d.sides }))
   state.status = 'shop'
 }
 
-export const doNextRound = () => {
-  state.status = 'ready'
-  if (state.dice.every((d) => d.roll == null))
-    setTimeout(() => doRoll(), afterSubmitRollDelay)
-}
-
 export const doRoll = async () => {
-  if (state.status.match(/passive|sticker/)) {
-    state.status = 'shop'
-    return
-  }
+  // if (getIsRoundComplete()) {
+  //   return doEnterShop()
+  // }
 
-  if (getIsRoundComplete()) {
-    return doEnterShop()
-  }
-
-  if (state.status === 'shop') {
-    doNextRound()
-  }
+  // if (state.status === 'shop') {
+  //   doNextRound()
+  // }
 
   if (state.status === 'rolling') return
   if (!DEV) zzfx(...clickSound)
 
   state.status = 'rolling'
-  updateDice((die) => ({ ...die, roll: die.selected ? die.roll : null }))
+  updateDice((die) => ({
+    ...die,
+    roll: die.selected || isDieBust(die) ? die.roll : null,
+  }))
 
   let j = 0
   await Promise.all(
-    state.dice.map(async (die) => {
-      const delay = initialDelay + j++ * perDieOffset
-      await doRollDie(die, delay)
-    }),
+    state.dice
+      .filter((die) => !die.selected && !isDieBust(die))
+      .map(async (die) => {
+        const delay = initialDelay + j++ * perDieOffset
+        await doRollDie(die, delay)
+      }),
   )
 
-  if (state.lives <= 0) {
-    state.status = 'lost'
-  } else {
-    state.status = 'ready'
+  const scoringDice = state.dice.filter(
+    (d) => d.roll !== d.sides && d.roll !== 1,
+  )
+  state.pendingCharms += state.dice.filter((d) => d.roll === d.sides).length
+  state.pendingPoints += scoringDice.reduce((acc, d) => acc + (d.roll ?? 0), 0)
+
+  const isBust = state.dice.every((d) => isDieBust(d) || d.selected)
+
+  if (isBust) {
+    state.pendingCharms = 0
+    state.pendingPoints = 0
   }
+  state.status = 'ready'
 }
 
-export const doSubmit = (index: number) => {
-  const card = state.cards[index]
-  if (
-    card.score !== undefined ||
-    card.bonus ||
-    state.dice.every((d) => !d.selected)
-  )
-    return
-
-  state.cards = state.cards.map((c, i) =>
-    i === index
-      ? { ...c, score: c.reward().qualified ? c.reward().value : 0 }
-      : c,
-  )
-
+export const doSubmit = () => {
   state.dice = state.dice.map((d) =>
     d.selected ? { ...d, selected: false, roll: null } : d,
   )
-
-  if (!getIsRoundComplete()) {
-    // reset dice
-    doNextRound()
-  } else {
-    // score bonus cards
-    state.cards = state.cards.map((card) => {
-      if (card.bonus && card.reward().qualified) {
-        card.score = card.reward().value
-      }
-      return { ...card }
-    })
-  }
 }
 
 export const startGame = () => {
-  state.passives = []
-  state.lives = 9
-  state.chips = 0
+  state.charms = 0
+  state.points = 0
   state.round = 1
-  state.pendingSticker = null
   state.status = 'ready'
-  state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
-  getNewCards()
-  resetPools()
+  state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2), getDie(4, 3)]
 
   setTimeout(() => doRoll(), afterSubmitRollDelay)
 }

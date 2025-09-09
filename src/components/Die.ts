@@ -1,20 +1,26 @@
 import { createElement } from '../utils/createElement'
 import { colors } from '../constants'
 import { state } from '../state'
-import { getDieUpgradeCost, onClickDie, onClickUpgradeDie } from '../state/die'
+import {
+  getDieUpgradeCost,
+  isDieBust,
+  isDieCharm,
+  onClickDie,
+  onClickUpgradeDie,
+} from '../state/die'
 
 export const Die = (index: number) => {
   const container = createElement('div', { className: 'die-container' })
   const number = createElement('div', { className: 'die-number' })
-  const sticker = createElement('div', { className: 'sticker' })
   const catSvg = document.querySelector(`#cat svg`)!.cloneNode(true)
+  const moonSvg = document.querySelector(`#charm svg`)!.cloneNode(true)
   const dieSvg = createElement('svg')
 
   const die = createElement('div', {
     className: 'die',
     onclick: () => onClickDie(index),
   })
-  die.append(number, sticker, catSvg, dieSvg)
+  die.append(number, catSvg, moonSvg, dieSvg)
 
   const upgradeButton = createElement(
     'button',
@@ -30,13 +36,9 @@ export const Die = (index: number) => {
     const _die = state.dice[index]
     if (!_die) return
 
-    const isUpgradeButtonHidden =
-      state.status !== 'shop' && state.status !== 'shop-sticker-apply'
+    const isUpgradeButtonHidden = state.status !== 'shop'
 
-    const upgradeLabel =
-      state.status === 'shop-sticker-apply'
-        ? `Apply Sticker`
-        : `Upgrade $${getDieUpgradeCost(index)}`
+    const upgradeLabel = `Upgrade ${getDieUpgradeCost(index)} Charms`
 
     const isClickable =
       state.status === 'ready' || state.status.includes('shop-sticker-apply')
@@ -50,7 +52,8 @@ export const Die = (index: number) => {
     die.classList.toggle('clickable', isClickable)
     die.classList.toggle('rolling', isRolling)
     die.classList.toggle('selected', _die.selected)
-    die.classList.toggle('die-number-cat', _die.roll === 1)
+    die.classList.toggle('die-number-cat', isDieBust(_die))
+    die.classList.toggle('die-number-charm', isDieCharm(_die))
     die.style.opacity = _die.roll === null ? '0.3' : '1'
 
     number.textContent = _die.roll ? `${_die.roll}` : ''
@@ -58,12 +61,6 @@ export const Die = (index: number) => {
     upgradeButton.toggleAttribute('disabled', _die.sides >= 20)
     upgradeButton.classList.toggle('hidden', isUpgradeButtonHidden)
     upgradeButton.textContent = upgradeLabel
-
-    const activeSticker = _die.stickers.find((s) => s.rollValue === _die.roll)
-    sticker.classList.toggle('hidden', !activeSticker)
-    sticker.innerText = activeSticker?.value.toString() ?? ''
-    sticker.style.backgroundColor =
-      activeSticker?.variant === 'number' ? 'blue' : 'red'
 
     if (lastSides !== _die.sides) {
       const _dieSvg = document

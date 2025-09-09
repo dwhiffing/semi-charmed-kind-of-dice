@@ -1,19 +1,25 @@
 import { createElement } from '../utils/createElement'
-import { doRoll, getIsRoundComplete, state } from '../state'
-import { onClickDie } from '../state/die'
+import { doEnterShop, doRoll, state } from '../state'
+import { isDieBust, onClickDie } from '../state/die'
 
 export const Controls = () => {
   const btnRoll = createElement('button', '') as HTMLButtonElement
+  const btnShop = createElement('button', '') as HTMLButtonElement
   const roundCount = createElement('div', { className: 'round-count' })
-  const lifeCount = createElement('div', { className: 'life-count' })
-  const chipCount = createElement('div', { className: 'chip-count' })
-  const gameButtons = createElement('div', { className: 'buttons' }, btnRoll)
+  const charmCount = createElement('div', { className: 'charm-count' })
+  const pointCount = createElement('div', { className: 'chip-count' })
+  const gameButtons = createElement(
+    'div',
+    { className: 'buttons' },
+    btnShop,
+    btnRoll,
+  )
   const info = createElement(
     'div',
     { className: 'info' },
     roundCount,
-    lifeCount,
-    chipCount,
+    charmCount,
+    pointCount,
   )
   const container = createElement(
     'div',
@@ -23,37 +29,52 @@ export const Controls = () => {
   )
 
   const update = () => {
-    const rollDisabled =
-      state.dice.every((d) => d.selected) ||
-      !!state.status.match(/rolling|menu|lost/)
+    const rollDisabled = !!state.status.match(/rolling|menu|lost/)
+    const isBust = state.dice.every(isDieBust)
     btnRoll.toggleAttribute('disabled', rollDisabled)
-    btnRoll.textContent = getIsRoundComplete()
-      ? 'Enter Shop'
+    btnRoll.textContent = isBust
+      ? 'End Day'
       : state.status === 'shop'
-      ? 'Next Round'
-      : state.status.match(/sticker|passive/)
-      ? 'Back'
+      ? 'Next Day'
       : 'Roll'
+    btnRoll.style.flex = '1'
+
+    btnShop.toggleAttribute('disabled', false)
+    btnShop.style.display = state.status === 'shop' || isBust ? 'none' : 'block'
+    btnShop.textContent = 'End Day'
+
+    btnRoll.onclick = isBust ? doEnterShop : doRoll
+    btnShop.onclick = doEnterShop
 
     roundCount.innerHTML = ''
-    lifeCount.innerHTML = ''
-    chipCount.innerHTML = ''
+    charmCount.innerHTML = ''
+    pointCount.innerHTML = ''
 
     roundCount.append(
       createElement('div', {}, `${state.round}`),
-      createElement('div', {}, `ROUND`),
+      createElement('div', {}, `DAY`),
     )
-    lifeCount.append(
-      createElement('div', {}, `${state.lives}`),
-      createElement('div', {}, `LIVES`),
+    charmCount.append(
+      createElement(
+        'div',
+        {},
+        `${state.charms}${
+          state.status === 'shop' ? '' : ` + ${state.pendingCharms}`
+        }`,
+      ),
+      createElement('div', {}, `CHARMS`),
     )
-    chipCount.append(
-      createElement('div', {}, `${state.chips}`),
-      createElement('div', {}, `CHIPS`),
+    pointCount.append(
+      createElement(
+        'div',
+        {},
+        `${state.points}${
+          state.status === 'shop' ? '' : ` + ${state.pendingPoints}`
+        }`,
+      ),
+      createElement('div', {}, `POINTS`),
     )
   }
-
-  btnRoll.onclick = doRoll
 
   const handleKeyPress = (event: KeyboardEvent) => {
     if (event.code === 'Space' && !btnRoll.hasAttribute('disabled')) {
@@ -72,10 +93,8 @@ export const Controls = () => {
   }
   document.addEventListener('keydown', handleKeyPress)
 
-  state.addUpdate('lives', update)
   state.addUpdate('status', update)
-  state.addUpdate('chips', update)
-  state.addUpdate('cards', update)
+  state.addUpdate('points', update)
   state.addUpdate('dice', update)
   update()
 

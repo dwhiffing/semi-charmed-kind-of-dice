@@ -1,33 +1,9 @@
-export type GoalVariant = 'set' | 'sum' | 'run'
-
-export type Passive = {
-  variant: 'basic'
-}
-
-export type Card = {
-  label: string
-  reward: () => { qualified: boolean; label?: string; value: number }
-  score?: number
-  bonus?: boolean
-}
-
-export type Sticker = {
-  variant: 'number' | 'multi' | 'base'
-  // | 'clone'
-  // | 'wild'
-  // | 'vampire'
-  // | 'reroll'
-  // | 'split'
-  rollValue: number
-  value: number
-}
 export type Die = {
   sides: number
   index: number
   selected: boolean
   roll: number | null
   status: 'rolling' | 'ready'
-  stickers: Sticker[]
 }
 
 export type Item = {
@@ -38,22 +14,12 @@ export type Item = {
 
 export interface IState extends State {
   dice: Die[]
-  cards: Card[]
-  lives: number
-  chips: number
+  points: number
+  charms: number
+  pendingCharms: number
+  pendingPoints: number
   round: number
-  passives: Passive[]
-  pendingSticker: Sticker | null
-  status:
-    | 'ready'
-    | 'rolling'
-    | 'won'
-    | 'lost'
-    | 'shop'
-    | 'menu'
-    | 'shop-sticker-pack'
-    | 'shop-passive-pack'
-    | 'shop-sticker-apply'
+  status: 'ready' | 'rolling' | 'lost' | 'shop' | 'menu'
 }
 
 export type DeepHTMLElement = HTMLElement & { [key: string]: unknown }

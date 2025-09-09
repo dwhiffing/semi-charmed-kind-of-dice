@@ -17,103 +17,12 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 550px;
+  max-width: 450px;
   margin: 0 auto;
   gap: 12px;
   padding: 16px;
   box-sizing: border-box;
   height: 100vh;
-  &.shop-mode {
-    .shop {
-      display: flex;
-    }
-    .cards {
-      display: none;
-    }
-  }
-}
-
-.shop {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.cards {
-  display: flex;
-  flex-direction: column;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  width: 100%;
-  max-width: 300px;
-  .card {
-    cursor: pointer;
-    padding: 12px;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    align-items: center;
-    gap: 8px;
-    background-color: var(--surface);
-    border-radius: 12px;
-    color: var(--light);
-    border: 2px solid black;
-
-    &.completed {
-      background-color: #444;
-      border-color: #333;
-      .goal {
-        opacity: 0.3;
-      }
-      .reward {
-        display: none;
-      }
-      .score {
-        border-color: var(--light);
-      }
-    }
-
-    &.bonus {
-      background-color: transparent;
-      border-color: transparent;
-      cursor: default;
-      .score,
-      .reward {
-        border-color: #fff7;
-      }
-    }
-    &:not(.bonus):hover {
-      background-color: #444;
-      .score div {
-        font-weight: 800;
-        opacity: 1 !important;
-      }
-    }
-    .reward-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .score,
-    .reward {
-      border: 2px solid #999;
-      border-radius: 8px;
-      padding: 6px;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-width: 55px;
-      max-width: 80px;
-      height: 55px;
-    }
-    .reward {
-      border-color: #555;
-    }
-    .goal {
-      font-weight: 800;
-    }
-  }
 }
 
 .dice {
@@ -138,14 +47,15 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 80px;
   button {
-    width: 80px;
+    width: 100%;
   }
 }
 
 .die {
-  height: 80px;
   width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,13 +63,13 @@ button {
   position: relative;
 
   .die-number,
-  .cat {
+  .cat,
+  .charm {
     transition: all 0.3s ease;
   }
   .cat {
-    width: 26px;
+    width: 36px;
     opacity: 0;
-
     .cat-body {
       fill: currentColor;
     }
@@ -168,6 +78,14 @@ button {
       stroke: currentColor;
       stroke-width: 3;
       stroke-linecap: round;
+    }
+  }
+  .charm {
+    width: 26px;
+    opacity: 0;
+
+    svg {
+      fill: black;
     }
   }
   .die-number {
@@ -195,6 +113,14 @@ button {
       opacity: 1;
     }
   }
+  &.die-number-charm {
+    .die-number {
+      opacity: 0;
+    }
+    .charm {
+      opacity: 1;
+    }
+  }
   &.selected svg rect:first-of-type,
   &.selected svg path:first-of-type {
     stroke-width: 12px;
@@ -203,7 +129,8 @@ button {
   &.rolling {
     animation: die-roll 500ms linear infinite;
     .die-number,
-    .cat {
+    .cat,
+    .charm {
       opacity: 0;
     }
   }
@@ -220,24 +147,11 @@ button {
   &.d6 .cat {
     width: 40px;
   }
-  &.d4 .die-number,
-  &.d4 .cat {
+  &.d4 .die-number {
     translate: 0 6px;
   }
-
-  .sticker {
-    position: absolute;
-    top: 24px;
-    right: 16px;
-    width: 16px;
-    aspect-ratio: 1;
-    border-radius: 100%;
-    background-color: red;
-    color: white;
-    font-size: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  &.d4 .cat {
+    translate: 0 8px;
   }
 }
 
@@ -258,57 +172,45 @@ button {
   }
 }
 
-.passives {
-  display: flex;
-  gap: 8px;
-}
-
-.passive {
-  border: #eee 2px solid;
-  width: 40px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  &.empty {
-    opacity: 0.5;
-  }
-}
-
 .controls {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 8px;
+  width: 100%;
 
   .buttons button {
     aspect-ratio: 1;
-    height: 55px;
-    padding: 0;
+    height: 63px;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 4px;
   }
 
   button[disabled] {
     opacity: 0.4;
   }
 
-  max-width: 300px;
-  width: 100%;
-
   .info {
     background-color: var(--surface);
     border: 2px solid black;
     padding: 8px;
     border-radius: 12px;
-    width: 100%;
     display: flex;
     flex-direction: row;
     .round-count,
-    .life-count,
+    .charm-count,
     .chip-count {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 14px;
+      gap: 5px;
+      font-size: 16px;
       font-weight: 800;
     }
   }
@@ -349,24 +251,11 @@ button {
 .muted {
   opacity: 0.5;
 }
-.bold {
-  font-weight: 800;
-}
 
-.green {
-  font-weight: 800;
-  color: #51ff4e;
-}
-.yellow {
+.charm-count {
   font-weight: 800;
   color: #f9ff4e;
 }
-.red,
-.life-count {
-  font-weight: 800;
-  color: #ff4e4e;
-}
-.blue,
 .chip-count {
   font-weight: 800;
   color: #8a8aff;

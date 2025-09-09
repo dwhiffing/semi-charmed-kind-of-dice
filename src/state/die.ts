@@ -1,7 +1,22 @@
 import { buyItem, state } from '.'
 import { perDieOffset } from '../constants'
-import type { Die, Sticker } from '../types'
+import type { Die } from '../types'
 import { rollDie } from '../utils'
+
+export const isDieCharm = (die: Die) => {
+  return die.roll === die.sides
+}
+
+export const isDieBust = (die: Die) => {
+  if (!die.roll) return false
+  if (die.sides === 4) return die.roll <= 1
+  if (die.sides === 6) return die.roll <= 2
+  if (die.sides === 8) return die.roll <= 3
+  if (die.sides === 10) return die.roll <= 5
+  if (die.sides === 12) return die.roll <= 7
+  if (die.sides === 20) return die.roll <= 13
+  return false
+}
 
 export const getDie = (sides: number, index: number) =>
   ({
@@ -13,37 +28,15 @@ export const getDie = (sides: number, index: number) =>
     stickers: [],
   } as Die)
 
-export const toggleDieSide = (index: number) =>
-  updateDice((die: Die, i) => {
-    if (i === index)
-      return {
-        ...die,
-        roll: die.roll === die.sides ? 2 : (die.roll ?? 0) + 1,
-      }
-    return die
-  })
-
 export const toggleDieSelected = (index: number) =>
   updateDice((die, i) => {
     if (i === index && die.roll) return { ...die, selected: !die.selected }
     return die
   })
 
-export const applySticker = (index: number, sticker: Sticker) =>
-  updateDice((die, i) => {
-    if (i === index)
-      return {
-        ...die,
-        stickers: [...die.stickers, { ...sticker, rollValue: die.roll ?? 1 }],
-      }
-    return die
-  })
-
-export const onClickDie = (index: number) => {
-  if (state.status.includes('shop-sticker-apply')) {
-    toggleDieSide(index)
-  } else if (state.status === 'ready') {
-    toggleDieSelected(index)
+export const onClickDie = (_index: number) => {
+  if (state.status === 'ready') {
+    // toggleDieSelected(index)
   }
 }
 
@@ -52,15 +45,9 @@ export const onClickUpgradeDie = (index: number) =>
   buyItem({
     label: '',
     cost: () => getDieUpgradeCost(index),
-    effect: () => {
-      if (state.status === 'shop-sticker-apply') {
-        applySticker(index, state.pendingSticker!)
-      } else {
-        upgradeDie(index)
-      }
-      state.status = 'shop'
-    },
+    effect: () => upgradeDie(index),
   })
+
 export const upgradeDie = (index: number) =>
   updateDice((die, i) => {
     if (i === index)
@@ -75,7 +62,7 @@ export const updateDice = (update: (die: Die, i: number) => Die) =>
   (state.dice = state.dice.map(update))
 
 export const doRollDie = async (die: Die, delay: number) => {
-  if (die.selected) return
+  if (die.selected || isDieBust(die)) return
 
   const app = document.querySelector('.dice-game')!
   return new Promise((resolve) =>
@@ -86,14 +73,13 @@ export const doRollDie = async (die: Die, delay: number) => {
         idx === die.index ? { ...d, roll } : d,
       )
 
-      if (roll === 1) {
+      if (isDieBust(state.dice[die.index])) {
         app.classList.add('shake')
-        setTimeout(() => app.classList.remove('shake'), perDieOffset)
-        state.lives -= 1
+        setTimeout(() => app.classList.remove('shake'), perDieOffset / 2)
       }
       resolve(undefined)
     }, delay),
   )
 }
 
-export const getDieUpgradeCost = (index: number) => 10 * state.dice[index].sides
+export const getDieUpgradeCost = (index: number) => state.dice[index].sides / 2

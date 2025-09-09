@@ -1,8 +1,8 @@
-export const DEV = true
+export const DEV = false
 
-export const initialDelay = DEV ? 250 : 150
-export const perDieOffset = DEV ? 50 : 500
-export const afterSubmitRollDelay = DEV ? 50 : 500
+export const initialDelay = DEV ? 150 : 500
+export const perDieOffset = DEV ? 100 : 500
+export const afterSubmitRollDelay = DEV ? 150 : 300
 
 export const SVGS = [
   `d${20}`,
@@ -12,6 +12,7 @@ export const SVGS = [
   `d${6}`,
   `d${4}`,
   'cat',
+  'charm',
 ]
 export const DICE = [20, 12, 10, 8, 6, 4]
 export const colors: Record<number, string> = {

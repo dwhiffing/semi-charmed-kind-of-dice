@@ -1,7 +1,7 @@
 export const DEV = false
 
-export const initialDelay = DEV ? 150 : 500
-export const perDieOffset = DEV ? 100 : 500
+export const initialDelay = DEV ? 100 : 250
+export const perDieOffset = DEV ? 100 : 250
 export const afterSubmitRollDelay = DEV ? 150 : 300
 
 export const SVGS = [

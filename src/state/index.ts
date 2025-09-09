@@ -14,15 +14,13 @@ const initialState = {
   dice: [],
   charms: 0,
   points: 0,
+  highScore: JSON.parse(localStorage.getItem('jynx-dice-highscore') || '0'),
   pendingCharms: 0,
   pendingPoints: 0,
   round: 1,
   status: 'menu',
 }
 export let state = createState(initialState) as IState
-
-// export const getIsRoundComplete = () =>
-//   state.cards.every((c) => c.score !== undefined || c.bonus)
 
 export const buyItem = (item: Item) => {
   const cost = item.cost()
@@ -35,6 +33,10 @@ export const buyItem = (item: Item) => {
 export const doEnterShop = () => {
   if (state.round === 13) {
     state.status = 'menu'
+    if (state.points > state.highScore) {
+      state.highScore = state.points
+      localStorage.setItem('jynx-dice-highscore', state.points.toString())
+    }
     return
   }
   state.round++

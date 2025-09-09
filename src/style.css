@@ -282,12 +282,17 @@ button {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   gap: 8px;
   z-index: 20;
   justify-content: center;
   align-items: center;
   background-color: var(--dark);
   transition: all 0.5s ease;
+  button {
+    margin-top: 20px;
+    padding: 20px 20px;
+  }
 }
 
 #d6 .die-number .die svg {

@@ -15,6 +15,7 @@ export type Item = {
 export interface IState extends State {
   dice: Die[]
   points: number
+  highScore: number
   charms: number
   pendingCharms: number
   pendingPoints: number

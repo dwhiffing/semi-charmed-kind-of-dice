@@ -12,25 +12,35 @@ body {
   margin: 0;
 }
 
-.dice-game {
+.dice-game-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 450px;
+  height: 100vh;
   margin: 0 auto;
+  max-width: 400px;
+}
+
+.dice-game {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
   gap: 12px;
   padding: 16px;
+  width: 100%;
   box-sizing: border-box;
-  height: 100vh;
+  height: 400px;
 }
 
 .dice {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
+  align-items: flex-end;
   .die.clickable svg {
     path,
     rect {
@@ -300,8 +310,9 @@ button {
   padding: 4px 12px;
 }
 
-.muted {
-  opacity: 0.5;
+button.buy-die {
+  width: 80px;
+  height: 80px;
 }
 
 .charm-count {

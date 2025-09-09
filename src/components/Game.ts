@@ -6,9 +6,18 @@ import { Dice } from './Dice'
 import { DEV } from '../constants'
 
 export const DiceGame = () => {
-  const app = createElement('div', { className: 'dice-game' })
-
-  app.append(Dice(), Controls(), Menu())
+  const app = createElement(
+    'div',
+    { className: 'dice-game' },
+    Dice(),
+    Controls(),
+    Menu(),
+  )
+  const container = createElement(
+    'div',
+    { className: 'dice-game-container' },
+    app,
+  )
 
   const update = () => {
     app.classList.toggle('shop-mode', state.status.includes('shop'))
@@ -17,5 +26,5 @@ export const DiceGame = () => {
 
   if (DEV) startGame()
 
-  return app
+  return container
 }

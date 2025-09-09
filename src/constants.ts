@@ -13,6 +13,8 @@ export const SVGS = [
   `d${4}`,
   'cat',
   'charm',
+  'charm-2',
+  'charm-3',
 ]
 export const DICE = [20, 12, 10, 8, 6, 4]
 export const colors: Record<number, string> = {

@@ -13,14 +13,16 @@ export const Die = (index: number) => {
   const container = createElement('div', { className: 'die-container' })
   const number = createElement('div', { className: 'die-number' })
   const catSvg = document.querySelector(`#cat svg`)!.cloneNode(true)
-  const moonSvg = document.querySelector(`#charm svg`)!.cloneNode(true)
+  const charmSvg = document.querySelector(`#charm svg`)!.cloneNode(true)
+  const charm2Svg = document.querySelector(`#charm-2 svg`)!.cloneNode(true)
+  const charm3Svg = document.querySelector(`#charm-3 svg`)!.cloneNode(true)
   const dieSvg = createElement('svg')
 
   const die = createElement('div', {
     className: 'die',
     onclick: () => onClickDie(index),
   })
-  die.append(number, catSvg, moonSvg, dieSvg)
+  die.append(number, catSvg, charmSvg, charm2Svg, charm3Svg, dieSvg)
 
   const upgradeButton = createElement(
     'button',

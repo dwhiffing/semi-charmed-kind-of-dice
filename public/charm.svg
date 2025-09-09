@@ -1,3 +1,3 @@
-<svg class="charm die-number"  viewBox="0 0 122.88 116.864" fill="none" xmlns="http://www.w3.org/2000/svg">
-<polygon fill-rule="evenodd" clip-rule="evenodd" points="61.44,0 78.351,41.326 122.88,44.638 88.803,73.491 99.412,116.864 61.44,93.371 23.468,116.864 34.078,73.491 0,44.638 44.529,41.326 61.44,0" fill="black"/>
+<svg class="charm charm-1 die-number" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M100.44 42L117.351 83.326L161.88 86.638L127.803 115.491L138.412 158.864L100.44 135.371L62.468 158.864L73.078 115.491L39 86.638L83.529 83.326L100.44 42Z" fill="black"/>
 </svg>

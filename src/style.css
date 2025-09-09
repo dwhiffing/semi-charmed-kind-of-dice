@@ -81,7 +81,7 @@ button {
     }
   }
   .charm {
-    width: 26px;
+    width: 35px;
     opacity: 0;
 
     svg {
@@ -117,8 +117,23 @@ button {
     .die-number {
       opacity: 0;
     }
-    .charm {
-      opacity: 1;
+    &.d4,
+    &.d6 {
+      .charm-1 {
+        opacity: 1;
+      }
+    }
+    &.d8,
+    &.d10 {
+      .charm-2 {
+        opacity: 1;
+      }
+    }
+    &.d20,
+    &.d12 {
+      .charm-3 {
+        opacity: 1;
+      }
     }
   }
   &.selected svg rect:first-of-type,

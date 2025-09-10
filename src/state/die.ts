@@ -15,10 +15,10 @@ export const isDieCharm = (die: { roll: number | null; sides: number }) => {
   if (!die.roll) return false
   if (die.sides === 4) return die.roll >= 4 // 25%
   if (die.sides === 6) return die.roll >= 6 // 17%
-  if (die.sides === 8) return die.roll >= 8 // 13%
+  if (die.sides === 8) return die.roll >= 7 // 25%
   if (die.sides === 10) return die.roll >= 9 // 20%
-  if (die.sides === 12) return die.roll >= 11 // 17%
-  if (die.sides === 20) return die.roll >= 19 // 10%
+  if (die.sides === 12) return die.roll >= 12 // 8%
+  if (die.sides === 20) return false // 0%
 }
 
 export const isDieBust = (die: { roll: number | null; sides: number }) => {

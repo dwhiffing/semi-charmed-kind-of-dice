@@ -178,14 +178,14 @@ button {
       }
     }
     &.d6,
-    &.d8,
-    &.d10 {
+    &.d8 {
       .charm-2 {
         opacity: 1;
       }
     }
     &.d20,
-    &.d12 {
+    &.d12,
+    &.d10 {
       .charm-3 {
         opacity: 1;
       }
@@ -248,8 +248,8 @@ button {
       translate: 0 -0.125em;
     }
     .charm {
-      width: 1.2em;
-      translate: 0 0.05em;
+      width: 1em;
+      translate: 0 -0.1em;
     }
     .cat {
       width: 1.15em;

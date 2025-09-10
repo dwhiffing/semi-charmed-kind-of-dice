@@ -173,6 +173,7 @@ button {
 
   &.d4 {
     .die-number {
+      font-size: 28px;
       translate: 0 6px;
     }
     .charm {
@@ -185,7 +186,7 @@ button {
 
   &.d6 {
     .die-number {
-      font-size: 24px;
+      font-size: 32px;
     }
     .cat,
     .charm {
@@ -194,18 +195,29 @@ button {
   }
 
   &.d8 {
+    .die-number {
+      font-size: 24px;
+    }
     .charm {
       width: 40px;
     }
   }
 
   &.d10 {
+    .die-number {
+      font-size: 24px;
+      translate: 0 -2px;
+    }
     .cat {
       width: 28px;
     }
   }
 
   &.d12 {
+    .die-number {
+      font-size: 24px;
+      translate: 0 -1px;
+    }
     .cat {
       width: 26px;
     }
@@ -346,8 +358,8 @@ button {
   margin-top: 20px;
 }
 
-#d6 .die-number .die svg {
-  width: 100%;
+.d4 .die-svg {
+  width: 88px;
 }
 
 .hidden {

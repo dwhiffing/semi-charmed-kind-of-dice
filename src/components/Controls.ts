@@ -39,7 +39,7 @@ export const Controls = () => {
       : 'Roll'
     btnRoll.style.flex = '1'
 
-    const newDieCost = (state.dice.length - 3) * 5
+    const newDieCost = (state.dice.length - 2) * 2
     const buyNewDie = () => {
       if (state.charms < newDieCost) return
       state.dice = [...state.dice, getDie(4, state.dice.length)]

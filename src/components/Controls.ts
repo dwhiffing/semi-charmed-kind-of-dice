@@ -54,7 +54,7 @@ export const Controls = () => {
     )
     btnShop.style.display = isBust ? 'none' : 'block'
     btnShop.innerHTML =
-      state.status === 'shop' ? `Buy Die<br/>${newDieCost} Charms` : 'End Day'
+      state.status === 'shop' ? `Buy Die -<br/>${newDieCost} Charms` : 'End Day'
 
     btnRoll.onclick = isBust ? doEnterShop : doRoll
     btnShop.onclick = state.status === 'shop' ? buyNewDie : doEnterShop

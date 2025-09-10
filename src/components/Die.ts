@@ -27,7 +27,7 @@ export const Die = (index: number) => {
 
     const isUpgradeButtonHidden = state.status !== 'shop'
     const upgradeCost = getDieUpgradeCost(_die.sides)
-    const upgradeLabel = `Upgrade ${upgradeCost} Charms`
+    const upgradeLabel = `Upgrade -<br/>${upgradeCost} Charms`
 
     dieFace.update(
       () => state.status.match(/ready|shop/) && onClickDie(index),
@@ -42,7 +42,7 @@ export const Die = (index: number) => {
       state.charms < upgradeCost || _die.sides >= 20,
     )
     upgradeButton.classList.toggle('hidden', isUpgradeButtonHidden)
-    upgradeButton.textContent = upgradeLabel
+    upgradeButton.innerHTML = upgradeLabel
   }
 
   state.addUpdate('dice', update)

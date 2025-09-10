@@ -360,8 +360,13 @@ button {
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease;
-  button {
+  button:first-of-type {
     padding: 1.25rem 1.25rem;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 }
 

@@ -13,6 +13,7 @@ export interface IState extends State {
   pendingCharms: number
   pendingPoints: number
   round: number
+  muted: boolean
   status: 'ready' | 'rolling' | 'shop' | 'menu'
 }
 

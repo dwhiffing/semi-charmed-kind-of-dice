@@ -1,6 +1,8 @@
 // ZzFX - Zuper Zmall Zound Zynth - Micro Edition
 // MIT License - Copyright 2019 Frank Force
 // https://github.com/KilledByAPixel/ZzFX
+import { state } from '../state'
+import { clickSound } from './sounds'
 
 // This is a minified build of zzfx for use in size coding projects.
 // You can use zzfxV to set volume.
@@ -45,8 +47,13 @@ type ZzfxParams = [
 export const zzfxV: number = 0.3 // volume
 export const zzfxR: number = 44100 // sample rate
 export const zzfxX: AudioContext = new AudioContext() // audio context
+export const toggleMute = () => {
+  state.muted = !state.muted
+  zzfx(...clickSound)
+}
 
 export function zzfx(...z: ZzfxParams): AudioBufferSourceNode {
+  if (state.muted) return {} as AudioBufferSourceNode
   return zzfxP(zzfxG(...z))
 }
 

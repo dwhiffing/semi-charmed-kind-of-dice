@@ -2,6 +2,7 @@ import { createElement } from '../utils/createElement'
 import { doEnterShop, doRoll, startGame, state } from '../state'
 import { buyNewDie, getNewDieCost, isDieBust } from '../state/die'
 import { MAX_DICE } from '../constants'
+import { toggleMute } from '../utils/zzfx'
 
 export const Controls = () => {
   const btnRoll = createElement('button', '') as HTMLButtonElement
@@ -100,6 +101,7 @@ export const Controls = () => {
       event.preventDefault()
       btnShop.click()
     }
+    if (event.code === 'KeyM') toggleMute()
   }
   document.addEventListener('keydown', handleKeyPress)
 

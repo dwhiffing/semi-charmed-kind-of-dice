@@ -1,13 +1,20 @@
 import { createElement } from '../utils/createElement'
 import { startGame, state } from '../state'
+import { toggleMute } from '../utils/zzfx'
 
 export const Menu = () => {
   const btnStart = createElement('button', 'Start Game') as HTMLButtonElement
+  const btnMute = createElement('button', '') as HTMLButtonElement
   const title = createElement('h2', { className: 'title' }, 'Jynx Dice')
   const credits = createElement('div', 'By Daniel Whiffing')
   const lastScore = createElement('div', 'Last Score: 0')
   const highScore = createElement('div', 'High Score: 0')
-  const buttons = createElement('div', { className: 'buttons' }, btnStart)
+  const buttons = createElement(
+    'div',
+    { className: 'buttons' },
+    btnStart,
+    btnMute,
+  )
 
   const container = createElement(
     'div',
@@ -32,11 +39,14 @@ export const Menu = () => {
 
     highScore.style.display = state.highScore ? 'block' : 'none'
     lastScore.style.display = state.points ? 'block' : 'none'
+    btnMute.textContent = state.muted ? 'Sound Off' : 'Sound On'
   }
 
   btnStart.onclick = () => startGame()
+  btnMute.onclick = () => toggleMute()
 
   state.addUpdate('points', update)
+  state.addUpdate('muted', update)
   state.addUpdate('status', update)
   update()
 

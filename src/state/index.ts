@@ -17,6 +17,7 @@ const initialState = {
   highScore: JSON.parse(localStorage.getItem('jynx-dice-highscore') || '0'),
   pendingCharms: 0,
   pendingPoints: 0,
+  selectedDie: -1,
   round: 1,
   status: 'menu',
 }
@@ -44,7 +45,7 @@ export const doEnterShop = () => {
   state.points += state.pendingPoints
   state.pendingCharms = 0
   state.pendingPoints = 0
-  state.dice = state.dice.map((d) => ({ ...d, selected: false, roll: d.sides }))
+  state.dice = state.dice.map((d) => ({ ...d, roll: d.sides }))
   state.status = 'shop'
 }
 
@@ -55,13 +56,13 @@ export const doRoll = async () => {
   state.status = 'rolling'
   updateDice((die) => ({
     ...die,
-    roll: die.selected || isDieBust(die) ? die.roll : null,
+    roll: isDieBust(die) ? die.roll : null,
   }))
 
   let j = 0
   await Promise.all(
     state.dice
-      .filter((die) => !die.selected && !isDieBust(die))
+      .filter((die) => !isDieBust(die))
       .map(async (die) => {
         const delay = initialDelay + j++ * perDieOffset
         await doRollDie(die, delay)
@@ -76,7 +77,7 @@ export const doRoll = async () => {
     .reduce((acc, d) => acc + (d.sides >= 12 ? 3 : d.sides >= 8 ? 2 : 1), 0)
   state.pendingPoints += scoringDice.reduce((acc, d) => acc + (d.roll ?? 0), 0)
 
-  const isBust = state.dice.every((d) => isDieBust(d) || d.selected)
+  const isBust = state.dice.every((d) => isDieBust(d))
 
   if (isBust) {
     state.pendingCharms = 0
@@ -85,18 +86,14 @@ export const doRoll = async () => {
   state.status = 'ready'
 }
 
-export const doSubmit = () => {
-  state.dice = state.dice.map((d) =>
-    d.selected ? { ...d, selected: false, roll: null } : d,
-  )
-}
-
 export const startGame = () => {
   state.charms = 0
   state.points = 0
   state.round = 1
   state.status = 'ready'
   state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2), getDie(4, 3)]
+  state.selectedDie = -1
+  updateDice((die) => ({ ...die, roll: null }))
 
   setTimeout(() => doRoll(), afterSubmitRollDelay)
 }

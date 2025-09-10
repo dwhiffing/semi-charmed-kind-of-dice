@@ -1,7 +1,6 @@
 export type Die = {
   sides: number
   index: number
-  selected: boolean
   roll: number | null
   status: 'rolling' | 'ready'
 }
@@ -16,6 +15,7 @@ export interface IState extends State {
   dice: Die[]
   points: number
   highScore: number
+  selectedDie: number
   charms: number
   pendingCharms: number
   pendingPoints: number

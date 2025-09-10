@@ -299,6 +299,50 @@ button {
   }
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-overlay {
+  opacity: 0;
+}
+
+.modal {
+  background-color: var(--surface);
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 30px 40px;
+  overflow-y: auto;
+  color: var(--light);
+  width: 100%;
+  max-width: 350px;
+}
+
+.modal-content {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
 #d6 .die-number .die svg {
   width: 100%;
 }

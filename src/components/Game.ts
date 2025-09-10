@@ -4,11 +4,13 @@ import { Controls } from './Controls'
 import { Menu } from './Menu'
 import { Dice } from './Dice'
 import { DEV } from '../constants'
+import { Modal } from './Modal'
 
 export const DiceGame = () => {
   const app = createElement(
     'div',
     { className: 'dice-game' },
+    Modal(),
     Dice(),
     Controls(),
     Menu(),

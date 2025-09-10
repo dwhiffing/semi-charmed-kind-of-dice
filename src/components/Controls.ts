@@ -1,6 +1,6 @@
 import { createElement } from '../utils/createElement'
 import { doEnterShop, doRoll, state } from '../state'
-import { isDieBust } from '../state/die'
+import { getDie, isDieBust } from '../state/die'
 
 export const Controls = () => {
   const btnRoll = createElement('button', '') as HTMLButtonElement
@@ -39,12 +39,25 @@ export const Controls = () => {
       : 'Roll'
     btnRoll.style.flex = '1'
 
-    btnShop.toggleAttribute('disabled', state.status !== 'ready')
-    btnShop.style.display = state.status === 'shop' || isBust ? 'none' : 'block'
-    btnShop.textContent = 'End Day'
+    const newDieCost = (state.dice.length - 3) * 5
+    const buyNewDie = () => {
+      if (state.charms < newDieCost) return
+      state.dice = [...state.dice, getDie(4, state.dice.length)]
+      state.charms -= newDieCost
+    }
+
+    btnShop.toggleAttribute(
+      'disabled',
+      state.status === 'shop'
+        ? state.charms < newDieCost
+        : state.status !== 'ready',
+    )
+    btnShop.style.display = isBust ? 'none' : 'block'
+    btnShop.innerHTML =
+      state.status === 'shop' ? `Buy Die<br/>${newDieCost} Charms` : 'End Day'
 
     btnRoll.onclick = isBust ? doEnterShop : doRoll
-    btnShop.onclick = doEnterShop
+    btnShop.onclick = state.status === 'shop' ? buyNewDie : doEnterShop
 
     roundCount.innerHTML = ''
     charmCount.innerHTML = ''

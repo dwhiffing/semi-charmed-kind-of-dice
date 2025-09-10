@@ -250,7 +250,7 @@ button {
   width: 100%;
 
   .buttons button {
-    aspect-ratio: 1;
+    width: 90px;
     height: 63px;
     padding: 8px;
     text-align: center;
@@ -360,12 +360,7 @@ button {
   &:hover {
     background-color: #999;
   }
-  padding: 4px 12px;
-}
-
-button.buy-die {
-  width: 80px;
-  height: 80px;
+  padding: 4px 6px;
 }
 
 .charm-count {

@@ -89,6 +89,8 @@ export const doRoll = async () => {
 export const startGame = () => {
   state.charms = 0
   state.points = 0
+  state.pendingCharms = 0
+  state.pendingPoints = 0
   state.round = 1
   state.status = 'ready'
   state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2), getDie(4, 3)]

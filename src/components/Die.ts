@@ -92,9 +92,10 @@ export const DieFace = () => {
       lastSides = sides
       dieSvg.innerHTML = ''
       dieSvg.append(_dieSvg)
-      if (_dieSvg.querySelector('*'))
+      if (_dieSvg.querySelector('.face')) {
         // @ts-ignore
-        _dieSvg.querySelector('*')!.onclick = onClick
+        _dieSvg.querySelector('.face')!.onclick = onClick
+      }
     }
   }
 

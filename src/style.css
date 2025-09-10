@@ -299,10 +299,6 @@ button {
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-
-  @media (pointer: coarse) {
-    pointer-events: none;
-  }
 }
 
 .controls {

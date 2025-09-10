@@ -202,14 +202,14 @@ button {
   &.d4 {
     .die-number {
       font-size: 1.75em;
-      translate: 0 0.25rem;
+      translate: 0 0.45rem;
     }
     .charm {
       width: 1.3em;
       translate: 0 0.25em;
     }
     .cat {
-      width: 1.4em;
+      width: 1.2em;
       translate: 0 0.3em;
     }
   }

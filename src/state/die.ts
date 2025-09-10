@@ -3,17 +3,24 @@ import { perDieOffset } from '../constants'
 import type { Die } from '../types'
 import { rollDie } from '../utils'
 
-export const isDieCharm = (die: { roll: number | null; sides: number }) =>
-  die.roll === die.sides
+export const isDieCharm = (die: { roll: number | null; sides: number }) => {
+  if (!die.roll) return false
+  if (die.sides === 4) return die.roll >= 4 // 25%
+  if (die.sides === 6) return die.roll >= 6 // 17%
+  if (die.sides === 8) return die.roll >= 8 // 13%
+  if (die.sides === 10) return die.roll >= 9 // 20%
+  if (die.sides === 12) return die.roll >= 11 // 17%
+  if (die.sides === 20) return die.roll >= 19 // 10%
+}
 
 export const isDieBust = (die: { roll: number | null; sides: number }) => {
   if (!die.roll) return false
-  if (die.sides === 4) return die.roll <= 1
-  if (die.sides === 6) return die.roll <= 2
-  if (die.sides === 8) return die.roll <= 3
-  if (die.sides === 10) return die.roll <= 5
-  if (die.sides === 12) return die.roll <= 7
-  if (die.sides === 20) return die.roll <= 13
+  if (die.sides === 4) return die.roll <= 1 // 25%
+  if (die.sides === 6) return die.roll <= 1 // 17%
+  if (die.sides === 8) return die.roll <= 2 // 25%
+  if (die.sides === 10) return die.roll <= 3 // 30%
+  if (die.sides === 12) return die.roll <= 4 // 33%
+  if (die.sides === 20) return die.roll <= 7 // 35%
   return false
 }
 

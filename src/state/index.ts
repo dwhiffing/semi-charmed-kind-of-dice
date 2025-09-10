@@ -1,4 +1,4 @@
-import { DEV, initialDelay, perDieOffset } from '../constants'
+import { DEV, dieRollTime, LAST_ROUND_NUMBER } from '../constants'
 import type { IState } from '../types'
 import { createState } from '../utils/createState'
 import { clickSound } from '../utils/sounds'
@@ -19,7 +19,7 @@ const initialState = {
 export let state = createState(initialState) as IState
 
 export const doEnterShop = () => {
-  if (state.round === 13) {
+  if (state.round === LAST_ROUND_NUMBER) {
     state.status = 'menu'
     if (state.points > state.highScore) {
       state.highScore = state.points
@@ -47,12 +47,13 @@ export const doRoll = async () => {
   }))
 
   let j = 0
+  const delay = dieRollTime / state.dice.length
   await Promise.all(
     state.dice
       .filter((die) => !isDieBust(die))
       .map(async (die) => {
-        const delay = initialDelay + j++ * perDieOffset
-        await doRollDie(die, delay)
+        const _delay = ++j * delay
+        await doRollDie(die, _delay)
       }),
   )
 

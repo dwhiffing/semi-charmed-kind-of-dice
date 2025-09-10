@@ -1,5 +1,5 @@
 import { createElement } from '../utils/createElement'
-import { colors } from '../constants'
+import { colors, dieRollTime } from '../constants'
 import { state } from '../state'
 import {
   getDieUpgradeCost,
@@ -85,6 +85,8 @@ export const DieFace = () => {
     container.classList.toggle('selected', isSelected)
     container.classList.toggle('die-number-cat', isDieBust({ roll, sides }))
     container.classList.toggle('die-number-charm', isDieCharm({ roll, sides }))
+
+    container.style.animationDuration = `${dieRollTime / state.dice.length}ms`
 
     number.textContent = roll ? `${roll}` : ''
 

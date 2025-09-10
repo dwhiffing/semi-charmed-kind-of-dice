@@ -1,8 +1,8 @@
 export const DEV = false
 
+export const LAST_ROUND_NUMBER = 13
 export const MAX_DICE = 8
-export const initialDelay = DEV ? 100 : 450
-export const perDieOffset = DEV ? 100 : 450
+export const dieRollTime = DEV ? 600 : 1750
 export const afterSubmitRollDelay = DEV ? 150 : 300
 
 export const SVGS = [

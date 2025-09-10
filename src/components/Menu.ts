@@ -23,7 +23,7 @@ export const Menu = () => {
     const disabled = false
     btnStart.toggleAttribute('disabled', disabled)
 
-    const visible = state.status !== 'menu' && state.status !== 'lost'
+    const visible = state.status !== 'menu'
     container.style.opacity = visible ? '0' : '1'
     container.style.pointerEvents = visible ? 'none' : 'auto'
     credits.style.marginBottom = '10px'

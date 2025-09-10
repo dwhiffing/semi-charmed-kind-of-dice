@@ -1,4 +1,4 @@
-import { buyItem, state } from '.'
+import { state } from '.'
 import { perDieOffset } from '../constants'
 import type { Die } from '../types'
 import { rollDie } from '../utils'
@@ -39,14 +39,12 @@ export const onClickDie = (_index: number) => {
 
 export const onClickUpgradeDie = (index: number) => {
   const sides = state.dice[index].sides
-  return (
-    sides < 20 &&
-    buyItem({
-      label: '',
-      cost: () => getDieUpgradeCost(sides),
-      effect: () => upgradeDie(index),
-    })
-  )
+  if (sides >= 20) return false
+  const cost = getDieUpgradeCost(sides)
+  if (state.charms < cost) return
+
+  state.charms -= cost
+  upgradeDie(index)
 }
 
 export const upgradeDie = (index: number) =>

@@ -1,5 +1,5 @@
 import { DEV, initialDelay, perDieOffset } from '../constants'
-import type { IState, Item } from '../types'
+import type { IState } from '../types'
 import { createState } from '../utils/createState'
 import { clickSound } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
@@ -17,14 +17,6 @@ const initialState = {
   status: 'menu',
 }
 export let state = createState(initialState) as IState
-
-export const buyItem = (item: Item) => {
-  const cost = item.cost()
-  if (state.charms < cost) return
-
-  state.charms -= cost
-  item.effect()
-}
 
 export const doEnterShop = () => {
   if (state.round === 13) {

@@ -2,13 +2,6 @@ export type Die = {
   sides: number
   index: number
   roll: number | null
-  status: 'rolling' | 'ready'
-}
-
-export type Item = {
-  label: string
-  cost: () => number
-  effect: () => void
 }
 
 export interface IState extends State {
@@ -20,7 +13,7 @@ export interface IState extends State {
   pendingCharms: number
   pendingPoints: number
   round: number
-  status: 'ready' | 'rolling' | 'lost' | 'shop' | 'menu'
+  status: 'ready' | 'rolling' | 'shop' | 'menu'
 }
 
 export type DeepHTMLElement = HTMLElement & { [key: string]: unknown }

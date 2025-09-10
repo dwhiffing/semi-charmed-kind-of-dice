@@ -29,7 +29,7 @@ export const Controls = () => {
   )
 
   const update = () => {
-    const rollDisabled = !!state.status.match(/rolling|menu|lost/)
+    const rollDisabled = !!state.status.match(/rolling|menu/)
     const isBust = state.dice.every(isDieBust)
     btnRoll.toggleAttribute('disabled', rollDisabled)
     btnRoll.textContent = isBust

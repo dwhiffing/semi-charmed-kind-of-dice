@@ -5,6 +5,7 @@ import { Menu } from './Menu'
 import { Dice } from './Dice'
 import { DEV } from '../constants'
 import { Modal } from './Modal'
+import { Background } from './Background'
 
 export const DiceGame = () => {
   const app = createElement(
@@ -18,6 +19,7 @@ export const DiceGame = () => {
   const container = createElement(
     'div',
     { className: 'dice-game-container' },
+    Background(),
     app,
   )
 

@@ -76,7 +76,7 @@ export const DieFace = () => {
     container.style.color = colors[sides]
     container.classList.remove('d4', 'd6', 'd8', 'd10', 'd12', 'd20')
     container.classList.add(`d${sides}`)
-    container.classList.toggle('clickable', state.status === 'ready')
+    container.classList.toggle('clickable', !!state.status.match(/ready|shop/))
 
     container.classList.toggle('rolling', isRolling)
     container.classList.toggle('selected', isSelected)
@@ -92,7 +92,9 @@ export const DieFace = () => {
       lastSides = sides
       dieSvg.innerHTML = ''
       dieSvg.append(_dieSvg)
-      dieSvg.querySelector('path')!.onclick = onClick
+      if (_dieSvg.querySelector('*'))
+        // @ts-ignore
+        _dieSvg.querySelector('*')!.onclick = onClick
     }
   }
 

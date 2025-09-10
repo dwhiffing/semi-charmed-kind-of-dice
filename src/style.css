@@ -16,6 +16,10 @@ h2 {
   margin: 0px;
 }
 
+h3 {
+  margin: 20px 0 5px;
+}
+
 .dice-game-container {
   display: flex;
   flex-direction: column;

@@ -108,7 +108,9 @@ export const getDieUpgradeCost = (sides: number) => {
 
 export const getNewDieCost = () => (state.dice.length - 2) * 2
 export const buyNewDie = () => {
+  const cost = getNewDieCost()
+  if (state.charms < cost) return
   zzfx(...newDieSound)
   state.dice = [...state.dice, getDie(4, state.dice.length)]
-  state.charms -= getNewDieCost()
+  state.charms -= cost
 }

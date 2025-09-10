@@ -223,12 +223,19 @@ export const Background = () => {
   const ctx = canvas.getContext('2d')!
   const noise = new SimplexNoise()
 
+  const scale = 0.1
   const resize = () => {
-    canvas.width = Math.floor(window.innerWidth / 2)
-    canvas.height = Math.floor(window.innerHeight / 2)
+    canvas.width = Math.floor(window.innerWidth * scale)
+    canvas.height = Math.floor(window.innerHeight * scale)
   }
   resize()
-  window.addEventListener('resize', resize)
+
+  let resizeTimeout: number
+  const debouncedResize = () => {
+    clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(resize, 100)
+  }
+  window.addEventListener('resize', debouncedResize)
 
   const purpleShades = [
     '#42176A',
@@ -241,13 +248,13 @@ export const Background = () => {
 
   let time = 0
   const animate = () => {
-    time += 0.001
+    time += 0.00025
     const imageData = ctx.createImageData(canvas.width, canvas.height)
     const data = imageData.data
     for (let y = 0; y < canvas.height; y++) {
       for (let x = 0; x < canvas.width; x++) {
-        const nx = x * 0.003
-        const ny = y * 0.003
+        const nx = x * 0.01
+        const ny = y * 0.01
         const n = noise.noise3d(nx, ny, time)
         const index = Math.floor(((n + 1) / 2) * 7)
 

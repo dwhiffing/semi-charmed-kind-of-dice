@@ -74,8 +74,8 @@ export const doRollDie = async (die: Die, delay: number) => {
       )
 
       if (isDieBust(state.dice[die.index])) {
-        app.classList.add('shake')
-        setTimeout(() => app.classList.remove('shake'), perDieOffset)
+        setTimeout(() => app.classList.add('shake'), 10)
+        setTimeout(() => app.classList.remove('shake'), 200)
       }
       resolve(undefined)
     }, delay),

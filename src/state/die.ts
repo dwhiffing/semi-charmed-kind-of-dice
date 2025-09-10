@@ -30,13 +30,17 @@ export const onClickDie = (_index: number) => {
   state.selectedDie = _index
 }
 
-export const onClickUpgradeDie = (index: number) =>
-  state.dice[index].sides < 20 &&
-  buyItem({
-    label: '',
-    cost: () => getDieUpgradeCost(index),
-    effect: () => upgradeDie(index),
-  })
+export const onClickUpgradeDie = (index: number) => {
+  const sides = state.dice[index].sides
+  return (
+    sides < 20 &&
+    buyItem({
+      label: '',
+      cost: () => getDieUpgradeCost(sides),
+      effect: () => upgradeDie(index),
+    })
+  )
+}
 
 export const upgradeDie = (index: number) =>
   updateDice((die, i) => {

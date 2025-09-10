@@ -26,7 +26,7 @@ export const Die = (index: number) => {
     if (!_die) return
 
     const isUpgradeButtonHidden = state.status !== 'shop'
-    const upgradeCost = getDieUpgradeCost(index)
+    const upgradeCost = getDieUpgradeCost(_die.sides)
     const upgradeLabel = `Upgrade ${upgradeCost} Charms`
 
     dieFace.update(

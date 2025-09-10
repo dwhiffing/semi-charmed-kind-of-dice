@@ -133,6 +133,9 @@ button {
   }
 
   &.die-number-cat {
+    .dice & {
+      opacity: 0.4;
+    }
     .die-number {
       opacity: 0;
     }

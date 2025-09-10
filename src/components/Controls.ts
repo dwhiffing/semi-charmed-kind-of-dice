@@ -108,6 +108,8 @@ export const Controls = () => {
   state.addUpdate('status', update)
   state.addUpdate('points', update)
   state.addUpdate('charms', update)
+  state.addUpdate('pendingCharms', update)
+  state.addUpdate('pendingPoints', update)
   state.addUpdate('dice', update)
   update()
 

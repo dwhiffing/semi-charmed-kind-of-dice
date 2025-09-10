@@ -3,7 +3,7 @@ import type { IState } from '../types'
 import { createState } from '../utils/createState'
 import { clickSound, endDaySound, gameOverSound } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
-import { updateDice, doRollDie, getDie, isDieBust, isDieCharm } from './die'
+import { updateDice, doRollDie, getDie, isDieBust } from './die'
 
 const initialState = {
   dice: [],
@@ -60,14 +60,6 @@ export const doRoll = async () => {
         await doRollDie(die, _delay)
       }),
   )
-
-  const scoringDice = state.dice.filter(
-    (d) => d.roll !== d.sides && d.roll !== 1,
-  )
-  state.pendingCharms += state.dice
-    .filter(isDieCharm)
-    .reduce((acc, d) => acc + (d.sides >= 10 ? 3 : d.sides >= 6 ? 2 : 1), 0)
-  state.pendingPoints += scoringDice.reduce((acc, d) => acc + (d.roll ?? 0), 0)
 
   const isBust = state.dice.every((d) => isDieBust(d))
 

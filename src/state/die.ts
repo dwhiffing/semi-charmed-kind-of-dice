@@ -83,9 +83,16 @@ export const doRollDie = async (die: Die, delay: number) => {
         idx === die.index ? { ...d, roll } : d,
       )
 
-      if (isDieCharm(state.dice[die.index])) {
+      const d = { sides: state.dice[die.index].sides, roll }
+      const isCharm = isDieCharm(d)
+      const isBust = isDieBust(d)
+      const charms = isCharm ? (d.sides >= 10 ? 3 : d.sides >= 6 ? 2 : 1) : 0
+      const points = isBust ? 0 : roll ?? 0
+      state.pendingCharms += charms
+      state.pendingPoints += points
+      if (isCharm) {
         zzfx(...charmSound)
-      } else if (isDieBust(state.dice[die.index])) {
+      } else if (isBust) {
         if (state.dice.every((d) => isDieBust(d))) {
           zzfx(...fullBustSound)
         } else {

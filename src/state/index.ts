@@ -1,7 +1,7 @@
 import { DEV, dieRollTime, LAST_ROUND_NUMBER } from '../constants'
 import type { IState } from '../types'
 import { createState } from '../utils/createState'
-import { clickSound } from '../utils/sounds'
+import { clickSound, endDaySound, gameOverSound } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
 import { updateDice, doRollDie, getDie, isDieBust, isDieCharm } from './die'
 
@@ -21,12 +21,15 @@ export let state = createState(initialState) as IState
 export const doEnterShop = () => {
   if (state.round === LAST_ROUND_NUMBER) {
     state.status = 'menu'
+    zzfx(...gameOverSound)
     if (state.points > state.highScore) {
       state.highScore = state.points
       localStorage.setItem('jynx-dice-highscore', state.points.toString())
     }
     return
   }
+
+  zzfx(...endDaySound)
   state.round++
   state.charms += state.pendingCharms
   state.points += state.pendingPoints
@@ -83,4 +86,6 @@ export const startGame = () => {
   state.status = 'shop'
   state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
   state.selectedDie = -1
+
+  zzfx(...endDaySound)
 }

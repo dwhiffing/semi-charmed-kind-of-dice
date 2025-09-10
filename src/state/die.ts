@@ -1,7 +1,15 @@
 import { state } from '.'
-import { perDieOffset } from '../constants'
 import type { Die } from '../types'
 import { rollDie } from '../utils'
+import {
+  blackCatSound,
+  fullBustSound,
+  charmSound,
+  numberSound,
+  upgradeSound,
+  newDieSound,
+} from '../utils/sounds'
+import { zzfx } from '../utils/zzfx'
 
 export const isDieCharm = (die: { roll: number | null; sides: number }) => {
   if (!die.roll) return false
@@ -47,7 +55,8 @@ export const onClickUpgradeDie = (index: number) => {
   upgradeDie(index)
 }
 
-export const upgradeDie = (index: number) =>
+export const upgradeDie = (index: number) => {
+  zzfx(...upgradeSound)
   updateDice((die, i) => {
     if (i === index)
       return {
@@ -57,6 +66,7 @@ export const upgradeDie = (index: number) =>
       }
     return die
   })
+}
 
 export const updateDice = (update: (die: Die, i: number) => Die) =>
   (state.dice = state.dice.map(update))
@@ -73,9 +83,18 @@ export const doRollDie = async (die: Die, delay: number) => {
         idx === die.index ? { ...d, roll } : d,
       )
 
-      if (isDieBust(state.dice[die.index])) {
+      if (isDieCharm(state.dice[die.index])) {
+        zzfx(...charmSound)
+      } else if (isDieBust(state.dice[die.index])) {
+        if (state.dice.every((d) => isDieBust(d))) {
+          zzfx(...fullBustSound)
+        } else {
+          zzfx(...blackCatSound)
+        }
         setTimeout(() => app.classList.add('shake'), 10)
         setTimeout(() => app.classList.remove('shake'), 200)
+      } else {
+        zzfx(...numberSound)
       }
       resolve(undefined)
     }, delay),
@@ -89,7 +108,7 @@ export const getDieUpgradeCost = (sides: number) => {
 
 export const getNewDieCost = () => (state.dice.length - 2) * 2
 export const buyNewDie = () => {
-  if (state.charms < getNewDieCost()) return
+  zzfx(...newDieSound)
   state.dice = [...state.dice, getDie(4, state.dice.length)]
   state.charms -= getNewDieCost()
 }

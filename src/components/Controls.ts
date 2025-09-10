@@ -1,6 +1,6 @@
 import { createElement } from '../utils/createElement'
 import { doEnterShop, doRoll, state } from '../state'
-import { isDieBust, onClickDie } from '../state/die'
+import { isDieBust } from '../state/die'
 
 export const Controls = () => {
   const btnRoll = createElement('button', '') as HTMLButtonElement
@@ -81,14 +81,9 @@ export const Controls = () => {
       event.preventDefault()
       doRoll()
     }
-
-    const key = parseInt(event.key)
-    if (key >= 1 && key <= 9) {
-      const dieIndex = key - 1
-      if (dieIndex < state.dice.length) {
-        event.preventDefault()
-        onClickDie(dieIndex)
-      }
+    if (event.code === 'Enter' && !btnShop.hasAttribute('disabled')) {
+      event.preventDefault()
+      doEnterShop()
     }
   }
   document.addEventListener('keydown', handleKeyPress)

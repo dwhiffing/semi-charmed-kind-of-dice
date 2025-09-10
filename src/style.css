@@ -140,8 +140,8 @@ button {
     stroke-width: 0.5rem;
   }
 
-  &.selected svg rect:first-of-type,
-  &.selected svg path:first-of-type {
+  &.selected svg.die-svg rect:first-of-type,
+  &.selected svg.die-svg path:first-of-type {
     stroke: white;
   }
 

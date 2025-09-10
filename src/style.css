@@ -77,15 +77,15 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 5rem;
+  width: 5em;
   button {
     width: 100%;
   }
 }
 
 .die {
-  width: 5rem;
-  height: 5rem;
+  width: 5em;
+  height: 5em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,7 @@ button {
     transition: all 0.3s ease;
   }
   .cat {
-    width: 2.25rem;
+    width: 1.5em;
     opacity: 0;
     .cat-body {
       fill: currentColor;
@@ -118,7 +118,7 @@ button {
     fill: #f1da41;
     & path {
       stroke: black;
-      stroke-width: 0.5rem;
+      stroke-width: 15px;
     }
   }
 
@@ -198,66 +198,73 @@ button {
 
   &.d4 {
     .die-number {
-      font-size: 1.75rem;
+      font-size: 1.75em;
       translate: 0 0.375rem;
     }
     .charm {
-      width: 2.5rem;
+      width: 1.3em;
     }
     .cat {
-      translate: 0 0.5rem;
+      width: 1.4em;
+      translate: 0 0.3em;
     }
   }
 
   &.d6 {
     .die-number {
-      font-size: 2rem;
+      font-size: 2em;
     }
     .cat,
     .charm {
-      width: 3.125rem;
+      width: 1.6em;
     }
   }
 
   &.d8 {
     .die-number {
-      font-size: 1.5rem;
+      font-size: 1.5em;
     }
     .charm {
-      width: 2.5rem;
+      width: 1.5em;
     }
   }
 
   &.d10 {
     .die-number {
-      font-size: 1.5rem;
+      font-size: 1.5em;
       translate: 0 -0.125rem;
     }
+    .charm {
+      width: 1.2em;
+      translate: 0 0.05rem;
+    }
     .cat {
-      width: 1.75rem;
+      width: 1.15em;
+      translate: 0 -0.05rem;
     }
   }
 
   &.d12 {
     .die-number {
-      font-size: 1.5rem;
+      font-size: 1.5em;
       translate: 0 -0.0625rem;
     }
     .cat {
-      width: 1.625rem;
+      width: 1.2em;
     }
     .charm {
+      width: 1em;
       translate: 0 -0.125rem;
     }
   }
 
   &.d20 {
     .die-number {
-      font-size: 0.875rem;
+      font-size: 0.875em;
     }
 
     .cat {
-      width: 1.625rem;
+      width: 1.625em;
     }
 
     .charm {
@@ -268,8 +275,8 @@ button {
 
 .die-svg {
   fill: none;
-  width: 5rem;
-  height: 5rem;
+  width: 5em;
+  height: 5em;
   .face {
     fill: currentColor;
   }
@@ -376,7 +383,11 @@ button {
   overflow-y: auto;
   color: var(--light);
   width: 100%;
-  max-width: 21.875rem;
+  max-width: 15rem;
+  font-size: 20px;
+  @media (max-width: 600px) {
+    font-size: 3vw;
+  }
 }
 
 .modal-content {
@@ -391,8 +402,8 @@ button {
 }
 
 .d4 .die-svg {
-  width: 5.5rem;
-  height: 5.5rem;
+  width: 5.5em;
+  height: 5.5em;
 }
 
 .hidden {

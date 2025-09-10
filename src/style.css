@@ -149,6 +149,9 @@ button {
   .dice &.clickable svg.die-svg path:first-of-type:hover {
     stroke: #fff6;
   }
+  .edges {
+    pointer-events: none;
+  }
 
   &.die-number-cat {
     .dice & {

@@ -77,4 +77,7 @@ export const doRollDie = async (die: Die, delay: number) => {
   )
 }
 
-export const getDieUpgradeCost = (index: number) => state.dice[index].sides / 2
+export const getDieUpgradeCost = (sides: number) => {
+  if (sides === 20) return 7
+  return sides / 2
+}

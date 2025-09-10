@@ -69,7 +69,7 @@ export const doRoll = async () => {
   )
   state.pendingCharms += state.dice
     .filter(isDieCharm)
-    .reduce((acc, d) => acc + (d.sides >= 12 ? 3 : d.sides >= 8 ? 2 : 1), 0)
+    .reduce((acc, d) => acc + (d.sides >= 12 ? 3 : d.sides >= 6 ? 2 : 1), 0)
   state.pendingPoints += scoringDice.reduce((acc, d) => acc + (d.roll ?? 0), 0)
 
   const isBust = state.dice.every((d) => isDieBust(d))

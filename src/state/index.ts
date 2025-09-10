@@ -1,9 +1,4 @@
-import {
-  afterSubmitRollDelay,
-  DEV,
-  initialDelay,
-  perDieOffset,
-} from '../constants'
+import { DEV, initialDelay, perDieOffset } from '../constants'
 import type { IState, Item } from '../types'
 import { createState } from '../utils/createState'
 import { clickSound } from '../utils/sounds'
@@ -87,15 +82,12 @@ export const doRoll = async () => {
 }
 
 export const startGame = () => {
-  state.charms = 0
+  state.charms = 3
   state.points = 0
   state.pendingCharms = 0
   state.pendingPoints = 0
   state.round = 1
-  state.status = 'ready'
-  state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2), getDie(4, 3)]
+  state.status = 'shop'
+  state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
   state.selectedDie = -1
-  updateDice((die) => ({ ...die, roll: null }))
-
-  setTimeout(() => doRoll(), afterSubmitRollDelay)
 }

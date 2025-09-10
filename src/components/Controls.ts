@@ -35,7 +35,7 @@ export const Controls = () => {
     btnRoll.textContent = isBust
       ? 'End Day'
       : state.status === 'shop'
-      ? 'Next Day'
+      ? 'Start Day'
       : 'Roll'
     btnRoll.style.flex = '1'
 
@@ -103,6 +103,7 @@ export const Controls = () => {
 
   state.addUpdate('status', update)
   state.addUpdate('points', update)
+  state.addUpdate('charms', update)
   state.addUpdate('dice', update)
   update()
 

@@ -1,6 +1,7 @@
 import { createElement } from '../utils/createElement'
 import { doEnterShop, doRoll, startGame, state } from '../state'
-import { getDie, isDieBust } from '../state/die'
+import { buyNewDie, getNewDieCost, isDieBust } from '../state/die'
+import { MAX_DICE } from '../constants'
 
 export const Controls = () => {
   const btnRoll = createElement('button', '') as HTMLButtonElement
@@ -39,22 +40,22 @@ export const Controls = () => {
       : 'Roll'
     btnRoll.style.flex = '1'
 
-    const newDieCost = (state.dice.length - 2) * 2
-    const buyNewDie = () => {
-      if (state.charms < newDieCost) return
-      state.dice = [...state.dice, getDie(4, state.dice.length)]
-      state.charms -= newDieCost
-    }
-
     btnShop.toggleAttribute(
       'disabled',
       state.status === 'shop'
-        ? state.charms < newDieCost
+        ? state.charms < getNewDieCost() || state.dice.length >= MAX_DICE
         : state.status !== 'ready',
     )
-    btnShop.style.display = isBust ? 'none' : 'block'
+    btnShop.style.display =
+      isBust || (state.status === 'shop' && state.dice.length >= MAX_DICE)
+        ? 'none'
+        : 'block'
     btnShop.innerHTML =
-      state.status === 'shop' ? `Buy Die -<br/>${newDieCost} Charms` : 'End Day'
+      state.status === 'shop'
+        ? state.dice.length >= MAX_DICE
+          ? ''
+          : `Buy Die -<br/>${getNewDieCost()} Charms`
+        : 'End Day'
 
     btnRoll.onclick = isBust ? doEnterShop : doRoll
     btnShop.onclick = state.status === 'shop' ? buyNewDie : doEnterShop

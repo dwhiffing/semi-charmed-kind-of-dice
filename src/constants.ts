@@ -1,5 +1,6 @@
 export const DEV = false
 
+export const MAX_DICE = 8
 export const initialDelay = DEV ? 100 : 450
 export const perDieOffset = DEV ? 100 : 450
 export const afterSubmitRollDelay = DEV ? 150 : 300

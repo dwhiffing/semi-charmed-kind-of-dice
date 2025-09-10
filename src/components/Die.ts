@@ -27,7 +27,10 @@ export const Die = (index: number) => {
 
     const isUpgradeButtonHidden = state.status !== 'shop'
     const upgradeCost = getDieUpgradeCost(_die.sides)
-    const upgradeLabel = `Upgrade -<br/>${upgradeCost} Charms`
+    const upgradeLabel =
+      _die.sides === 20
+        ? 'Upgrade -<br/>Max Level'
+        : `Upgrade -<br/>${upgradeCost} Charms`
 
     dieFace.update(
       () => state.status.match(/ready|shop/) && onClickDie(index),

@@ -86,3 +86,10 @@ export const getDieUpgradeCost = (sides: number) => {
   if (sides === 20) return 7
   return sides / 2
 }
+
+export const getNewDieCost = () => (state.dice.length - 2) * 2
+export const buyNewDie = () => {
+  if (state.charms < getNewDieCost()) return
+  state.dice = [...state.dice, getDie(4, state.dice.length)]
+  state.charms -= getNewDieCost()
+}

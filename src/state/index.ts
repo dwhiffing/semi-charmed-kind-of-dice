@@ -49,14 +49,6 @@ export const doEnterShop = () => {
 }
 
 export const doRoll = async () => {
-  // if (getIsRoundComplete()) {
-  //   return doEnterShop()
-  // }
-
-  // if (state.status === 'shop') {
-  //   doNextRound()
-  // }
-
   if (state.status === 'rolling') return
   if (!DEV) zzfx(...clickSound)
 

@@ -69,7 +69,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: all 0.3s ease;
   position: relative;
 
   .die-number,
@@ -106,19 +106,22 @@ button {
     user-select: none;
   }
 
-  svg rect:first-of-type,
-  svg path:first-of-type {
-    transition: all 0.3s ease;
+  svg.die-svg rect:first-of-type,
+  svg.die-svg path:first-of-type {
+    transition: all 0.5s ease;
     stroke: transparent;
     paint-order: stroke;
-    stroke: transparent;
-    stroke-width: 4px;
+    stroke-width: 12px;
   }
 
   &.selected svg rect:first-of-type,
   &.selected svg path:first-of-type {
-    stroke-width: 12px;
     stroke: white;
+  }
+
+  .dice &.clickable svg.die-svg rect:first-of-type:hover,
+  .dice &.clickable svg.die-svg path:first-of-type:hover {
+    stroke: #fff6;
   }
 
   &.die-number-cat {
@@ -155,7 +158,8 @@ button {
   }
 
   &.rolling {
-    animation: die-roll 500ms linear infinite;
+    opacity: 0.5;
+    animation: die-roll 450ms linear infinite;
     .die-number,
     .cat,
     .charm {
@@ -261,7 +265,7 @@ button {
     background-color: var(--surface);
     border: 2px solid black;
     padding: 8px;
-    border-radius: 12px;
+    border-radius: 4px;
     display: flex;
     flex-direction: row;
     .round-count,

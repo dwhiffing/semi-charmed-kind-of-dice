@@ -1,5 +1,5 @@
 import { createElement } from '../utils/createElement'
-import { doEnterShop, doRoll, state } from '../state'
+import { doEnterShop, doRoll, startGame, state } from '../state'
 import { getDie, isDieBust } from '../state/die'
 
 export const Controls = () => {
@@ -90,13 +90,14 @@ export const Controls = () => {
   }
 
   const handleKeyPress = (event: KeyboardEvent) => {
-    if (event.code === 'Space' && !btnRoll.hasAttribute('disabled')) {
+    if (event.code === 'Space') {
       event.preventDefault()
-      doRoll()
+      if (state.status === 'menu') return startGame()
+      if (!btnRoll.hasAttribute('disabled')) btnRoll.click()
     }
     if (event.code === 'Enter' && !btnShop.hasAttribute('disabled')) {
       event.preventDefault()
-      doEnterShop()
+      btnShop.click()
     }
   }
   document.addEventListener('keydown', handleKeyPress)

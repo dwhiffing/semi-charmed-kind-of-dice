@@ -85,7 +85,7 @@ button {
 
 .die {
   width: 5em;
-  height: 5em;
+  height: 5.5em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -227,8 +227,12 @@ button {
       font-size: 1.65em;
       translate: 0 -0.15rem;
     }
+    .cat {
+      width: 1.2em;
+    }
     .charm {
-      width: 1.5em;
+      width: 1.3em;
+      translate: 0 -0.1rem;
     }
   }
 
@@ -282,7 +286,7 @@ button {
 .die-svg {
   fill: none;
   width: 5em;
-  height: 5em;
+  height: 5.5em;
   .face {
     fill: currentColor;
   }

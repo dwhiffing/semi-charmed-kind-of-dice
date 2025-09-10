@@ -202,7 +202,7 @@ button {
   &.d4 {
     .die-number {
       font-size: 1.75em;
-      translate: 0 0.45rem;
+      translate: 0 0.25em;
     }
     .charm {
       width: 1.3em;
@@ -217,7 +217,7 @@ button {
   &.d6 {
     .die-number {
       font-size: 2em;
-      translate: 0 -0.05rem;
+      translate: 0 -0.05em;
     }
     .cat,
     .charm {
@@ -228,43 +228,43 @@ button {
   &.d8 {
     .die-number {
       font-size: 1.65em;
-      translate: 0 -0.15rem;
+      translate: 0 -0.15em;
     }
     .cat {
       width: 1.2em;
     }
     .charm {
       width: 1.3em;
-      translate: 0 -0.1rem;
+      translate: 0 -0.1em;
     }
   }
 
   &.d10 {
     .die-number {
       font-size: 1.5em;
-      translate: 0 -0.125rem;
+      translate: 0 -0.125em;
     }
     .charm {
       width: 1.2em;
-      translate: 0 0.05rem;
+      translate: 0 0.05em;
     }
     .cat {
       width: 1.15em;
-      translate: 0 -0.05rem;
+      translate: 0 -0.05em;
     }
   }
 
   &.d12 {
     .die-number {
       font-size: 1.5em;
-      translate: 0 -0.15rem;
+      translate: 0 -0.075em;
     }
     .cat {
       width: 1.2em;
     }
     .charm {
       width: 1em;
-      translate: 0 -0.15rem;
+      translate: 0 -0.1em;
     }
   }
 

@@ -114,6 +114,12 @@ button {
   .charm {
     width: 2rem;
     opacity: 0;
+    paint-order: stroke;
+    fill: #f1da41;
+    & path {
+      stroke: black;
+      stroke-width: 0.5rem;
+    }
   }
 
   .die-number {

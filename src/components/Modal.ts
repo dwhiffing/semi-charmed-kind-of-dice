@@ -38,12 +38,13 @@ export const Modal = () => {
     textEl.innerText = `Current Level (d${sides})`
     if (sides <= 12) {
       contentNextEl.innerHTML = ''
-      for (let i = 1; i <= sides + 2; i++) {
+      const _sides = sides === 12 ? 20 : sides + 2
+      for (let i = 1; i <= _sides; i++) {
         const { container, update } = DieFace()
-        update(null, sides + 2, i, false, false)
+        update(null, _sides, i, false, false)
         contentNextEl.append(container)
       }
-      textNextEl.innerText = `Next Level (d${sides === 12 ? 20 : sides + 2})`
+      textNextEl.innerText = `Next Level (d${_sides})`
     } else {
       textNextEl.innerText = 'Max Level Reached'
     }

@@ -11,9 +11,9 @@ export const DiceGame = () => {
   const app = createElement(
     'div',
     { className: 'dice-game' },
-    Modal(),
     Dice(),
     Controls(),
+    Modal(),
     Menu(),
   )
   const container = createElement(
@@ -25,8 +25,11 @@ export const DiceGame = () => {
 
   const update = () => {
     app.classList.toggle('shop-mode', state.status.includes('shop'))
+    app.classList.toggle('menu-mode', state.status.includes('menu'))
   }
+
   state.addUpdate('status', update)
+  update()
 
   if (DEV) startGame()
 

@@ -52,6 +52,11 @@ h3 {
   width: 100%;
   justify-content: center;
   align-items: flex-end;
+  transition: all 0.5s ease;
+  .menu-mode & {
+    opacity: 0;
+    pointer-events: none;
+  }
   .die.clickable svg {
     path,
     rect {
@@ -280,6 +285,12 @@ button {
   justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
+  transition: all 0.5s ease;
+
+  .menu-mode & {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   .buttons button {
     width: 5.625rem;

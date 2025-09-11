@@ -22,6 +22,7 @@ export type Tag =
   | 'a'
   | 'br'
   | 'button'
+  | 'canvas'
   | 'dialog'
   | 'div'
   | 'form'

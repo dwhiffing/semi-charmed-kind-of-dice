@@ -1,3 +1,5 @@
+import { createElement } from '../utils/createElement'
+
 // Simplex Noise implementation (ported from Stefan Gustavson's java implementation)
 class SimplexNoise {
   grad3: number[][]
@@ -211,19 +213,14 @@ class SimplexNoise {
 }
 
 export const Background = () => {
-  const canvas = document.createElement('canvas')
-  canvas.style.position = 'fixed'
-  canvas.style.top = '0'
-  canvas.style.left = '0'
-  canvas.style.width = '100%'
-  canvas.style.height = '100%'
-  canvas.style.zIndex = '-1'
-  canvas.style.imageRendering = 'pixelated'
+  const canvas = createElement('canvas', {
+    className: 'background-canvas',
+  }) as HTMLCanvasElement
 
   const ctx = canvas.getContext('2d')!
   const noise = new SimplexNoise()
 
-  const scale = 0.1
+  const scale = 0.15
   const resize = () => {
     canvas.width = Math.floor(window.innerWidth * scale)
     canvas.height = Math.floor(window.innerHeight * scale)

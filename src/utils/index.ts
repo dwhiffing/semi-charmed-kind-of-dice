@@ -1,10 +1,3 @@
-export function arraysHaveSameValues(arr1: number[], arr2: number[]): boolean {
-  if (arr1.length !== arr2.length) return false
-  const sorted1 = [...arr1].sort((a, b) => a - b)
-  const sorted2 = [...arr2].sort((a, b) => a - b)
-  return sorted1.every((val, i) => val === sorted2[i])
-}
-
 const pools = new Map<string, number[]>()
 
 export const shuffle = <T>(array: T[]): T[] => {
@@ -28,25 +21,4 @@ export const rollDie = (sides: number, index: number) => {
   }
   const val = pool.pop()!
   return val
-}
-
-export const randInt = (min: number, max: number) =>
-  Math.floor(Math.random() * (max + 1 - min)) + min
-
-export const adjacentRange = (value: number, range: number): number[] => {
-  const r = Math.max(1, Math.floor(range))
-
-  // number of items on each side of `value` should sum to r-1
-  const half = (r - 1) / 2
-  let left = Math.floor(half)
-  let right = Math.ceil(half)
-
-  // if unbalanced (happens when r is even) randomly flip which side gets the extra
-  if (left !== right && Math.random() < 0.5) {
-    ;[left, right] = [right, left]
-  }
-
-  const out: number[] = []
-  for (let i = value - left; i <= value + right; i++) out.push(i)
-  return out
 }

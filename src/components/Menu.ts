@@ -39,14 +39,19 @@ export const Menu = () => {
 
     highScore.style.display = state.highScore ? 'block' : 'none'
     lastScore.style.display = state.points ? 'block' : 'none'
-    btnMute.textContent = state.muted ? 'Sound Off' : 'Sound On'
+    btnMute.textContent =
+      state.muteState === 0
+        ? 'Muted'
+        : state.muteState === 2
+        ? 'Music off'
+        : 'Sound/Music on'
   }
 
   btnStart.onclick = () => startGame()
   btnMute.onclick = () => toggleMute()
 
   state.addUpdate('points', update)
-  state.addUpdate('muted', update)
+  state.addUpdate('muteState', update)
   state.addUpdate('status', update)
   update()
 

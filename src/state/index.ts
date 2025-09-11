@@ -12,7 +12,7 @@ const initialState = {
   highScore: JSON.parse(localStorage.getItem('jynx-dice-highscore') || '0'),
   pendingCharms: 0,
   pendingPoints: 0,
-  muted: false,
+  muteState: 1,
   selectedDie: -1,
   round: 1,
   status: 'menu',

@@ -17,6 +17,7 @@ const initialState = {
   selectedDie: -1,
   round: 1,
   status: 'menu',
+  isAnimating: false,
 }
 export let state = createState(initialState) as IState
 
@@ -83,6 +84,7 @@ export const startGame = () => {
   state.status = 'shop'
   state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
   state.selectedDie = -1
+  state.isAnimating = false
 
   zzfx(...endDaySound)
 }

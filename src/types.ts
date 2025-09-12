@@ -14,6 +14,7 @@ export interface IState extends State {
   pendingPoints: number
   round: number
   muteState: number
+  isAnimating: boolean
   status: 'ready' | 'rolling' | 'shop' | 'menu'
 }
 

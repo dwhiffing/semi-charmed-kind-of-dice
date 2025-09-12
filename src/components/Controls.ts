@@ -32,7 +32,8 @@ export const Controls = () => {
   )
 
   const update = () => {
-    const rollDisabled = !!state.status.match(/rolling|menu/)
+    const rollDisabled =
+      state.isAnimating || !!state.status.match(/rolling|menu/)
     const isBust = state.dice.every(isDieBust)
     btnRoll.toggleAttribute('disabled', rollDisabled)
     btnRoll.textContent = isBust
@@ -44,9 +45,10 @@ export const Controls = () => {
 
     btnShop.toggleAttribute(
       'disabled',
-      state.status === 'shop'
-        ? state.charms < getNewDieCost() || state.dice.length >= MAX_DICE
-        : state.status !== 'ready',
+      state.isAnimating ||
+        (state.status === 'shop'
+          ? state.charms < getNewDieCost() || state.dice.length >= MAX_DICE
+          : state.status !== 'ready'),
     )
     btnShop.style.display =
       isBust || (state.status === 'shop' && state.dice.length >= MAX_DICE)
@@ -114,6 +116,7 @@ export const Controls = () => {
   state.addUpdate('charms', update)
   state.addUpdate('pendingCharms', update)
   state.addUpdate('pendingPoints', update)
+  state.addUpdate('isAnimating', update)
   state.addUpdate('dice', update)
   update()
 

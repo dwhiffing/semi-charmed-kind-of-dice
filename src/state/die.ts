@@ -10,6 +10,7 @@ import {
 } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
 import { particleSystem } from '../utils/particles'
+import { colors } from '../constants'
 
 export const isDieCharm = (die: { roll: number | null; sides: number }) => {
   if (!die.roll) return false
@@ -87,7 +88,7 @@ export const doRollDie = async (die: Die, delay: number) => {
       const rect = dieElement.getBoundingClientRect()
       const x = rect.left + rect.width / 2 + (isBust ? 20 : 0)
       const y = rect.top + rect.height / 2 + (isBust ? 20 : 0)
-      const color = isBust ? 'black' : isCharm ? '#f1da41' : '#489dff'
+      const color = isBust ? 'black' : isCharm ? '#f1da41' : colors[d.sides]
       const count = isCharm || isBust ? 10 : 6
       const svg = isCharm ? '/charm.svg' : undefined
       particleSystem.createConfetti(x, y, color, count, svg)

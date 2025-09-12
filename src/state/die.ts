@@ -33,13 +33,7 @@ export const isDieBust = (die: { roll: number | null; sides: number }) => {
 }
 
 export const getDie = (sides: number, index: number) =>
-  ({
-    sides,
-    roll: sides,
-    status: 'ready',
-    index,
-    stickers: [],
-  } as Die)
+  ({ sides, roll: sides, index } as Die)
 
 export const onClickDie = (_index: number) => {
   state.selectedDie = _index
@@ -58,12 +52,8 @@ export const onClickUpgradeDie = (index: number) => {
 export const upgradeDie = (index: number) => {
   zzfx(...upgradeSound)
   updateDice((die, i) => {
-    if (i === index)
-      return {
-        ...die,
-        sides: die.sides >= 12 ? 20 : die.sides + 2,
-        roll: die.sides >= 12 ? 20 : die.sides + 2,
-      }
+    const sides = die.sides >= 12 ? 20 : die.sides + 2
+    if (i === index) return { ...die, sides, roll: sides }
     return die
   })
 }

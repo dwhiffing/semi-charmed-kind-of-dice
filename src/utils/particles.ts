@@ -23,9 +23,6 @@ export interface OrbitalParticle {
   currentSpeedMultiplier: number
 }
 
-const centerX = window.innerWidth / 2
-const centerY = window.innerHeight / 2 - 100
-
 export class ParticleSystem {
   private particles: Particle[] = []
   private orbitalParticles: OrbitalParticle[] = []
@@ -35,7 +32,11 @@ export class ParticleSystem {
   private initialized = false
   private globalOrbitalAngle = 0
   private baseAngularVelocity = 0.02
-  public pointCount = 124
+  public pointCount = 0
+  public centerX = window.innerWidth / 2
+  public centerY = window.innerHeight / 2
+  public centerYOffset = 0
+  public scale = 1
   constructor() {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.init())
@@ -54,7 +55,7 @@ export class ParticleSystem {
 
     this.ctx = this.canvas.getContext('2d')!
     this.initialized = true
-    this.ctx.strokeStyle = '#000'
+    // this.ctx.strokeStyle = '#000'
 
     this.animate()
 
@@ -66,6 +67,9 @@ export class ParticleSystem {
     if (!this.canvas) return
     this.canvas.width = window.innerWidth
     this.canvas.height = window.innerHeight
+    this.centerX = this.canvas.width / 2
+    this.centerY = this.canvas.height / 2
+    this.scale = Math.min(500, this.canvas!.width) / 500
   }
 
   createConfetti(
@@ -77,8 +81,8 @@ export class ParticleSystem {
   ) {
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5
-      const speed = 0.5 + Math.random() * 3
-      const maxLife = 80 + Math.random() * 20
+      const speed = (0.5 + Math.random() * 3) * this.scale
+      const maxLife = (40 + Math.random() * 90) * this.scale
       this.particles.push({
         x,
         y,
@@ -90,7 +94,7 @@ export class ParticleSystem {
         maxLife,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        size: 2 + Math.random() * 9,
+        size: 5 + Math.random() * 5,
         rotationSpeed: Math.random() * 0.2,
       })
     }
@@ -105,14 +109,11 @@ export class ParticleSystem {
       particle.currentSpeedMultiplier = 1 // Reset speed multiplier
     })
 
-    // Create new orbital particles
-    const orbitalIndex = this.orbitalParticles.length + 1
-
     this.orbitalParticles.push({
-      x: centerX,
-      y: centerY,
+      x: this.centerX,
+      y: this.centerY + this.centerYOffset,
       rotation: 0,
-      orbitalIndex,
+      orbitalIndex: this.orbitalParticles.length,
       currentSpeedMultiplier: 1,
     })
 
@@ -135,11 +136,11 @@ export class ParticleSystem {
   }
 
   fireOffOrbitalParticles() {
-    this.convertOrbitalParticlesToRegular(0.1, 1) // outward direction
+    this.convertOrbitalParticlesToRegular(0.1 * this.scale, 1) // outward direction
   }
 
   pullInOrbitalParticles() {
-    this.convertOrbitalParticlesToRegular(0.07, -1) // inward direction
+    this.convertOrbitalParticlesToRegular(0.07 * this.scale, -1) // inward direction
   }
 
   private convertOrbitalParticlesToRegular(
@@ -166,7 +167,7 @@ export class ParticleSystem {
         Math.sin(currentAngle) * speedMultiplier * 0.5 * radialDirection
       const vx = (tangentVx + radialVx) * 100
       const vy = (tangentVy + radialVy) * 100
-      const maxLife = 60
+      const maxLife = 60 * this.scale
 
       // Create a new regular particle from the orbital particle
       this.particles.push({
@@ -210,15 +211,21 @@ export class ParticleSystem {
 
       const maxRadius = 180
       const radius =
-        80 +
-        (maxRadius - 80) * (1 - Math.exp(-0.05 * this.orbitalParticles.length))
+        (80 +
+          (maxRadius - 80) *
+            (1 - Math.exp(-0.05 * this.orbitalParticles.length))) *
+        this.scale
 
       // Calculate ideal position
-      const idealX = centerX + Math.cos(idealAngle) * radius
-      const idealY = centerY + Math.sin(idealAngle) * radius
+      const idealX = this.centerX + Math.cos(idealAngle) * radius
+      const idealY =
+        this.centerY + this.centerYOffset + Math.sin(idealAngle) * radius
 
       // Calculate current angle of the particle relative to center
-      const currentAngle = Math.atan2(p.y - centerY, p.x - centerX)
+      const currentAngle = Math.atan2(
+        p.y - (this.centerY + this.centerYOffset),
+        p.x - this.centerX,
+      )
 
       // Calculate angle difference (shortest path)
       let angleDiff = idealAngle - currentAngle
@@ -298,12 +305,13 @@ export class ParticleSystem {
     this.ctx.save()
 
     const time = Date.now() * 0.001
-    const scaleAnimation = 1 + this.pointCount / 140 + Math.sin(time * 4) * 0.05
-    this.ctx.translate(centerX, centerY)
+    const scaleAnimation =
+      (1 + this.pointCount / 140 + Math.sin(time * 4) * 0.05) * this.scale
+    this.ctx.translate(this.centerX, this.centerY + this.centerYOffset)
     this.ctx.scale(scaleAnimation, scaleAnimation)
     this.ctx.rotate(Math.sin(time * 1.5) * 0.1)
 
-    this.ctx.font = 'bold 28px system-ui'
+    this.ctx.font = 'bold 38px system-ui'
     this.ctx.fillStyle = '#489dff'
     this.ctx.textAlign = 'center'
     this.ctx.textBaseline = 'middle'
@@ -317,17 +325,17 @@ export class ParticleSystem {
     this.ctx.save()
 
     const img = document.querySelector('.charm-1 path') as SVGPathElement
-    const size = 18 // Since size isn't stored, calculate it
-    const color = '#FFD700' // Default orbital particle color
+    const size = 18
+    const color = '#FFD700'
 
     this.ctx.fillStyle = color
     this.ctx.beginPath()
 
-    const scale = size / 40
+    const scale = (size / 40) * this.scale
 
     this.ctx.translate(p.x, p.y)
     this.ctx.scale(scale, scale)
-    this.ctx.strokeStyle = '#000'
+    // this.ctx.strokeStyle = '#000'
     this.ctx.rotate(p.rotation)
 
     this.ctx.translate(-100, -100)
@@ -352,13 +360,13 @@ export class ParticleSystem {
     this.ctx.fillStyle = p.color
     this.ctx.beginPath()
 
-    const scale = size / 40
+    const scale = (size / 40) * this.scale
     const rotateFromOrigin = p.color !== 'black'
     let offset = rotateFromOrigin ? 0 : 15
 
     this.ctx.translate(p.x - offset, p.y - offset)
     this.ctx.scale(scale, scale)
-    this.ctx.strokeStyle = '#000'
+    // this.ctx.strokeStyle = '#000'
     if (p.rotation !== undefined) this.ctx.rotate(p.rotation)
 
     if (p.svgSrc) {
@@ -368,7 +376,7 @@ export class ParticleSystem {
       this.ctx.stroke(path2)
       this.ctx.fill(path2)
     } else {
-      this.ctx.lineWidth = 20
+      this.ctx.lineWidth = 10
       this.ctx.arc(0, 0, size * 10, 0, 360)
       this.ctx.stroke()
       this.ctx.fill()

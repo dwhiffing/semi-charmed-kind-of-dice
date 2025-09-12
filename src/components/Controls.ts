@@ -63,6 +63,7 @@ export const Controls = () => {
     btnShop.onclick = state.status === 'shop' ? buyNewDie : doEnterShop
 
     particleSystem.pointCount = state.pendingPoints
+    particleSystem.centerYOffset = state.dice.length > 4 ? -190 : -40
 
     roundCount.innerHTML = ''
     charmCount.innerHTML = ''

@@ -430,7 +430,7 @@ canvas {
 }
 
 button {
-  border: 3px solid #000;
+  border: 0.125rem solid #000;
   background-color: #8457d8;
   color: black;
   border-radius: 8px;

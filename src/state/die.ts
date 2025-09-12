@@ -10,6 +10,7 @@ import {
   newDieSound,
 } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
+import { particleSystem } from '../utils/particles'
 
 export const isDieCharm = (die: { roll: number | null; sides: number }) => {
   if (!die.roll) return false
@@ -78,12 +79,31 @@ export const doRollDie = async (die: Die, delay: number) => {
       const isBust = isDieBust(d)
       const charms = isCharm ? (d.sides >= 10 ? 3 : d.sides >= 6 ? 2 : 1) : 0
       const points = isBust ? 0 : roll ?? 0
-      state.pendingCharms += charms
+
       state.pendingPoints += points
+
+      const dieElement = document.querySelectorAll('.die')[
+        die.index
+      ] as HTMLElement
+      const rect = dieElement.getBoundingClientRect()
+      const x = rect.left + rect.width / 2
+      const y = rect.top + rect.height / 2
+      const color = isBust ? 'black' : isCharm ? 'yellow' : '#489dff'
+      const count = isCharm || isBust ? 10 : 6
+      const svg = isCharm ? '/charm.svg' : undefined
+      particleSystem.createConfetti(x, y, color, count, svg)
+
       if (isCharm) {
-        zzfx(...charmSound)
+        for (let i = 0; i < charms; i++) {
+          setTimeout(() => {
+            zzfx(...charmSound)
+            state.pendingCharms++
+            particleSystem.createOrbitalParticle()
+          }, i * 150)
+        }
       } else if (isBust) {
         if (state.dice.every((d) => isDieBust(d))) {
+          particleSystem.fireOffOrbitalParticles()
           zzfx(...fullBustSound)
         } else {
           zzfx(...blackCatSound)

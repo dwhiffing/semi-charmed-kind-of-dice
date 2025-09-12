@@ -3,6 +3,7 @@ import { doEnterShop, doRoll, startGame, state } from '../state'
 import { buyNewDie, getNewDieCost, isDieBust } from '../state/die'
 import { MAX_DICE } from '../constants'
 import { toggleMute } from '../utils/zzfx'
+import { particleSystem } from '../utils/particles'
 
 export const Controls = () => {
   const btnRoll = createElement('button', '') as HTMLButtonElement
@@ -60,6 +61,8 @@ export const Controls = () => {
 
     btnRoll.onclick = isBust ? doEnterShop : doRoll
     btnShop.onclick = state.status === 'shop' ? buyNewDie : doEnterShop
+
+    particleSystem.pointCount = state.pendingPoints
 
     roundCount.innerHTML = ''
     charmCount.innerHTML = ''

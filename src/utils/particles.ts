@@ -1,0 +1,381 @@
+import { createElement } from './createElement'
+
+export interface Particle {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  life: number
+  maxLife: number
+  size: number
+  color: string
+  gravity: number
+  svgSrc?: string
+  rotation?: number
+  rotationSpeed?: number
+}
+
+export interface OrbitalParticle {
+  x: number
+  y: number
+  rotation: number
+  orbitalIndex: number
+  currentSpeedMultiplier: number
+}
+
+const centerX = window.innerWidth / 2
+const centerY = window.innerHeight / 2 - 100
+
+export class ParticleSystem {
+  private particles: Particle[] = []
+  private orbitalParticles: OrbitalParticle[] = []
+  private canvas: HTMLCanvasElement | null = null
+  private ctx: CanvasRenderingContext2D | null = null
+  private animationId: number | null = null
+  private initialized = false
+  private globalOrbitalAngle = 0
+  private baseAngularVelocity = 0.02
+  public pointCount = 124
+  constructor() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => this.init())
+    } else {
+      this.init()
+    }
+  }
+
+  private init() {
+    if (this.initialized) return
+
+    this.canvas = createElement('canvas', {
+      className: 'particle-canvas',
+    }) as HTMLCanvasElement
+    document.body.appendChild(this.canvas)
+
+    this.ctx = this.canvas.getContext('2d')!
+    this.initialized = true
+    this.ctx.strokeStyle = '#000'
+
+    this.animate()
+
+    this.resize()
+    window.addEventListener('resize', () => this.resize())
+  }
+
+  private resize() {
+    if (!this.canvas) return
+    this.canvas.width = window.innerWidth
+    this.canvas.height = window.innerHeight
+  }
+
+  createConfetti(
+    x: number,
+    y: number,
+    color: string,
+    count = 20,
+    svgSrc?: string,
+  ) {
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5
+      const speed = 0.5 + Math.random() * 3
+      const maxLife = 80 + Math.random() * 20
+      this.particles.push({
+        x,
+        y,
+        gravity: 0,
+        rotation: 0,
+        color,
+        svgSrc,
+        life: maxLife,
+        maxLife,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 2 + Math.random() * 9,
+        rotationSpeed: Math.random() * 0.2,
+      })
+    }
+
+    if (!this.animationId) this.animate()
+  }
+
+  createOrbitalParticle() {
+    // Reassign indices to existing orbital particles
+    this.orbitalParticles.forEach((particle, index) => {
+      particle.orbitalIndex = index
+      particle.currentSpeedMultiplier = 1 // Reset speed multiplier
+    })
+
+    // Create new orbital particles
+    const orbitalIndex = this.orbitalParticles.length + 1
+
+    this.orbitalParticles.push({
+      x: centerX,
+      y: centerY,
+      rotation: 0,
+      orbitalIndex,
+      currentSpeedMultiplier: 1,
+    })
+
+    if (!this.animationId) this.animate()
+  }
+
+  redistributeOrbitalParticles() {
+    this.orbitalParticles.forEach((particle, index) => {
+      particle.orbitalIndex = index
+      particle.currentSpeedMultiplier = 1 // Reset speed multiplier
+    })
+  }
+
+  removeOrbitalParticle(particleToRemove: OrbitalParticle) {
+    const index = this.orbitalParticles.indexOf(particleToRemove)
+    if (index > -1) {
+      this.orbitalParticles.splice(index, 1)
+      this.redistributeOrbitalParticles()
+    }
+  }
+
+  fireOffOrbitalParticles() {
+    this.convertOrbitalParticlesToRegular(0.1, 1) // outward direction
+  }
+
+  pullInOrbitalParticles() {
+    this.convertOrbitalParticlesToRegular(0.07, -1) // inward direction
+  }
+
+  private convertOrbitalParticlesToRegular(
+    speedMultiplier: number,
+    radialDirection: number,
+  ) {
+    this.orbitalParticles.forEach((orbitalParticle) => {
+      // Calculate the current velocity based on orbital motion
+      const totalParticles = this.orbitalParticles.length
+      const currentAngle =
+        this.globalOrbitalAngle +
+        (Math.PI * 2 * orbitalParticle.orbitalIndex) / totalParticles
+
+      // Calculate tangent vector (perpendicular to radius for circular motion)
+      const tangentVx =
+        -Math.sin(currentAngle) * this.baseAngularVelocity * speedMultiplier
+      const tangentVy =
+        Math.cos(currentAngle) * this.baseAngularVelocity * speedMultiplier
+
+      // Add radial velocity (outward or inward from center based on direction)
+      const radialVx =
+        Math.cos(currentAngle) * speedMultiplier * 0.5 * radialDirection
+      const radialVy =
+        Math.sin(currentAngle) * speedMultiplier * 0.5 * radialDirection
+      const vx = (tangentVx + radialVx) * 100
+      const vy = (tangentVy + radialVy) * 100
+      const maxLife = 60
+
+      // Create a new regular particle from the orbital particle
+      this.particles.push({
+        x: orbitalParticle.x,
+        y: orbitalParticle.y,
+        vx,
+        vy,
+        life: maxLife,
+        maxLife,
+        size: 18,
+        color: '#FFD700',
+        gravity: 0,
+        svgSrc: '/charm.svg',
+        rotation: orbitalParticle.rotation,
+        rotationSpeed: 0.1,
+      })
+    })
+
+    this.orbitalParticles = []
+    if (!this.animationId) this.animate()
+  }
+
+  private animate() {
+    if (!this.canvas || !this.ctx) return
+
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.renderNumber()
+
+    // Update global orbital angle
+    this.globalOrbitalAngle += this.baseAngularVelocity
+    this.globalOrbitalAngle = this.globalOrbitalAngle % (Math.PI * 2)
+
+    // Animate orbital particles
+    for (let i = 0; i < this.orbitalParticles.length; i++) {
+      const p = this.orbitalParticles[i]
+
+      // Calculate where this particle should be based on the global angle
+      const idealAngle =
+        this.globalOrbitalAngle +
+        (Math.PI * 2 * p.orbitalIndex) / this.orbitalParticles.length
+
+      const maxRadius = 180
+      const radius =
+        80 +
+        (maxRadius - 80) * (1 - Math.exp(-0.05 * this.orbitalParticles.length))
+
+      // Calculate ideal position
+      const idealX = centerX + Math.cos(idealAngle) * radius
+      const idealY = centerY + Math.sin(idealAngle) * radius
+
+      // Calculate current angle of the particle relative to center
+      const currentAngle = Math.atan2(p.y - centerY, p.x - centerX)
+
+      // Calculate angle difference (shortest path)
+      let angleDiff = idealAngle - currentAngle
+      angleDiff = ((angleDiff + Math.PI) % (Math.PI * 2)) - Math.PI
+
+      // Adjust speed multiplier based on how far off we are
+      const maxAngleDiff = Math.PI / 4 // Max difference where we apply speed changes
+      const speedAdjustment = Math.abs(angleDiff) / maxAngleDiff
+
+      if (Math.abs(angleDiff) > 0.05) {
+        // Speed up or slow down to catch up/slow down
+        p.currentSpeedMultiplier =
+          1 + (angleDiff > 0 ? speedAdjustment * 2 : -speedAdjustment * 0.5)
+        p.currentSpeedMultiplier = Math.max(
+          0.2,
+          Math.min(3, p.currentSpeedMultiplier),
+        )
+      } else {
+        // Close enough, return to normal speed
+        p.currentSpeedMultiplier = 1
+      }
+
+      // Smoothly interpolate towards the ideal position
+      const lerpFactor = 0.15 // How fast to move towards ideal position
+      p.x = p.x + (idealX - p.x) * lerpFactor
+      p.y = p.y + (idealY - p.y) * lerpFactor
+
+      // Update rotation
+      p.rotation = idealAngle + 0.2
+    }
+
+    // Animate regular particles
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i]
+
+      p.x += p.vx
+      p.y += p.vy
+      p.vy += p.gravity
+      p.vx *= 0.98
+      p.vy *= 0.98
+      p.life--
+
+      if (p.rotationSpeed !== undefined && p.rotation !== undefined) {
+        p.rotation += p.rotationSpeed
+      }
+
+      if (p.life <= 0) {
+        this.particles.splice(i, 1)
+        continue
+      }
+    }
+
+    // Render orbital particles
+    this.orbitalParticles.forEach((p) => {
+      this.renderOrbitalParticle(p)
+    })
+
+    // Render regular particles
+    this.particles.forEach((p) => {
+      this.renderParticle(p)
+    })
+
+    if (
+      this.pointCount > 0 ||
+      this.particles.length > 0 ||
+      this.orbitalParticles.length > 0
+    ) {
+      this.animationId = requestAnimationFrame(() => this.animate())
+    } else {
+      this.animationId = null
+    }
+  }
+
+  private renderNumber() {
+    if (!this.ctx || this.pointCount === 0) return
+
+    this.ctx.save()
+
+    const time = Date.now() * 0.001
+    const scaleAnimation = 1 + this.pointCount / 140 + Math.sin(time * 4) * 0.05
+    this.ctx.translate(centerX, centerY)
+    this.ctx.scale(scaleAnimation, scaleAnimation)
+    this.ctx.rotate(Math.sin(time * 1.5) * 0.1)
+
+    this.ctx.font = 'bold 28px system-ui'
+    this.ctx.fillStyle = '#489dff'
+    this.ctx.textAlign = 'center'
+    this.ctx.textBaseline = 'middle'
+    this.ctx.fillText(`${this.pointCount}`, 0, 0)
+    this.ctx.restore()
+  }
+
+  private renderOrbitalParticle(p: OrbitalParticle) {
+    if (!this.ctx) return
+
+    this.ctx.save()
+
+    const img = document.querySelector('.charm-1 path') as SVGPathElement
+    const size = 18 // Since size isn't stored, calculate it
+    const color = '#FFD700' // Default orbital particle color
+
+    this.ctx.fillStyle = color
+    this.ctx.beginPath()
+
+    const scale = size / 40
+
+    this.ctx.translate(p.x, p.y)
+    this.ctx.scale(scale, scale)
+    this.ctx.strokeStyle = '#000'
+    this.ctx.rotate(p.rotation)
+
+    this.ctx.translate(-100, -100)
+    let path2 = new Path2D(img.getAttribute('d')!)
+    this.ctx.lineWidth = 10
+    this.ctx.stroke(path2)
+    this.ctx.fill(path2)
+
+    this.ctx.restore()
+  }
+
+  private renderParticle(p: Particle) {
+    if (!this.ctx) return
+
+    const alpha = p.life / p.maxLife
+    const size = p.size * alpha
+
+    this.ctx.save()
+
+    const img = document.querySelector('.charm-1 path') as SVGPathElement
+
+    this.ctx.fillStyle = p.color
+    this.ctx.beginPath()
+
+    const scale = size / 40
+    const rotateFromOrigin = p.color !== 'black'
+    let offset = rotateFromOrigin ? 0 : 15
+
+    this.ctx.translate(p.x - offset, p.y - offset)
+    this.ctx.scale(scale, scale)
+    this.ctx.strokeStyle = '#000'
+    if (p.rotation !== undefined) this.ctx.rotate(p.rotation)
+
+    if (p.svgSrc) {
+      if (rotateFromOrigin) this.ctx.translate(-100, -100)
+      let path2 = new Path2D(img.getAttribute('d')!)
+      this.ctx.lineWidth = 10
+      this.ctx.stroke(path2)
+      this.ctx.fill(path2)
+    } else {
+      this.ctx.lineWidth = 20
+      this.ctx.arc(0, 0, size * 10, 0, 360)
+      this.ctx.stroke()
+      this.ctx.fill()
+    }
+
+    this.ctx.restore()
+  }
+}
+
+export const particleSystem = new ParticleSystem()

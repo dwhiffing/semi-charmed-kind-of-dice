@@ -1,6 +1,7 @@
 import { DEV, dieRollTime, LAST_ROUND_NUMBER } from '../constants'
 import type { IState } from '../types'
 import { createState } from '../utils/createState'
+import { particleSystem } from '../utils/particles'
 import { clickSound, endDaySound, gameOverSound } from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
 import { updateDice, doRollDie, getDie, isDieBust } from './die'
@@ -12,7 +13,7 @@ const initialState = {
   highScore: JSON.parse(localStorage.getItem('jynx-dice-highscore') || '0'),
   pendingCharms: 0,
   pendingPoints: 0,
-  muteState: 1,
+  muteState: 2,
   selectedDie: -1,
   round: 1,
   status: 'menu',
@@ -20,9 +21,12 @@ const initialState = {
 export let state = createState(initialState) as IState
 
 export const doEnterShop = () => {
+  particleSystem.pullInOrbitalParticles()
+
   if (state.round === LAST_ROUND_NUMBER) {
     state.status = 'menu'
     zzfx(...gameOverSound)
+    particleSystem.pointCount = 0
     if (state.points > state.highScore) {
       state.highScore = state.points
       localStorage.setItem('jynx-dice-highscore', state.points.toString())

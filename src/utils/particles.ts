@@ -33,6 +33,7 @@ export class ParticleSystem {
   private globalOrbitalAngle = 0
   private baseAngularVelocity = 0.02
   public pointCount = 0
+  private fadeAlpha = 1
   public centerX = window.innerWidth / 2
   public centerY = window.innerHeight / 2
   public centerYOffset = 0
@@ -194,6 +195,12 @@ export class ParticleSystem {
     if (!this.canvas || !this.ctx) return
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+
+    if (this.pointCount === 0) {
+      this.fadeAlpha = Math.max(0, this.fadeAlpha - 0.02)
+    } else if (this.pointCount > 0) {
+      this.fadeAlpha = Math.min(1, this.fadeAlpha + 0.1)
+    }
     this.renderNumber()
 
     // Update global orbital angle
@@ -288,19 +295,11 @@ export class ParticleSystem {
       this.renderParticle(p)
     })
 
-    if (
-      this.pointCount > 0 ||
-      this.particles.length > 0 ||
-      this.orbitalParticles.length > 0
-    ) {
-      this.animationId = requestAnimationFrame(() => this.animate())
-    } else {
-      this.animationId = null
-    }
+    this.animationId = requestAnimationFrame(() => this.animate())
   }
 
   private renderNumber() {
-    if (!this.ctx || this.pointCount === 0) return
+    if (!this.ctx) return
 
     this.ctx.save()
 
@@ -312,7 +311,7 @@ export class ParticleSystem {
     this.ctx.rotate(Math.sin(time * 1.5) * 0.1)
 
     this.ctx.font = 'bold 38px system-ui'
-    this.ctx.fillStyle = '#489dff'
+    this.ctx.fillStyle = `rgba(72, 157, 255, ${this.fadeAlpha})`
     this.ctx.textAlign = 'center'
     this.ctx.textBaseline = 'middle'
     this.ctx.fillText(`${this.pointCount}`, 0, 0)

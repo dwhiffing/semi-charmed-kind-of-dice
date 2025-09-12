@@ -85,9 +85,9 @@ export const doRollDie = async (die: Die, delay: number) => {
         die.index
       ] as HTMLElement
       const rect = dieElement.getBoundingClientRect()
-      const x = rect.left + rect.width / 2
-      const y = rect.top + rect.height / 2
-      const color = isBust ? 'black' : isCharm ? 'yellow' : '#489dff'
+      const x = rect.left + rect.width / 2 + (isBust ? 20 : 0)
+      const y = rect.top + rect.height / 2 + (isBust ? 20 : 0)
+      const color = isBust ? 'black' : isCharm ? '#f1da41' : '#489dff'
       const count = isCharm || isBust ? 10 : 6
       const svg = isCharm ? '/charm.svg' : undefined
       particleSystem.createConfetti(x, y, color, count, svg)
@@ -103,6 +103,12 @@ export const doRollDie = async (die: Die, delay: number) => {
       } else if (isBust) {
         if (state.dice.every((d) => isDieBust(d))) {
           particleSystem.fireOffOrbitalParticles()
+          particleSystem.createConfetti(
+            particleSystem.centerX,
+            particleSystem.centerY,
+            'black',
+            30,
+          )
           zzfx(...fullBustSound)
         } else {
           zzfx(...blackCatSound)

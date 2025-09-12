@@ -1,20 +1,22 @@
 import { createElement } from '../utils/createElement'
 
-const noise = (x: number, y: number, t: number) => {
-  const n1 = Math.sin(x * 0.02 + t) * Math.cos(y * 0.02)
-  const n2 = Math.sin(x * 0.01 + y * 0.01 + t * 2) * 0.5
-  const n3 = Math.sin((x + y) * 0.005 + t * 1.5) * 0.3
+const noise = (x: number, y: number, t: number, seed: number) => {
+  const n1 = Math.sin(x * 0.02 + t + seed) * Math.cos(y * 0.02 + seed * 0.5)
+  const n2 = Math.sin(x * 0.01 + y * 0.01 + t * 2 + seed * 1.3) * 0.5
+  const n3 = Math.sin((x + y) * 0.03 + t * 1.5 + seed * 0.7) * 0.3
   return n1 + n2 + n3
 }
 
 export const Background = () => {
+  const seed = Math.random() * Math.PI * 2
+
   const canvas = createElement('canvas', {
     className: 'background-canvas',
   }) as HTMLCanvasElement
 
   const ctx = canvas.getContext('2d')!
 
-  const scale = 0.2
+  const scale = 0.1
   const resize = () => {
     canvas.width = Math.floor(window.innerWidth * scale)
     canvas.height = Math.floor(window.innerHeight * scale)
@@ -46,7 +48,7 @@ export const Background = () => {
 
     for (let y = 0; y < canvas.height; y++) {
       for (let x = 0; x < canvas.width; x++) {
-        const n = noise(x, y, time)
+        const n = noise(x, y, time, seed)
         const index = Math.floor(((n + 1.8) / 3.6) * purpleShades.length)
         const colorIndex = Math.min(purpleShades.length - 1, Math.max(0, index))
 

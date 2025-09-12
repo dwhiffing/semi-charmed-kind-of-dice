@@ -77,7 +77,7 @@ export const doRollDie = async (die: Die, delay: number) => {
       const isCharm = isDieCharm(d)
       const isBust = isDieBust(d)
       const charms = isCharm ? (d.sides >= 10 ? 3 : d.sides >= 6 ? 2 : 1) : 0
-      const points = isBust ? 0 : roll ?? 0
+      const points = isBust || isCharm ? 0 : roll ?? 0
 
       state.pendingPoints += points
 

@@ -1,6 +1,5 @@
 import { state } from '.'
 import type { Die } from '../types'
-import { rollDie } from '../utils'
 import {
   blackCatSound,
   fullBustSound,
@@ -69,7 +68,7 @@ export const doRollDie = async (die: Die, delay: number) => {
   return new Promise((resolve) =>
     setTimeout(() => {
       app.classList.remove('shake')
-      const roll = rollDie(die.sides, die.index)
+      const roll = rollDie(die.sides)
       state.dice = state.dice.map((d, idx) =>
         idx === die.index ? { ...d, roll } : d,
       )
@@ -130,4 +129,8 @@ export const buyNewDie = () => {
   zzfx(...newDieSound)
   state.dice = [...state.dice, getDie(4, state.dice.length)]
   state.charms -= cost
+}
+
+const rollDie = (sides: number) => {
+  return Math.floor(Math.random() * sides) + 1
 }

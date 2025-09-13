@@ -76,7 +76,7 @@ const startAnimateCountdown = (points = 0, charms = 0) => {
       if (_points > 0) {
         state.points += _points
         state.pendingPoints -= _points
-        if (state.pendingPoints <= 1 || points < 50 || count++ >= 3) {
+        if (state.pendingPoints <= 1 || points < 50 || count++ >= 5) {
           zzfx(...blip)
           count = 0
         }

@@ -4,14 +4,13 @@ import { toggleMute } from '../utils/zzfx'
 
 export const Menu = () => {
   const btnStart = createElement('button', 'Start Game') as HTMLButtonElement
-  const btnMute = createElement('button', '') as HTMLButtonElement
+  const btnMute = createElement('button') as HTMLButtonElement
   const title = createElement('h2')
   title.innerHTML = 'Semi-Charmed<br/>Kind of Dice'
-  title.style.textAlign = 'center'
 
   const credits = createElement('div', 'By Daniel Whiffing')
-  const lastScore = createElement('div', 'Last Score: 0')
-  const highScore = createElement('div', 'High Score: 0')
+  const lastScore = createElement('div')
+  const highScore = createElement('div')
   const buttons = createElement(
     'div',
     { className: 'buttons' },

@@ -5,7 +5,7 @@ export const fullBustSound = [.7,,296,.01,.21,.14,3,1.6,,-8,3,.01,,,4.2,,.02,.62
 // prettier-ignore
 export const blackCatSound = [1.6,,459,.08,,.12,1,4.7,-1,,-195,.01,.02,.1,.3,,.21,.67,.03,.05,161]
 // prettier-ignore
-export const charmSound = [.4,.2,400,.05,.02,.2,,.3,,,132,.1,,.1,,,,.6,.02]
+export const charmSound = [.25,.2,400,.05,.02,.2,,.3,,,132,.1,,.1,,,,.6,.02]
 // prettier-ignore
 export const getNumberSound = (p: number) => [.45,,600 - Math.min(500, p),,,.02,,3.5,-33,,,,,.2,17,,,.64,.08]
 // prettier-ignore

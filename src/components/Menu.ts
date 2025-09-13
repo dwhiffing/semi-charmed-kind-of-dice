@@ -54,6 +54,7 @@ export const Menu = () => {
   btnMute.onclick = () => toggleMute()
 
   state.addUpdate('points', update)
+  state.addUpdate('highScore', update)
   state.addUpdate('muteState', update)
   state.addUpdate('status', update)
   update()

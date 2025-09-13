@@ -33,8 +33,8 @@ export const Modal = () => {
     }
 
     textEl.innerText = 'Current Level (d' + sides + ')'
+    contentNextEl.innerHTML = ''
     if (sides <= 12) {
-      contentNextEl.innerHTML = ''
       const nextSides = sides === 12 ? 20 : sides + 2
       for (let i = 1; i <= nextSides; i++) {
         const { container, update } = DieFace()

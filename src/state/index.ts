@@ -133,9 +133,9 @@ export const startGame = () => {
   state.charms = 3
   state.points = 0
   state.pendingCharms = 0
-  state.pendingPoints = 500
+  state.pendingPoints = 0
   state.round = 1
-  state.status = 'ready'
+  state.status = 'shop'
   state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
   state.selectedDie = -1
   state.isAnimating = false

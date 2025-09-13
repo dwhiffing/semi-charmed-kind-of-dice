@@ -65,9 +65,12 @@ export const Controls = () => {
     btnShop.onclick = state.status === 'shop' ? buyNewDie : doEnterShop
 
     particleSystem.pointCount = state.pendingPoints
-    const dieSize = innerWidth < 400 ? 30 : 105
+
+    const game = document.querySelector('.dice-game')
+    const height = game?.getBoundingClientRect().height ?? 0
+    const mobileOffset = innerHeight / 2 - height - 150
     particleSystem.centerYOffset =
-      state.dice.length > 4 ? dieSize * -2 : -dieSize
+      innerWidth < 500 ? mobileOffset : state.dice.length > 4 ? -210 : -105
 
     roundCount.innerHTML = ''
     charmCount.innerHTML = ''

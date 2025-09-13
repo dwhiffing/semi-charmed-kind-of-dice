@@ -216,7 +216,7 @@ export class ParticleSystem {
         this.globalOrbitalAngle +
         (Math.PI * 2 * p.orbitalIndex) / this.orbitalParticleCount
 
-      const maxRadius = 180
+      const maxRadius = 150
       const radius =
         (100 +
           (maxRadius - 100) *

@@ -56,7 +56,6 @@ export class ParticleSystem {
 
     this.ctx = this.canvas.getContext('2d')!
     this.initialized = true
-    // this.ctx.strokeStyle = '#000'
 
     this.animate()
 
@@ -334,7 +333,6 @@ export class ParticleSystem {
 
     this.ctx.translate(p.x, p.y)
     this.ctx.scale(scale, scale)
-    // this.ctx.strokeStyle = '#000'
     this.ctx.rotate(p.rotation)
 
     this.ctx.translate(-100, -100)
@@ -365,7 +363,6 @@ export class ParticleSystem {
 
     this.ctx.translate(p.x - offset, p.y - offset)
     this.ctx.scale(scale, scale)
-    // this.ctx.strokeStyle = '#000'
     if (p.rotation !== undefined) this.ctx.rotate(p.rotation)
 
     this.ctx.lineWidth = 10

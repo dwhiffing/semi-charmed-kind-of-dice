@@ -1,9 +1,8 @@
 import { createElement } from '../utils/createElement'
-import { startGame, state } from '../state'
+import { state } from '../state'
 import { Controls } from './Controls'
 import { Menu } from './Menu'
 import { Dice } from './Dice'
-import { DEV } from '../constants'
 import { Modal } from './Modal'
 import { Background } from './Background'
 
@@ -30,8 +29,6 @@ export const DiceGame = () => {
 
   state.addUpdate('status', update)
   update()
-
-  if (DEV) startGame()
 
   return container
 }

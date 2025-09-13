@@ -1,4 +1,4 @@
-import { DEV, dieRollTime, LAST_ROUND_NUMBER } from '../constants'
+import { dieRollTime, LAST_ROUND_NUMBER } from '../constants'
 import type { IState } from '../types'
 import { createState } from '../utils/createState'
 import { particleSystem } from '../utils/particles'
@@ -101,7 +101,7 @@ const startAnimateCountdown = (points = 0, charms = 0) => {
 
 export const doRoll = async () => {
   if (state.status === 'rolling') return
-  if (!DEV) zzfx(...clickSound)
+  zzfx(...clickSound)
 
   state.status = 'rolling'
   updateDice((die) => ({

@@ -1,9 +1,6 @@
-export const DEV = false
-
 export const LAST_ROUND_NUMBER = 13
 export const MAX_DICE = 8
-export const dieRollTime = DEV ? 600 : 1750
-export const afterSubmitRollDelay = DEV ? 150 : 300
+export const dieRollTime = 1750
 
 export const SVGS = [
   `d${20}`,

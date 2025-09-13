@@ -90,8 +90,7 @@ export const doRollDie = async (die: Die, delay: number) => {
       const y = rect.top + rect.height / 2 + (isBust ? 20 : 0)
       const color = isBust ? 'black' : isCharm ? '#f1da41' : colors[d.sides]
       const count = isCharm || isBust ? 10 : 6
-      const svg = isCharm ? '/charm.svg' : undefined
-      particleSystem.createConfetti(x, y, color, count, svg)
+      particleSystem.createConfetti(x, y, color, count, isCharm)
 
       if (isCharm) {
         for (let i = 0; i < charms; i++) {

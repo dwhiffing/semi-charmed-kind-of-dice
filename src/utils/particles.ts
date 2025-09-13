@@ -9,8 +9,7 @@ export interface Particle {
   maxLife: number
   size: number
   color: string
-  gravity: number
-  svgSrc?: string
+  isStar?: boolean
   rotation?: number
   rotationSpeed?: number
 }
@@ -79,7 +78,7 @@ export class ParticleSystem {
     y: number,
     color: string,
     count = 20,
-    svgSrc?: string,
+    isStar?: boolean,
   ) {
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5
@@ -88,10 +87,9 @@ export class ParticleSystem {
       this.particles.push({
         x,
         y,
-        gravity: 0,
         rotation: 0,
         color,
-        svgSrc,
+        isStar,
         life: maxLife,
         maxLife,
         vx: Math.cos(angle) * speed,
@@ -141,15 +139,11 @@ export class ParticleSystem {
       maxLife,
       size: 18,
       color: '#FFD700',
-      gravity: 0,
-      svgSrc: '/charm.svg',
+      isStar: true,
       rotation: p.rotation,
       rotationSpeed: 0.1,
     })
-    setTimeout(
-      () => this.createConfetti(p.x, p.y, '#FFD700', 10, '/charm.svg'),
-      200,
-    )
+    setTimeout(() => this.createConfetti(p.x, p.y, '#FFD700', 10, true), 200)
   }
 
   private convertOrbitalParticlesToRegular(
@@ -187,8 +181,7 @@ export class ParticleSystem {
         maxLife,
         size: 18,
         color: '#FFD700',
-        gravity: 0,
-        svgSrc: '/charm.svg',
+        isStar: true,
         rotation: orbitalParticle.rotation,
         rotationSpeed: 0.1,
       })
@@ -277,7 +270,6 @@ export class ParticleSystem {
 
       p.x += p.vx
       p.y += p.vy
-      p.vy += p.gravity
       p.vx *= 0.98
       p.vy *= 0.98
       p.life--
@@ -376,14 +368,13 @@ export class ParticleSystem {
     // this.ctx.strokeStyle = '#000'
     if (p.rotation !== undefined) this.ctx.rotate(p.rotation)
 
-    if (p.svgSrc) {
+    this.ctx.lineWidth = 10
+    if (p.isStar) {
       if (rotateFromOrigin) this.ctx.translate(-100, -100)
       let path2 = new Path2D(img.getAttribute('d')!)
-      this.ctx.lineWidth = 10
       this.ctx.stroke(path2)
       this.ctx.fill(path2)
     } else {
-      this.ctx.lineWidth = 10
       this.ctx.arc(0, 0, size * 10, 0, 360)
       this.ctx.stroke()
       this.ctx.fill()

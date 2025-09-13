@@ -65,7 +65,7 @@ export const Controls = () => {
     btnShop.onclick = state.status === 'shop' ? buyNewDie : doEnterShop
 
     particleSystem.pointCount = state.pendingPoints
-    const dieSize = window.innerWidth < 600 ? 30 : 105
+    const dieSize = window.innerWidth < 400 ? 30 : 105
     particleSystem.centerYOffset =
       state.dice.length > 4 ? dieSize * -2 : -dieSize
 

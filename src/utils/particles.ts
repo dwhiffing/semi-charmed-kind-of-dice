@@ -218,8 +218,8 @@ export class ParticleSystem {
 
       const maxRadius = 180
       const radius =
-        (80 +
-          (maxRadius - 80) *
+        (100 +
+          (maxRadius - 100) *
             (1 - Math.exp(-0.05 * this.orbitalParticleCount))) *
         this.scale
 
@@ -303,14 +303,14 @@ export class ParticleSystem {
     this.ctx.save()
 
     const time = Date.now() * 0.001
-    const sizeFactor = Math.min(this.pointCount, 200) / 140
+    const sizeFactor = Math.min(this.pointCount, 200) / 400
     const scaleAnimation =
       (1 + sizeFactor + Math.sin(time * 4) * 0.05) * this.scale
     this.ctx.translate(this.centerX, this.centerY + this.centerYOffset)
     this.ctx.scale(scaleAnimation, scaleAnimation)
     this.ctx.rotate(Math.sin(time * 1.5) * 0.1)
 
-    this.ctx.font = 'bold 28px system-ui'
+    this.ctx.font = 'bold 42px system-ui'
     this.ctx.fillStyle = `rgba(72, 157, 255, ${this.fadeAlpha})`
     this.ctx.textAlign = 'center'
     this.ctx.textBaseline = 'middle'

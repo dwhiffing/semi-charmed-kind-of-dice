@@ -12,26 +12,28 @@ import { zzfx } from '../utils/zzfx'
 import { particleSystem } from '../utils/particles'
 import { colors } from '../constants'
 
-export const isDieCharm = (die: { roll: number | null; sides: number }) => {
-  if (!die.roll) return false
-  if (die.sides === 4) return die.roll >= 4 // 25%
-  if (die.sides === 6) return die.roll >= 6 // 17%
-  if (die.sides === 8) return die.roll >= 7 // 25%
-  if (die.sides === 10) return die.roll >= 9 // 20%
-  if (die.sides === 12) return die.roll >= 12 // 8%
-  if (die.sides === 20) return false // 0%
+const charm: Record<number, number> = {
+  4: 4,
+  6: 6,
+  8: 7,
+  10: 9,
+  12: 12,
+  20: 21,
 }
 
-export const isDieBust = (die: { roll: number | null; sides: number }) => {
-  if (!die.roll) return false
-  if (die.sides === 4) return die.roll <= 1 // 25%
-  if (die.sides === 6) return die.roll <= 1 // 17%
-  if (die.sides === 8) return die.roll <= 2 // 25%
-  if (die.sides === 10) return die.roll <= 3 // 30%
-  if (die.sides === 12) return die.roll <= 4 // 33%
-  if (die.sides === 20) return die.roll <= 7 // 35%
-  return false
+const bust: Record<number, number> = {
+  4: 1,
+  6: 1,
+  8: 2,
+  10: 2,
+  12: 3,
+  20: 5,
 }
+export const isDieCharm = (die: { roll: number | null; sides: number }) =>
+  (die.roll ?? 0) >= charm[die.sides]
+
+export const isDieBust = (die: { roll: number | null; sides: number }) =>
+  (die.roll ?? 0) <= bust[die.sides]
 
 export const getDie = (sides: number, index: number) =>
   ({ sides, roll: sides, index } as Die)

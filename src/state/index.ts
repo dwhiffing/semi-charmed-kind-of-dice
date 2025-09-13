@@ -53,9 +53,8 @@ export const doEnterShop = async () => {
 
 const startAnimateCountdown = (points = 0, charms = 0) => {
   return new Promise((resolve) => {
-    if (points === 0 && charms === 0) {
-      return resolve(true)
-    }
+    if (points === 0 && charms === 0) return resolve(true)
+
     const pointDuration = Math.min(750 + points * 10, 3000)
     const charmDuration = Math.min(charms * 150, 1500)
     const startTime = Date.now()
@@ -74,29 +73,25 @@ const startAnimateCountdown = (points = 0, charms = 0) => {
           : points < 50
           ? 1 - Math.pow(1 - pointProgress, 2)
           : 1 - Math.pow(1 - pointProgress, 4)
-      const pointsToTransfer = Math.floor(points * easedProgress)
-      const charmsToTransfer = Math.floor(charms * charmProgress)
 
-      const actualPointsTransferred =
-        pointsToTransfer - (points - state.pendingPoints)
-      const actualCharmsTransferred =
-        charmsToTransfer - (charms - state.pendingCharms)
+      const _points =
+        Math.floor(points * easedProgress) - (points - state.pendingPoints)
+      const _charms =
+        Math.floor(charms * charmProgress) - (charms - state.pendingCharms)
 
-      if (actualPointsTransferred > 0) {
-        state.points += actualPointsTransferred
-        state.pendingPoints -= actualPointsTransferred
+      if (_points > 0) {
+        state.points += _points
+        state.pendingPoints -= _points
         if (state.pendingPoints <= 3 || points < 50 || count++ >= 3) {
           zzfx(...blip)
           count = 0
         }
       }
 
-      if (actualCharmsTransferred > 0) {
-        state.charms += actualCharmsTransferred
-        state.pendingCharms -= actualCharmsTransferred
-        for (let i = 0; i < actualCharmsTransferred; i++) {
-          particleSystem.removeOrbitalParticle()
-        }
+      if (_charms > 0) {
+        state.charms += _charms
+        state.pendingCharms -= _charms
+        for (let i = 0; i < _charms; i++) particleSystem.removeOrbitalParticle()
         zzfx(...charmSound)
       }
 

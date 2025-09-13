@@ -33,6 +33,7 @@ export default defineConfig({
     cssCodeSplit: false,
     // Reduce chunk size warnings for JS13K
     chunkSizeWarningLimit: 13000, // 13KB limit for JS13K
+    copyPublicDir: false,
   },
   // Enable CSS minification
   css: {

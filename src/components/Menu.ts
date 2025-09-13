@@ -29,16 +29,12 @@ export const Menu = () => {
   )
 
   const update = () => {
-    const disabled = false
-    btnStart.toggleAttribute('disabled', disabled)
-
     const visible = state.status !== 'menu'
     container.style.opacity = visible ? '0' : '1'
     container.style.pointerEvents = visible ? 'none' : 'auto'
     credits.style.marginBottom = '10px'
-    highScore.textContent = `High Score: ${state.highScore}`
-    lastScore.textContent = `Last Score: ${state.points}`
-
+    highScore.textContent = 'High Score: ' + state.highScore
+    lastScore.textContent = 'Last Score: ' + state.points
     highScore.style.display = state.highScore ? 'block' : 'none'
     lastScore.style.display = state.points ? 'block' : 'none'
     btnMute.textContent =

@@ -104,10 +104,7 @@ export const doRoll = async () => {
   zzfx(...clickSound)
 
   state.status = 'rolling'
-  updateDice((die) => ({
-    ...die,
-    roll: isDieBust(die) ? die.roll : null,
-  }))
+  updateDice((die) => ({ ...die, roll: isDieBust(die) ? die.roll : null }))
 
   let j = 0
   const delay = dieRollTime / state.dice.length

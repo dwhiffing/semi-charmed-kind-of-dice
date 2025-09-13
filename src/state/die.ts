@@ -21,14 +21,7 @@ const charm: Record<number, number> = {
   20: 21,
 }
 
-const bust: Record<number, number> = {
-  4: 1,
-  6: 1,
-  8: 2,
-  10: 2,
-  12: 3,
-  20: 5,
-}
+const bust: Record<number, number> = { 4: 1, 6: 1, 8: 2, 10: 2, 12: 3, 20: 5 }
 export const isDieCharm = (die: { roll: number | null; sides: number }) =>
   die.roll ? die.roll >= charm[die.sides] : false
 
@@ -125,10 +118,8 @@ export const doRollDie = async (die: Die, delay: number) => {
   )
 }
 
-export const getDieUpgradeCost = (sides: number) => {
-  if (sides === 20) return 7
-  return sides / 2
-}
+export const getDieUpgradeCost = (sides: number) =>
+  sides === 20 ? 7 : sides / 2
 
 export const getNewDieCost = () => (state.dice.length - 2) * 2
 export const buyNewDie = () => {
@@ -152,7 +143,7 @@ const shuffle = <T>(array: T[]): T[] => {
 
 export const rollDie = (sides: number, index: number) => {
   if (sides < 1) return 0
-  const key = `${sides}-${index}`
+  const key = sides + '-' + index
   let pool = pools.get(key)
   if (!pool || pool.length === 0) {
     pool = []

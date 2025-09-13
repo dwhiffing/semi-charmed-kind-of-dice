@@ -30,7 +30,7 @@ export const Die = (index: number) => {
     const upgradeLabel =
       _die.sides === 20
         ? 'Upgrade -<br/>Max Level'
-        : `Upgrade -<br/>${upgradeCost} Charms`
+        : 'Upgrade -<br/>' + upgradeCost + ' Charms'
 
     dieFace.update(
       () => state.status.match(/ready|shop/) && onClickDie(index),
@@ -59,10 +59,10 @@ export const Die = (index: number) => {
 
 export const DieFace = () => {
   const number = createElement('div', { className: 'die-number' })
-  const catSvg = document.querySelector(`#cat svg`)!.cloneNode(true)
-  const charmSvg = document.querySelector(`#charm svg`)!.cloneNode(true)
-  const charm2Svg = document.querySelector(`#charm-2 svg`)!.cloneNode(true)
-  const charm3Svg = document.querySelector(`#charm-3 svg`)!.cloneNode(true)
+  const catSvg = document.querySelector('#cat svg')!.cloneNode(true)
+  const charmSvg = document.querySelector('#charm svg')!.cloneNode(true)
+  const charm2Svg = document.querySelector('#charm-2 svg')!.cloneNode(true)
+  const charm3Svg = document.querySelector('#charm-3 svg')!.cloneNode(true)
   const dieSvg = createElement('svg')
 
   const container = createElement('div', { className: 'die' })
@@ -78,21 +78,18 @@ export const DieFace = () => {
   ) => {
     container.style.color = colors[sides]
     container.classList.remove('d4', 'd6', 'd8', 'd10', 'd12', 'd20')
-    container.classList.add(`d${sides}`)
+    container.classList.add('d' + sides)
     container.classList.toggle('clickable', !!state.status.match(/ready|shop/))
-
     container.classList.toggle('rolling', isRolling)
     container.classList.toggle('selected', isSelected)
     container.classList.toggle('die-number-cat', isDieBust({ roll, sides }))
     container.classList.toggle('die-number-charm', isDieCharm({ roll, sides }))
-
-    container.style.animationDuration = `${dieRollTime / state.dice.length}ms`
-
-    number.textContent = roll ? `${roll}` : ''
+    container.style.animationDuration = dieRollTime / state.dice.length + 'ms'
+    number.textContent = roll ? roll + '' : ''
 
     if (lastSides !== sides) {
       const _dieSvg = document
-        .querySelector(`#d${sides} svg`)!
+        .querySelector('#d' + sides + ' svg')!
         .cloneNode(true) as SVGSVGElement
       lastSides = sides
       dieSvg.innerHTML = ''

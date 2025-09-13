@@ -7,18 +7,15 @@ export const Modal = () => {
   const modal = createElement('div', { className: 'modal' })
   const contentEl = createElement('div', { className: 'modal-content' })
   const contentNextEl = createElement('div', { className: 'modal-content' })
-  const textEl = createElement('h3', '')
-  const textNextEl = createElement('h3', '')
+  const textEl = createElement('h3')
+  const textNextEl = createElement('h3')
 
   const closeModal = () => (state.selectedDie = -1)
-  const buttonsEl = createElement('div', { className: 'modal-buttons' })
   const btn = createElement('button', { onclick: closeModal }, 'Close')
+  const buttonsEl = createElement('div', { className: 'modal-buttons' }, btn)
 
   overlay.onclick = (e) => e.target === overlay && closeModal()
-
-  buttonsEl.appendChild(btn)
   modal.append(textEl, contentEl, textNextEl, contentNextEl, buttonsEl)
-
   overlay.appendChild(modal)
 
   state.addUpdate('selectedDie', () => {
@@ -35,16 +32,16 @@ export const Modal = () => {
       contentEl.append(container)
     }
 
-    textEl.innerText = `Current Level (d${sides})`
+    textEl.innerText = 'Current Level (d' + sides + ')'
     if (sides <= 12) {
       contentNextEl.innerHTML = ''
-      const _sides = sides === 12 ? 20 : sides + 2
-      for (let i = 1; i <= _sides; i++) {
+      const nextSides = sides === 12 ? 20 : sides + 2
+      for (let i = 1; i <= nextSides; i++) {
         const { container, update } = DieFace()
-        update(null, _sides, i, false, false)
+        update(null, nextSides, i, false, false)
         contentNextEl.append(container)
       }
-      textNextEl.innerText = `Next Level (d${_sides})`
+      textNextEl.innerText = 'Next Level (d' + nextSides + ')'
     } else {
       textNextEl.innerText = 'Max Level Reached'
     }

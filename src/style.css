@@ -2,9 +2,9 @@
   --dark: #5a3b60;
   --light: #fff;
   --surface: #2b173e;
-  font-size: 28px;
+  font-size: 24px;
   @media (max-width: 700px) {
-    font-size: 4vw;
+    font-size: 3.8vw;
   }
 }
 

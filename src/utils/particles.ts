@@ -34,8 +34,8 @@ export class ParticleSystem {
   private orbitalParticleCount = 0
   public pointCount = 0
   private fadeAlpha = 0
-  public centerX = window.innerWidth / 2
-  public centerY = window.innerHeight / 2
+  public centerX = innerWidth / 2
+  public centerY = innerHeight / 2
   public centerYOffset = 0
   public scale = 1
   constructor() {
@@ -60,13 +60,13 @@ export class ParticleSystem {
     this.animate()
 
     this.resize()
-    window.addEventListener('resize', () => this.resize())
+    addEventListener('resize', () => this.resize())
   }
 
   private resize() {
     if (!this.canvas) return
-    this.canvas.width = window.innerWidth
-    this.canvas.height = window.innerHeight
+    this.canvas.width = innerWidth
+    this.canvas.height = innerHeight
     this.centerX = this.canvas.width / 2
     this.centerY = this.canvas.height / 2
     this.scale = Math.min(500, this.canvas!.width) / 500

@@ -3,8 +3,8 @@ import { createElement } from '../utils/createElement'
 const noise = (x: number, y: number, t: number, seed: number) => {
   const n1 = Math.sin(x * 0.02 + t + seed) * Math.cos(y * 0.02 + seed * 0.5)
   const n2 = Math.sin(x * 0.01 + y * 0.01 + t * 2 + seed * 1.3) * 0.5
-  const n3 = Math.sin((x + y) * 0.03 + t * 1.5 + seed * 0.7) * 0.3
-  return n1 + n2 + n3
+  // const n3 = Math.sin((x + y) * 0.03 + t * 1.5 + seed * 0.7) * 0.3
+  return n1 + n2
 }
 
 export const Background = () => {
@@ -15,20 +15,9 @@ export const Background = () => {
   }) as HTMLCanvasElement
 
   const ctx = canvas.getContext('2d')!
-
   const scale = 0.1
-  const resize = () => {
-    canvas.width = Math.floor(window.innerWidth * scale)
-    canvas.height = Math.floor(window.innerHeight * scale)
-  }
-  resize()
-
-  let resizeTimeout: number
-  const debouncedResize = () => {
-    clearTimeout(resizeTimeout)
-    resizeTimeout = setTimeout(resize, 100)
-  }
-  window.addEventListener('resize', debouncedResize)
+  canvas.width = Math.floor(window.innerWidth * scale)
+  canvas.height = Math.floor(window.innerHeight * scale)
 
   const purpleShades = [
     '#42176A',

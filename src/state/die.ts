@@ -30,10 +30,10 @@ const bust: Record<number, number> = {
   20: 5,
 }
 export const isDieCharm = (die: { roll: number | null; sides: number }) =>
-  (die.roll ?? 0) >= charm[die.sides]
+  die.roll ? die.roll >= charm[die.sides] : false
 
 export const isDieBust = (die: { roll: number | null; sides: number }) =>
-  (die.roll ?? 0) <= bust[die.sides]
+  die.roll ? die.roll <= bust[die.sides] : false
 
 export const getDie = (sides: number, index: number) =>
   ({ sides, roll: sides, index } as Die)

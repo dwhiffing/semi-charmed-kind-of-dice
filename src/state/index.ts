@@ -55,7 +55,7 @@ const startAnimateCountdown = (points = 0, charms = 0) => {
   return new Promise((resolve) => {
     if (points === 0 && charms === 0) return resolve(true)
 
-    const pointDuration = Math.min(750 + points * 10, 3000)
+    const pointDuration = Math.min(1000 + points * 10, 3000)
     const charmDuration = Math.min(charms * 150, 1500)
     const startTime = Date.now()
     let count = 0
@@ -66,13 +66,7 @@ const startAnimateCountdown = (points = 0, charms = 0) => {
         1,
       )
       const charmProgress = Math.min(elapsed / charmDuration, 1)
-
-      const easedProgress =
-        points < 10
-          ? pointProgress
-          : points < 50
-          ? 1 - Math.pow(1 - pointProgress, 2)
-          : 1 - Math.pow(1 - pointProgress, 4)
+      const easedProgress = 1 - Math.pow(1 - pointProgress, 1.8)
 
       const _points =
         Math.floor(points * easedProgress) - (points - state.pendingPoints)
@@ -82,7 +76,7 @@ const startAnimateCountdown = (points = 0, charms = 0) => {
       if (_points > 0) {
         state.points += _points
         state.pendingPoints -= _points
-        if (state.pendingPoints <= 3 || points < 50 || count++ >= 3) {
+        if (state.pendingPoints <= 1 || points < 50 || count++ >= 3) {
           zzfx(...blip)
           count = 0
         }
@@ -139,9 +133,9 @@ export const startGame = () => {
   state.charms = 3
   state.points = 0
   state.pendingCharms = 0
-  state.pendingPoints = 0
+  state.pendingPoints = 500
   state.round = 1
-  state.status = 'shop'
+  state.status = 'ready'
   state.dice = [getDie(4, 0), getDie(4, 1), getDie(4, 2)]
   state.selectedDie = -1
   state.isAnimating = false

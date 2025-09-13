@@ -20,9 +20,9 @@ if (fs.existsSync(outputFile)) {
 console.log('Zipping dist folder...')
 
 try {
-  // Create zip file using system zip command
-  // -r = recursive, -q = quiet
-  execSync(`tar czvf "${outputFile}" dist`, {
+  // Create zip file using system zip command with consistent compression
+  // -r = recursive, -9 = maximum compression, -q = quiet
+  execSync(`zip -r9q "${outputFile}" dist`, {
     cwd: path.resolve(__dirname, '..'),
   })
 

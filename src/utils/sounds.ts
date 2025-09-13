@@ -7,7 +7,7 @@ export const blackCatSound = [1.5,,459,.08,,.12,1,4.7,-1,,-195,.01,.02,.1,.3,,.2
 // prettier-ignore
 export const charmSound = [.5,.2,400,.05,.02,.2,,.3,,,132,.1,,.1,,,,.6,.02]
 // prettier-ignore
-export const numberSound = [.45,,160,,,.02,,3.5,-33,,,,,.2,17,,,.64,.08]
+export const getNumberSound = (p: number) => [.45,,600 - Math.min(500, p),,,.02,,3.5,-33,,,,,.2,17,,,.64,.08]
 // prettier-ignore
 export const upgradeSound = [1.6,,190,.33,.13,.26,,2.5,,-91,,,.12,,77,,,.58,.01,,134]
 

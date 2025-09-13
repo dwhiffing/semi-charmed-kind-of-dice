@@ -4,7 +4,7 @@ import {
   blackCatSound,
   fullBustSound,
   charmSound,
-  numberSound,
+  getNumberSound,
   upgradeSound,
   newDieSound,
 } from '../utils/sounds'
@@ -117,7 +117,7 @@ export const doRollDie = async (die: Die, delay: number) => {
         setTimeout(() => app.classList.add('shake'), 10)
         setTimeout(() => app.classList.remove('shake'), 200)
       } else {
-        zzfx(...numberSound)
+        zzfx(...getNumberSound(state.pendingPoints))
       }
       resolve(undefined)
     }, delay),

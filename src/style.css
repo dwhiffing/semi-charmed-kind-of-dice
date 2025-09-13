@@ -23,7 +23,7 @@ h2 {
 }
 
 h3 {
-  margin: 1.25rem 0 0.3125rem;
+  margin: 1.1rem 0 0.31rem;
 }
 
 .dice-game-container {
@@ -410,11 +410,12 @@ canvas {
   background-color: var(--surface);
   border: 0.2rem solid black;
   border-radius: 8px;
-  padding: 2rem;
-  max-width: 15rem;
-  font-size: 20px;
-  @media (max-width: 600px) {
-    font-size: 3vw;
+  padding: 0.8rem 1.7rem;
+  width: 100%;
+  max-width: 20rem;
+  font-size: 14px;
+  @media (max-width: 500px) {
+    font-size: 2.4vw;
   }
 }
 

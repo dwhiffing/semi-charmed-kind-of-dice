@@ -32,8 +32,9 @@ export class ParticleSystem {
   private initialized = false
   private globalOrbitalAngle = 0
   private baseAngularVelocity = 0.02
+  private orbitalParticleCount = 0
   public pointCount = 0
-  private fadeAlpha = 1
+  private fadeAlpha = 0
   public centerX = window.innerWidth / 2
   public centerY = window.innerHeight / 2
   public centerYOffset = 0
@@ -118,30 +119,37 @@ export class ParticleSystem {
       currentSpeedMultiplier: 1,
     })
 
+    this.orbitalParticleCount = this.orbitalParticles.length
+
     if (!this.animationId) this.animate()
-  }
-
-  redistributeOrbitalParticles() {
-    this.orbitalParticles.forEach((particle, index) => {
-      particle.orbitalIndex = index
-      particle.currentSpeedMultiplier = 1 // Reset speed multiplier
-    })
-  }
-
-  removeOrbitalParticle(particleToRemove: OrbitalParticle) {
-    const index = this.orbitalParticles.indexOf(particleToRemove)
-    if (index > -1) {
-      this.orbitalParticles.splice(index, 1)
-      this.redistributeOrbitalParticles()
-    }
   }
 
   fireOffOrbitalParticles() {
     this.convertOrbitalParticlesToRegular(0.1 * this.scale, 1) // outward direction
   }
 
-  pullInOrbitalParticles() {
-    this.convertOrbitalParticlesToRegular(0.07 * this.scale, -1) // inward direction
+  removeOrbitalParticle() {
+    const p = this.orbitalParticles.shift()!
+
+    const maxLife = 30
+    this.particles.push({
+      x: p.x,
+      y: p.y,
+      vx: 0,
+      vy: 0,
+      life: maxLife,
+      maxLife,
+      size: 18,
+      color: '#FFD700',
+      gravity: 0,
+      svgSrc: '/charm.svg',
+      rotation: p.rotation,
+      rotationSpeed: 0.1,
+    })
+    setTimeout(
+      () => this.createConfetti(p.x, p.y, '#FFD700', 10, '/charm.svg'),
+      200,
+    )
   }
 
   private convertOrbitalParticlesToRegular(
@@ -150,10 +158,9 @@ export class ParticleSystem {
   ) {
     this.orbitalParticles.forEach((orbitalParticle) => {
       // Calculate the current velocity based on orbital motion
-      const totalParticles = this.orbitalParticles.length
       const currentAngle =
         this.globalOrbitalAngle +
-        (Math.PI * 2 * orbitalParticle.orbitalIndex) / totalParticles
+        (Math.PI * 2 * orbitalParticle.orbitalIndex) / this.orbitalParticleCount
 
       // Calculate tangent vector (perpendicular to radius for circular motion)
       const tangentVx =
@@ -214,13 +221,13 @@ export class ParticleSystem {
       // Calculate where this particle should be based on the global angle
       const idealAngle =
         this.globalOrbitalAngle +
-        (Math.PI * 2 * p.orbitalIndex) / this.orbitalParticles.length
+        (Math.PI * 2 * p.orbitalIndex) / this.orbitalParticleCount
 
       const maxRadius = 180
       const radius =
         (80 +
           (maxRadius - 80) *
-            (1 - Math.exp(-0.05 * this.orbitalParticles.length))) *
+            (1 - Math.exp(-0.05 * this.orbitalParticleCount))) *
         this.scale
 
       // Calculate ideal position
@@ -304,13 +311,14 @@ export class ParticleSystem {
     this.ctx.save()
 
     const time = Date.now() * 0.001
+    const sizeFactor = Math.min(this.pointCount, 200) / 140
     const scaleAnimation =
-      (1 + this.pointCount / 140 + Math.sin(time * 4) * 0.05) * this.scale
+      (1 + sizeFactor + Math.sin(time * 4) * 0.05) * this.scale
     this.ctx.translate(this.centerX, this.centerY + this.centerYOffset)
     this.ctx.scale(scaleAnimation, scaleAnimation)
     this.ctx.rotate(Math.sin(time * 1.5) * 0.1)
 
-    this.ctx.font = 'bold 38px system-ui'
+    this.ctx.font = 'bold 28px system-ui'
     this.ctx.fillStyle = `rgba(72, 157, 255, ${this.fadeAlpha})`
     this.ctx.textAlign = 'center'
     this.ctx.textBaseline = 'middle'

@@ -2,7 +2,13 @@ import { DEV, dieRollTime, LAST_ROUND_NUMBER } from '../constants'
 import type { IState } from '../types'
 import { createState } from '../utils/createState'
 import { particleSystem } from '../utils/particles'
-import { clickSound, endDaySound, gameOverSound } from '../utils/sounds'
+import {
+  blip,
+  charmSound,
+  clickSound,
+  endDaySound,
+  gameOverSound,
+} from '../utils/sounds'
 import { zzfx } from '../utils/zzfx'
 import { updateDice, doRollDie, getDie, isDieBust } from './die'
 
@@ -21,13 +27,18 @@ const initialState = {
 }
 export let state = createState(initialState) as IState
 
-export const doEnterShop = () => {
-  particleSystem.pullInOrbitalParticles()
+export const doEnterShop = async () => {
+  if (state.isAnimating) return
+
+  state.isAnimating = true
+  zzfx(...endDaySound)
+
+  await startAnimateCountdown(state.pendingPoints, state.pendingCharms)
+  state.isAnimating = false
 
   if (state.round === LAST_ROUND_NUMBER) {
     state.status = 'menu'
     zzfx(...gameOverSound)
-    particleSystem.pointCount = 0
     if (state.points > state.highScore) {
       state.highScore = state.points
       localStorage.setItem('jynx-dice-highscore', state.points.toString())
@@ -35,14 +46,68 @@ export const doEnterShop = () => {
     return
   }
 
-  zzfx(...endDaySound)
   state.round++
-  state.charms += state.pendingCharms
-  state.points += state.pendingPoints
-  state.pendingCharms = 0
-  state.pendingPoints = 0
   state.dice = state.dice.map((d) => ({ ...d, roll: d.sides }))
   state.status = 'shop'
+}
+
+const startAnimateCountdown = (points = 0, charms = 0) => {
+  return new Promise((resolve) => {
+    if (points === 0 && charms === 0) {
+      return resolve(true)
+    }
+    const pointDuration = Math.min(750 + points * 10, 3000)
+    const charmDuration = Math.min(charms * 150, 1500)
+    const startTime = Date.now()
+    let count = 0
+    const animateCountdown = () => {
+      const elapsed = Date.now() - startTime
+      const pointProgress = Math.min(
+        (elapsed - charmDuration * 1.2) / pointDuration,
+        1,
+      )
+      const charmProgress = Math.min(elapsed / charmDuration, 1)
+
+      const easedProgress =
+        points < 10
+          ? pointProgress
+          : points < 50
+          ? 1 - Math.pow(1 - pointProgress, 2)
+          : 1 - Math.pow(1 - pointProgress, 4)
+      const pointsToTransfer = Math.floor(points * easedProgress)
+      const charmsToTransfer = Math.floor(charms * charmProgress)
+
+      const actualPointsTransferred =
+        pointsToTransfer - (points - state.pendingPoints)
+      const actualCharmsTransferred =
+        charmsToTransfer - (charms - state.pendingCharms)
+
+      if (actualPointsTransferred > 0) {
+        state.points += actualPointsTransferred
+        state.pendingPoints -= actualPointsTransferred
+        if (state.pendingPoints <= 3 || points < 50 || count++ >= 3) {
+          zzfx(...blip)
+          count = 0
+        }
+      }
+
+      if (actualCharmsTransferred > 0) {
+        state.charms += actualCharmsTransferred
+        state.pendingCharms -= actualCharmsTransferred
+        for (let i = 0; i < actualCharmsTransferred; i++) {
+          particleSystem.removeOrbitalParticle()
+        }
+        zzfx(...charmSound)
+      }
+
+      if (charmProgress >= 1 && pointProgress >= 1) {
+        resolve(true)
+      } else {
+        requestAnimationFrame(animateCountdown)
+      }
+    }
+    requestAnimationFrame(animateCountdown)
+  })
 }
 
 export const doRoll = async () => {

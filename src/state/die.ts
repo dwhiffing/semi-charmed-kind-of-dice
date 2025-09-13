@@ -107,7 +107,7 @@ export const doRollDie = async (die: Die, delay: number) => {
           particleSystem.fireOffOrbitalParticles()
           particleSystem.createConfetti(
             particleSystem.centerX,
-            particleSystem.centerY,
+            particleSystem.centerY + particleSystem.centerYOffset,
             'black',
             30,
           )
